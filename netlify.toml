@@ -1,69 +1,75 @@
 [build]
   command = "cd frontend && npm install && npm run build"
   publish = "frontend/dist"
+  functions = "netlify/functions"
 
-# ====== API 反向代理规则（按优先级排列）======
-# 后端部署到 Render.com (服务名: codemind-studio)
-# 部署完成后请将 YOUR_RENDER_URL 替换为实际的 Render URL
-# 例如: https://codemind-studio.onrender.com
+# ====== API 路由规则 ======
+# 后端 Flask 已集成到 Netlify Functions
+# 所有 /api/* 和其他后端路径直接由 Functions 处理
 
-# /api/* 代理（所有 REST API）
+# /api/* 路由（所有 REST API）
 [[redirects]]
   from = "/api/*"
-  to = "https://YOUR_RENDER_URL/api/:splat"
+  to = "/.netlify/functions/app"
   status = 200
 
 # 认证相关路径
 [[redirects]]
   from = "/login"
-  to = "https://YOUR_RENDER_URL/login"
+  to = "/.netlify/functions/app"
   status = 200
 
 [[redirects]]
   from = "/logout"
-  to = "https://YOUR_RENDER_URL/logout"
+  to = "/.netlify/functions/app"
   status = 200
 
 [[redirects]]
   from = "/register"
-  to = "https://YOUR_RENDER_URL/register"
+  to = "/.netlify/functions/app"
   status = 200
 
 [[redirects]]
   from = "/reset"
-  to = "https://YOUR_RENDER_URL/reset"
+  to = "/.netlify/functions/app"
   status = 200
 
 [[redirects]]
   from = "/reset_password"
-  to = "https://YOUR_RENDER_URL/reset_password"
+  to = "/.netlify/functions/app"
   status = 200
 
 [[redirects]]
   from = "/get_verification_code"
-  to = "https://YOUR_RENDER_URL/get_verification_code"
+  to = "/.netlify/functions/app"
   status = 200
 
 [[redirects]]
   from = "/get_forgot_password_code"
-  to = "https://YOUR_RENDER_URL/get_forgot_password_code"
+  to = "/.netlify/functions/app"
   status = 200
 
 [[redirects]]
   from = "/auth"
-  to = "https://YOUR_RENDER_URL/auth"
+  to = "/.netlify/functions/app"
   status = 200
 
 # 代码审查提交接口
 [[redirects]]
   from = "/process_code"
-  to = "https://YOUR_RENDER_URL/process_code"
+  to = "/.netlify/functions/app"
   status = 200
 
-# Flask 静态资源（图片等）
+# Flask 静态资源
 [[redirects]]
   from = "/static/*"
-  to = "https://YOUR_RENDER_URL/static/:splat"
+  to = "/.netlify/functions/app"
+  status = 200
+
+# 健康检查
+[[redirects]]
+  from = "/health"
+  to = "/.netlify/functions/app"
   status = 200
 
 # ====== SPA 路由回退（Vue Router history 模式）======
@@ -88,8 +94,6 @@
     Cache-Control = "public, max-age=31536000, immutable"
 
 # ====== Cookie 域配置 ======
-# 如果需要跨域携带 Cookie，确保后端设置 SameSite=None; Secure
-# 此配置告知 Netlify 添加相关 CORS 头
 [[headers]]
   for = "/api/*"
   [headers.values]
