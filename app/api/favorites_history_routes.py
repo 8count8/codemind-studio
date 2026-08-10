@@ -2,7 +2,7 @@
     收藏夹和历史记录页面路由
 """
 from flask import render_template
-from flasgger import swag_from
+from app.api.flasgger_compat import swag_from
 from . import favorites_history_bp
 
 @favorites_history_bp.route('/favorites', methods=['GET', 'POST'])

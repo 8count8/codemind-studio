@@ -1,25 +1,20 @@
 services:
   - type: web
-    name: codemind-backend
+    name: codemind-studio
     env: python
     region: singapore
     buildCommand: "pip install -r requirements.txt"
-    startCommand: "gunicorn -w 2 -b 0.0.0.0:10000 app:app"
+    startCommand: "gunicorn -w 2 -b 0.0.0.0:$PORT app:app"
     envVars:
       - key: FLASK_ENV
         value: production
-      - key: DATABASE_PATH
-        value: /data/codemind.db
       - key: DATABASE_URL
-        value: sqlite:////data/codemind.db
+        value: postgresql://postgres:0zRH7mlijXinntXg@db.xqwbtufemsickddncnsm.supabase.co:5432/postgres
       - key: SECRET_KEY
         generateValue: true
       - key: CORS_ORIGINS
         value: https://codemind-studio.netlify.app,http://localhost:5173
-      - key: PORT
-        value: 10000
-    persistentVolume:
-      size: 1024
-      mountPath: /data
+      - key: PYTHON_VERSION
+        value: "3.10.0"
     healthCheckPath: /health
     autoDeploy: false

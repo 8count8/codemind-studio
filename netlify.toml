@@ -3,65 +3,67 @@
   publish = "frontend/dist"
 
 # ====== API 反向代理规则（按优先级排列）======
-# 后端部署到 Render.com: https://codemind-backend.onrender.com
+# 后端部署到 Render.com (服务名: codemind-studio)
+# 部署完成后请将 YOUR_RENDER_URL 替换为实际的 Render URL
+# 例如: https://codemind-studio.onrender.com
 
 # /api/* 代理（所有 REST API）
 [[redirects]]
   from = "/api/*"
-  to = "https://codemind-backend.onrender.com/api/:splat"
+  to = "https://YOUR_RENDER_URL/api/:splat"
   status = 200
 
 # 认证相关路径
 [[redirects]]
   from = "/login"
-  to = "https://codemind-backend.onrender.com/login"
+  to = "https://YOUR_RENDER_URL/login"
   status = 200
 
 [[redirects]]
   from = "/logout"
-  to = "https://codemind-backend.onrender.com/logout"
+  to = "https://YOUR_RENDER_URL/logout"
   status = 200
 
 [[redirects]]
   from = "/register"
-  to = "https://codemind-backend.onrender.com/register"
+  to = "https://YOUR_RENDER_URL/register"
   status = 200
 
 [[redirects]]
   from = "/reset"
-  to = "https://codemind-backend.onrender.com/reset"
+  to = "https://YOUR_RENDER_URL/reset"
   status = 200
 
 [[redirects]]
   from = "/reset_password"
-  to = "https://codemind-backend.onrender.com/reset_password"
+  to = "https://YOUR_RENDER_URL/reset_password"
   status = 200
 
 [[redirects]]
   from = "/get_verification_code"
-  to = "https://codemind-backend.onrender.com/get_verification_code"
+  to = "https://YOUR_RENDER_URL/get_verification_code"
   status = 200
 
 [[redirects]]
   from = "/get_forgot_password_code"
-  to = "https://codemind-backend.onrender.com/get_forgot_password_code"
+  to = "https://YOUR_RENDER_URL/get_forgot_password_code"
   status = 200
 
 [[redirects]]
   from = "/auth"
-  to = "https://codemind-backend.onrender.com/auth"
+  to = "https://YOUR_RENDER_URL/auth"
   status = 200
 
 # 代码审查提交接口
 [[redirects]]
   from = "/process_code"
-  to = "https://codemind-backend.onrender.com/process_code"
+  to = "https://YOUR_RENDER_URL/process_code"
   status = 200
 
 # Flask 静态资源（图片等）
 [[redirects]]
   from = "/static/*"
-  to = "https://codemind-backend.onrender.com/static/:splat"
+  to = "https://YOUR_RENDER_URL/static/:splat"
   status = 200
 
 # ====== SPA 路由回退（Vue Router history 模式）======

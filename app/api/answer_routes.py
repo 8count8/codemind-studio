@@ -4,7 +4,7 @@ import json
 """
 from . import answer_bp
 from flask import render_template, request, jsonify
-from flasgger import swag_from
+from app.api.flasgger_compat import swag_from
 
 from app.service import QuestionService
 

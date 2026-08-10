@@ -1,4 +1,4 @@
-"""用户的登录、注册信息、验证码存储到 SQLite 数据库"""
+"""用户登录/注册 - 支持 SQLite 和 PostgreSQL"""
 from datetime import datetime, timedelta
 from flask import render_template_string
 import random
@@ -10,18 +10,15 @@ import bcrypt
 
 from app.utils import EmailTool
 from app.utils.DrunkEmailTool import ContentType
-from app.models.sqlite_db import get_db_connection, get_current_timestamp
+from app.models.db import get_db_connection, get_current_timestamp, fetch_one_dict
 
-# 加载环境变量
 load_dotenv()
 
-# 邮件配置（从 .env 文件中加载）
 SMTP_SERVER = os.getenv("SMTP_SERVER")
 SMTP_PORT = int(os.getenv("SMTP_PORT", "465"))
 EMAIL_ACCOUNT = os.getenv("EMAIL_ACCOUNT")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 
-# 验证码模板
 email_template = """<h1 style="color: #333; font-size: 24px;">欢迎注册</h1>
 <p style="color: #666; font-size: 16px;">您的验证码是：</p>
 <div class="verification-code" style="color: #007BFF; font-size: 20px; font-weight: bold;">{{ verification_code }}</div>
@@ -31,23 +28,27 @@ email_template = """<h1 style="color: #333; font-size: 24px;">欢迎注册</h1>
 """
 
 
+def create_mysql_connection():
+    """兼容旧接口"""
+    return get_db_connection()
+
+
 def create_database():
-    """创建用户表和验证码表（已在初始化模块完成）"""
+    """兼容旧接口"""
     pass
 
 
-# 检查用户名或邮箱是否已存在
 def check_user_exists(username=None, email=None):
     """检查用户名或邮箱是否已存在"""
     conn = get_db_connection()
     try:
         cursor = conn.cursor()
         if username and email:
-            cursor.execute("SELECT * FROM users WHERE username=? OR email=?", (username, email))
+            cursor.execute("SELECT * FROM users WHERE username=%s OR email=%s", (username, email))
         elif username:
-            cursor.execute("SELECT * FROM users WHERE username=?", (username,))
+            cursor.execute("SELECT * FROM users WHERE username=%s", (username,))
         elif email:
-            cursor.execute("SELECT * FROM users WHERE email=?", (email,))
+            cursor.execute("SELECT * FROM users WHERE email=%s", (email,))
         row = cursor.fetchone()
         return row is not None
     except Exception as e:
@@ -57,9 +58,8 @@ def check_user_exists(username=None, email=None):
         conn.close()
 
 
-# 注册用户
 def register_user(username, password, email):
-    """向数据库中插入新用户"""
+    """注册新用户"""
     hashed_password = bcrypt.hashpw(password.encode('UTF-8'), bcrypt.gensalt())
 
     if check_user_exists(username=username, email=email):
@@ -68,7 +68,7 @@ def register_user(username, password, email):
     conn = get_db_connection()
     try:
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO users (username, password, email) VALUES (?, ?, ?)",
+        cursor.execute("INSERT INTO users (username, password, email) VALUES (%s, %s, %s)",
                        (username, hashed_password.decode('UTF-8'), email))
         conn.commit()
         return {"status": "success", "message": "注册成功！"}
@@ -79,7 +79,6 @@ def register_user(username, password, email):
         conn.close()
 
 
-# 发送验证码到邮箱
 def send_verification_code(email, code):
     try:
         email_tool = EmailTool(storage_type="env")
@@ -98,23 +97,30 @@ def send_verification_code(email, code):
         insert_verification_code(email, code)
 
 
-# 生成随机验证码
 def generate_code(length=6):
     return ''.join(random.choices(string.digits, k=length))
 
 
-# 插入验证码到数据库
 def insert_verification_code(email, code):
-    """插入验证码，如已存在则更新"""
+    """插入验证码"""
     conn = get_db_connection()
     try:
         cursor = conn.cursor()
         expires_at = (datetime.now() + timedelta(minutes=10)).strftime('%Y-%m-%d %H:%M:%S')
-        cursor.execute('''
-            INSERT INTO verification_codes (email, code, expires_at)
-            VALUES (?, ?, ?)
-            ON CONFLICT(email) DO UPDATE SET code=?, expires_at=?
-        ''', (email, code, expires_at, code, expires_at))
+        
+        # 兼容 SQLite 和 PostgreSQL 的 upsert 语法
+        from app.models.db import USE_POSTGRESQL
+        if USE_POSTGRESQL:
+            cursor.execute('''
+                INSERT INTO verification_codes (email, code, expires_at)
+                VALUES (%s, %s, %s)
+                ON CONFLICT(email) DO UPDATE SET code=%s, expires_at=%s
+            ''', (email, code, expires_at, code, expires_at))
+        else:
+            cursor.execute('''
+                INSERT OR REPLACE INTO verification_codes (email, code, expires_at)
+                VALUES (?, ?, ?)
+            ''', (email, code, expires_at))
         conn.commit()
     except Exception as e:
         print(f"Error inserting verification code: {e}")
@@ -122,20 +128,23 @@ def insert_verification_code(email, code):
         conn.close()
 
 
-# 验证验证码
 def verify_verification_code(email, user_input_code):
     """验证用户输入的验证码"""
     conn = get_db_connection()
     try:
         cursor = conn.cursor()
-        cursor.execute('''
-            SELECT code, expires_at FROM verification_codes WHERE email=?
-        ''', (email,))
+        cursor.execute('SELECT code, expires_at FROM verification_codes WHERE email=%s', (email,))
         row = cursor.fetchone()
 
         if row:
-            stored_code = row['code']
-            expires_at = row['expires_at']
+            from app.models.db import USE_POSTGRESQL
+            if USE_POSTGRESQL:
+                stored_code = row[0]
+                expires_at = str(row[1])
+            else:
+                stored_code = row['code']
+                expires_at = row['expires_at']
+            
             if stored_code == user_input_code and datetime.now().strftime('%Y-%m-%d %H:%M:%S') < expires_at:
                 return True
         return False
@@ -146,12 +155,11 @@ def verify_verification_code(email, user_input_code):
         conn.close()
 
 
-# 删除已使用的验证码
 def delete_verification_code(email):
     conn = get_db_connection()
     try:
         cursor = conn.cursor()
-        cursor.execute('DELETE FROM verification_codes WHERE email=?', (email,))
+        cursor.execute('DELETE FROM verification_codes WHERE email=%s', (email,))
         conn.commit()
     except Exception as e:
         print(f"Error deleting verification code: {e}")
@@ -159,18 +167,22 @@ def delete_verification_code(email):
         conn.close()
 
 
-# 检查是否可以发送验证码
 def can_send_verification_code(email):
     conn = get_db_connection()
     try:
         cursor = conn.cursor()
-        cursor.execute('SELECT sent_time FROM verification_codes WHERE email=?', (email,))
+        cursor.execute('SELECT sent_time FROM verification_codes WHERE email=%s', (email,))
         row = cursor.fetchone()
 
         if row:
-            sent_time = row['sent_time']
+            from app.models.db import USE_POSTGRESQL
+            sent_time = row[0] if USE_POSTGRESQL else row['sent_time']
             if sent_time:
-                sent_datetime = datetime.strptime(sent_time, '%Y-%m-%d %H:%M:%S')
+                if hasattr(sent_time, 'strftime'):
+                    sent_str = sent_time.strftime('%Y-%m-%d %H:%M:%S')
+                else:
+                    sent_str = str(sent_time)
+                sent_datetime = datetime.strptime(sent_str, '%Y-%m-%d %H:%M:%S')
                 if (datetime.now() - sent_datetime).total_seconds() < 20:
                     return False
         return True
@@ -181,7 +193,6 @@ def can_send_verification_code(email):
         conn.close()
 
 
-# 获取验证码
 def handle_get_verification_code(email):
     if check_user_exists(email=email):
         return {"status": "error", "message": "该邮箱已被注册！"}
@@ -196,7 +207,6 @@ def handle_get_verification_code(email):
         return {"status": "error", "message": "验证码发送失败，请稍后再试！"}
 
 
-# 用户注册
 def handle_register(username, password, email, user_input_code):
     if not verify_verification_code(email, user_input_code):
         return {"status": "error", "message": "验证码错误！"}
@@ -210,16 +220,16 @@ def handle_register(username, password, email, user_input_code):
         return {"status": "error", "message": "注册失败！"}
 
 
-# 用户登录
 def handle_login(username, password):
     conn = get_db_connection()
     try:
         cursor = conn.cursor()
-        cursor.execute("SELECT password FROM users WHERE username=?", (username,))
+        cursor.execute("SELECT password FROM users WHERE username=%s", (username,))
         row = cursor.fetchone()
 
         if row:
-            stored_password = row['password']
+            from app.models.db import USE_POSTGRESQL
+            stored_password = row[0] if USE_POSTGRESQL else row['password']
             if isinstance(stored_password, str):
                 stored_password = stored_password.encode('UTF-8')
             if bcrypt.checkpw(password.encode('UTF-8'), stored_password):
@@ -235,7 +245,6 @@ def handle_login(username, password):
         conn.close()
 
 
-# 忘记密码 - 获取验证码
 def handle_forgot_password_get_code(email):
     if not check_user_exists(email=email):
         return {"status": "error", "message": "该邮箱未注册！"}
@@ -249,7 +258,6 @@ def handle_forgot_password_get_code(email):
         return {"status": "error", "message": f"验证码发送失败: {str(e)}"}
 
 
-# 忘记密码 - 重置密码
 def handle_forgot_password_reset(email, new_password, user_input_code):
     if not verify_verification_code(email, user_input_code):
         return {"status": "error", "message": "验证码错误！"}
@@ -258,7 +266,8 @@ def handle_forgot_password_reset(email, new_password, user_input_code):
     conn = get_db_connection()
     try:
         cursor = conn.cursor()
-        cursor.execute("UPDATE users SET password=? WHERE email=?", (hashed_password.decode('UTF-8'), email))
+        cursor.execute("UPDATE users SET password=%s WHERE email=%s", 
+                       (hashed_password.decode('UTF-8'), email))
         conn.commit()
         if cursor.rowcount > 0:
             delete_verification_code(email)
@@ -272,15 +281,18 @@ def handle_forgot_password_reset(email, new_password, user_input_code):
         conn.close()
 
 
-# 通过用户名获取用户个人信息
 def get_user_profile(username):
     conn = get_db_connection()
     try:
         cursor = conn.cursor()
-        cursor.execute("SELECT username, email FROM users WHERE username=?", (username,))
+        cursor.execute("SELECT username, email FROM users WHERE username=%s", (username,))
         row = cursor.fetchone()
         if row:
-            return {"username": row['username'], "email": row['email']}
+            from app.models.db import USE_POSTGRESQL
+            if USE_POSTGRESQL:
+                return {"username": row[0], "email": row[1]}
+            else:
+                return {"username": row['username'], "email": row['email']}
         else:
             return None
     except Exception as e:

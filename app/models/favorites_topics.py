@@ -1,6 +1,11 @@
-"""收藏功能 - SQLite 版本"""
+"""收藏功能 - 支持 SQLite 和 PostgreSQL"""
 
-from app.models.sqlite_db import get_db_connection
+from app.models.db import get_db_connection, fetch_dict, fetch_one_dict
+
+
+def create_mysql_connection():
+    """兼容旧接口"""
+    return get_db_connection()
 
 
 def add_favorite(user_id, title, question, difficulty, tags):
@@ -11,14 +16,14 @@ def add_favorite(user_id, title, question, difficulty, tags):
         return {"error": f"Invalid difficulty. Valid values are: {valid_difficulties}"}, 400
 
     try:
-        connection = get_db_connection()
-        cursor = connection.cursor()
+        conn = get_db_connection()
+        cursor = conn.cursor()
         cursor.execute("""
-        INSERT INTO favorites (user_id, question_id, question_title, question_content, created_at)
-        VALUES (?, ?, ?, ?, datetime('now', 'localtime'))
+        INSERT INTO favorites (user_id, question_id, question_title, question_content)
+        VALUES (%s, %s, %s, %s)
         """, (user_id, title, title, question))
-        connection.commit()
-        connection.close()
+        conn.commit()
+        conn.close()
         return {"message": "Favorite added successfully"}, 200
     except Exception as e:
         return {"error": f"Database error: {str(e)}"}, 500
@@ -27,16 +32,16 @@ def add_favorite(user_id, title, question, difficulty, tags):
 def get_favorites_with_question(user_id):
     """获取收藏列表（包含题目内容）"""
     try:
-        connection = get_db_connection()
-        cursor = connection.cursor()
+        conn = get_db_connection()
+        cursor = conn.cursor()
         cursor.execute("""
-        SELECT id, question_title as title, question_content as question, created_at
+        SELECT id, question_title AS title, question_content AS question, created_at
         FROM favorites
-        WHERE user_id = ?
+        WHERE user_id = %s
         ORDER BY created_at ASC
         """, (user_id,))
-        results = [dict(row) for row in cursor.fetchall()]
-        connection.close()
+        results = fetch_dict(cursor)
+        conn.close()
         return {"favorites": results}, 200
     except Exception as e:
         return {"error": f"Database error: {str(e)}"}, 500
@@ -45,71 +50,53 @@ def get_favorites_with_question(user_id):
 def get_favorites_without_question(user_id):
     """获取收藏列表（不包含题目内容）"""
     try:
-        connection = get_db_connection()
-        cursor = connection.cursor()
+        conn = get_db_connection()
+        cursor = conn.cursor()
         cursor.execute("""
-        SELECT id, question_title as title, created_at
+        SELECT id, question_title AS title, created_at
         FROM favorites
-        WHERE user_id = ?
+        WHERE user_id = %s
         ORDER BY created_at ASC
         """, (user_id,))
-        results = [dict(row) for row in cursor.fetchall()]
-        connection.close()
+        results = fetch_dict(cursor)
+        conn.close()
         return {"favorites": results}, 200
     except Exception as e:
         return {"error": f"Database error: {str(e)}"}, 500
 
 
-def search_favorites_by_title(user_id, title=None):
+def search_favorites_by_title(user_id, search_title):
     """根据标题搜索收藏"""
-    if not title:
-        return {"error": "'title' must be provided"}, 400
-
     try:
-        connection = get_db_connection()
-        cursor = connection.cursor()
-
-        query = """
-        SELECT id, question_title as title, question_content as question, created_at 
-        FROM favorites 
-        WHERE user_id = ?
-        """
-        params = [user_id]
-
-        if title:
-            query += " AND question_title LIKE ?"
-            params.append(f"%{title}%")
-
-        query += " ORDER BY created_at ASC"
-
-        cursor.execute(query, params)
-        results = [dict(row) for row in cursor.fetchall()]
-        connection.close()
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("""
+        SELECT id, question_title AS title, question_content AS question, created_at
+        FROM favorites
+        WHERE user_id = %s AND question_title LIKE %s
+        ORDER BY created_at ASC
+        """, (user_id, f"%{search_title}%"))
+        results = fetch_dict(cursor)
+        conn.close()
         return {"favorites": results}, 200
     except Exception as e:
         return {"error": f"Database error: {str(e)}"}, 500
 
 
-def delete_favorite(user_id, title):
+def delete_favorite(favorite_id, user_id):
     """删除收藏"""
     try:
-        connection = get_db_connection()
-        cursor = connection.cursor()
+        conn = get_db_connection()
+        cursor = conn.cursor()
         cursor.execute("""
         DELETE FROM favorites
-        WHERE user_id = ? AND question_title = ?
-        """, (user_id, title))
-        connection.commit()
-
+        WHERE id = %s AND user_id = %s
+        """, (favorite_id, user_id))
+        conn.commit()
         if cursor.rowcount == 0:
-            connection.close()
-            return {"error": "Favorite not found or already deleted"}, 404
-
-        connection.close()
+            conn.close()
+            return {"error": "Favorite not found"}, 404
+        conn.close()
         return {"message": "Favorite deleted successfully"}, 200
     except Exception as e:
         return {"error": f"Database error: {str(e)}"}, 500
-
-
-# 兼容旧接口
-create_mysql_connection = get_db_connection

@@ -3,7 +3,7 @@
 """
 
 from flask import render_template
-from flasgger import swag_from
+from app.api.flasgger_compat import swag_from
 from . import code_review_bp
 
 @code_review_bp.route('/code-review', methods=['GET', 'POST'])

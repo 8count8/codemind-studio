@@ -1,27 +1,20 @@
-"""用户操作记录 - SQLite 版本"""
+"""用户操作记录 - 支持 SQLite 和 PostgreSQL"""
 import os
 from datetime import datetime
 import logging
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
-from app.models.sqlite_db import get_db_connection, get_current_timestamp
+from app.models.db import get_db_connection, get_current_timestamp, fetch_dict, USE_POSTGRESQL
 
 
-# 数据库连接封装
-def get_db_connection():
-    """获取数据库连接（使用 sqlite_db 模块）"""
-    from app.models.sqlite_db import get_db_connection as _get_connection
-    return _get_connection()
-
-
-# 记录用户使用的功能名称到 functions_used 表
 def log_function_usage(user_id, function_name):
+    """记录用户功能使用日志"""
     try:
         connection = get_db_connection()
         cursor = connection.cursor()
         timestamp = get_current_timestamp()
-        cursor.execute('INSERT INTO functions_used (user_id, function_name, timestamp) VALUES (?, ?, ?)',
+        cursor.execute('INSERT INTO functions_used (user_id, function_name, timestamp) VALUES (%s, %s, %s)',
                        (user_id, function_name, timestamp))
         connection.commit()
         logging.info(f"功能 {function_name} 使用记录成功！")
@@ -31,8 +24,8 @@ def log_function_usage(user_id, function_name):
         connection.close()
 
 
-# 处理上传文件并存储到 user_uploads 表
 def upload_file_to_db(user_id, file_path, file_type):
+    """处理上传文件并存储到数据库"""
     try:
         connection = get_db_connection()
         cursor = connection.cursor()
@@ -42,7 +35,7 @@ def upload_file_to_db(user_id, file_path, file_type):
         cursor.execute('''
         INSERT INTO user_uploads 
         (user_id, upload_time, file_name, file_type, file_path)
-        VALUES (?, ?, ?, ?, ?)
+        VALUES (%s, %s, %s, %s, %s)
         ''', (user_id, timestamp, file_name, file_type, file_path))
         connection.commit()
         logging.info(f"文件 {file_name} 上传成功！")
@@ -52,8 +45,8 @@ def upload_file_to_db(user_id, file_path, file_type):
         connection.close()
 
 
-# 记录后端 API 返回的代码文件到 api_responses 表
 def log_api_response(upload_id, response_file_name, response_file_content):
+    """记录后端 API 返回的代码文件"""
     try:
         connection = get_db_connection()
         cursor = connection.cursor()
@@ -61,7 +54,7 @@ def log_api_response(upload_id, response_file_name, response_file_content):
         cursor.execute('''
         INSERT INTO api_responses 
         (user_upload_id, response_file_name, response_file_content, timestamp)
-        VALUES (?, ?, ?, ?)
+        VALUES (%s, %s, %s, %s)
         ''', (upload_id, response_file_name, response_file_content, timestamp))
         connection.commit()
         logging.info(f"API 响应文件 {response_file_name} 记录成功！")
@@ -71,8 +64,8 @@ def log_api_response(upload_id, response_file_name, response_file_content):
         connection.close()
 
 
-# 查询用户的历史记录
 def get_user_history_combined(user_id):
+    """查询用户的历史记录（整合版）"""
     try:
         connection = get_db_connection()
         cursor = connection.cursor()
@@ -81,39 +74,33 @@ def get_user_history_combined(user_id):
         cursor.execute('''
         SELECT 'function' AS record_type, function_name AS name, timestamp 
         FROM functions_used 
-        WHERE user_id = ?
+        WHERE user_id = %s
         ''', (user_id,))
-        function_records = cursor.fetchall()
+        function_records = fetch_dict(cursor)
 
         # 查询 user_uploads 表
         cursor.execute('''
         SELECT 'upload' AS record_type, file_name AS name, upload_time AS timestamp, file_type, file_path 
         FROM user_uploads 
-        WHERE user_id = ?
+        WHERE user_id = %s
         ''', (user_id,))
-        upload_records = cursor.fetchall()
+        upload_records = fetch_dict(cursor)
 
         # 查询 api_responses 表
         cursor.execute('''
         SELECT 'api_response' AS record_type, response_file_name AS name, timestamp, response_file_content AS content 
         FROM api_responses 
         WHERE user_upload_id IN (
-            SELECT id FROM user_uploads WHERE user_id = ?
+            SELECT id FROM user_uploads WHERE user_id = %s
         )
         ''', (user_id,))
-        api_response_records = cursor.fetchall()
+        api_response_records = fetch_dict(cursor)
 
-        # 合并所有记录（使用字典形式）
-        all_records = []
-        for r in function_records:
-            all_records.append(dict(r))
-        for r in upload_records:
-            all_records.append(dict(r))
-        for r in api_response_records:
-            all_records.append(dict(r))
+        # 合并所有记录
+        all_records = function_records + upload_records + api_response_records
 
         # 按时间排序
-        all_records.sort(key=lambda x: x.get('timestamp', ''), reverse=True)
+        all_records.sort(key=lambda x: str(x.get('timestamp', '')), reverse=True)
 
         logging.info(f"成功获取用户 {user_id} 的历史记录！")
         return all_records
@@ -134,20 +121,20 @@ def delete_history_record(user_id, record_type, record_id):
         if record_type == "function":
             cursor.execute('''
             DELETE FROM functions_used 
-            WHERE id = ? AND user_id = ?
+            WHERE id = %s AND user_id = %s
             ''', (record_id, user_id))
 
         elif record_type == "upload":
             cursor.execute('''
             DELETE FROM user_uploads 
-            WHERE id = ? AND user_id = ?
+            WHERE id = %s AND user_id = %s
             ''', (record_id, user_id))
 
         elif record_type == "api_response":
             cursor.execute('''
             DELETE FROM api_responses 
-            WHERE id = ? AND user_upload_id IN (
-                SELECT id FROM user_uploads WHERE user_id = ?
+            WHERE id = %s AND user_upload_id IN (
+                SELECT id FROM user_uploads WHERE user_id = %s
             )
             ''', (record_id, user_id))
 

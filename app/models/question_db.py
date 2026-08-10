@@ -1,9 +1,9 @@
-"""题库管理 - SQLite 版本"""
+"""题库管理 - 支持 SQLite 和 PostgreSQL"""
 
 import json
 import logging
 
-from app.models.sqlite_db import get_db_connection
+from app.models.db import get_db_connection, fetch_dict, fetch_one_dict, USE_POSTGRESQL
 
 logging.basicConfig(level=logging.INFO)
 
@@ -32,15 +32,15 @@ def dict_to_markdown(content_dict):
 def get_all_questions():
     """获取所有题目列表"""
     try:
-        connection = get_db_connection()
-        cursor = connection.cursor()
+        conn = get_db_connection()
+        cursor = conn.cursor()
         cursor.execute("""
         SELECT id, title, difficulty, tags, created_at
         FROM problems
         ORDER BY created_at ASC
         """)
-        results = [dict(row) for row in cursor.fetchall()]
-        connection.close()
+        results = fetch_dict(cursor)
+        conn.close()
         return {"questions": results}, 200
     except Exception as e:
         return {"error": f"Database error: {str(e)}"}, 500
@@ -49,17 +49,17 @@ def get_all_questions():
 def get_question_by_id(question_id):
     """根据 ID 获取题目详情"""
     try:
-        connection = get_db_connection()
-        cursor = connection.cursor()
+        conn = get_db_connection()
+        cursor = conn.cursor()
         cursor.execute("""
         SELECT id, title, content, difficulty, tags, created_at
         FROM problems
-        WHERE id = ?
+        WHERE id = %s
         """, (question_id,))
-        result = cursor.fetchone()
-        connection.close()
+        result = fetch_one_dict(cursor)
+        conn.close()
         if result:
-            return {"question": dict(result)}, 200
+            return {"question": result}, 200
         else:
             return {"error": "Question not found"}, 404
     except Exception as e:
@@ -72,16 +72,16 @@ def search_questions_by_title(title=None):
         return {"error": "'title' must be provided"}, 400
 
     try:
-        connection = get_db_connection()
-        cursor = connection.cursor()
+        conn = get_db_connection()
+        cursor = conn.cursor()
         cursor.execute("""
         SELECT id, title, content, difficulty, tags, created_at
         FROM problems
-        WHERE title LIKE ?
+        WHERE title LIKE %s
         ORDER BY created_at ASC
         """, (f"%{title}%",))
-        results = [dict(row) for row in cursor.fetchall()]
-        connection.close()
+        results = fetch_dict(cursor)
+        conn.close()
         return {"questions": results}, 200
     except Exception as e:
         return {"error": f"Database error: {str(e)}"}, 500
@@ -94,38 +94,38 @@ def update_question(question_id, title=None, difficulty=None, tags=None, content
         return {"error": f"Invalid difficulty. Valid values are: {valid_difficulties}"}, 400
 
     try:
-        connection = get_db_connection()
-        cursor = connection.cursor()
+        conn = get_db_connection()
+        cursor = conn.cursor()
 
         updates = []
         params = []
         if title is not None:
-            updates.append("title = ?")
+            updates.append("title = %s")
             params.append(title)
         if difficulty is not None:
-            updates.append("difficulty = ?")
+            updates.append("difficulty = %s")
             params.append(difficulty)
         if tags is not None:
-            updates.append("tags = ?")
+            updates.append("tags = %s")
             params.append(tags)
         if content is not None:
-            updates.append("content = ?")
+            updates.append("content = %s")
             params.append(content)
 
         if not updates:
-            connection.close()
+            conn.close()
             return {"message": "No changes needed"}, 200
 
         params.append(question_id)
-        query = f"UPDATE problems SET {', '.join(updates)} WHERE id = ?"
+        query = f"UPDATE problems SET {', '.join(updates)} WHERE id = %s"
         cursor.execute(query, params)
-        connection.commit()
+        conn.commit()
 
         if cursor.rowcount == 0:
-            connection.close()
+            conn.close()
             return {"error": "Question not found or no changes made"}, 404
 
-        connection.close()
+        conn.close()
         return {"message": "Question updated successfully"}, 200
     except Exception as e:
         return {"error": f"Database error: {str(e)}"}, 500
@@ -140,14 +140,14 @@ def insert_question(title, content_dict, difficulty, tags):
     content = dict_to_markdown(content_dict)
 
     try:
-        connection = get_db_connection()
-        cursor = connection.cursor()
+        conn = get_db_connection()
+        cursor = conn.cursor()
         cursor.execute("""
-        INSERT INTO problems (title, content, difficulty, tags, created_at)
-        VALUES (?, ?, ?, ?, datetime('now', 'localtime'))
+        INSERT INTO problems (title, content, difficulty, tags)
+        VALUES (%s, %s, %s, %s)
         """, (title, content, difficulty, tags))
-        connection.commit()
-        connection.close()
+        conn.commit()
+        conn.close()
         return {"message": "Question inserted successfully"}, 201
     except Exception as e:
         return {"error": f"Database error: {str(e)}"}, 500

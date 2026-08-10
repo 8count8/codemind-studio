@@ -1,7 +1,7 @@
 """
     用户认证
 """
-from flasgger import swag_from
+from app.api.flasgger_compat import swag_from
 
 from . import auth_bp
 from flask import redirect, url_for, request, session, current_app, render_template, jsonify

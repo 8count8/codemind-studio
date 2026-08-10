@@ -8,3 +8,5 @@ redis
 flasgger
 flask-cors
 gunicorn
+psycopg2-binary
+supabase

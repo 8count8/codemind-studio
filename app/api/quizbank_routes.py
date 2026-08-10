@@ -1,6 +1,6 @@
 """ 试题库相关路由 4"""
 from flask import render_template
-from flasgger import swag_from
+from app.api.flasgger_compat import swag_from
 from . import quizbank_bp
 
 

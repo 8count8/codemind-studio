@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, render_template, current_app
-from flasgger import swag_from
+from app.api.flasgger_compat import swag_from
 from app.service.algorithm_service import generate_and_save_algorithm_problem
 from . import ai_question_bp
 

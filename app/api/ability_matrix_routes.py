@@ -11,7 +11,7 @@
 """
 
 from flask import Blueprint, request, jsonify, render_template, session, current_app
-from flasgger import swag_from
+from app.api.flasgger_compat import swag_from
 
 from . import ability_matrix_bp
 from app.service.ability_matrix_service import AbilityMatrixService
