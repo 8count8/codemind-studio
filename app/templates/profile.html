@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人信息 - CMS</title>
+    <!-- 引用 home.css 以保持风格一致，其中包含了个人信息页面的样式 -->
+    <link rel="stylesheet" href="/static/css/home.css">
+    <script src="/static/js/home.js" defer></script>
+    <script src="/static/js/profile.js" defer></script>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <a class="logo">
+            <img src="/static/img/logo.jpg" alt="Logo" id="logo-img">
+            <span>CodeMind Studio</span>
+        </a>
+        <div class="nav-buttons">
+            <button class="btn btn-theme" id="theme-toggle">
+                <span id="theme-icon">🌞</span>
+                <span id="theme-text">亮色</span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="profile-container">
+        <div class="profile-info">
+            <!-- 头像，使用用户的头像或默认头像 -->
+            <img src={{ user.user_avatar }} alt="用户头像" class="user-avatar">
+            <!-- 隐藏的文件输入框 -->
+            <input type="file" id="avatar-input" style="display: none;" accept="image/*">
+            <!-- 昵称 -->
+            <h2>{{ user.username }}</h2>
+            <!-- 邮箱 -->
+            <p>邮箱: {{ user.email }}</p>
+        </div>
+        <div class="profile-actions">
+            <!-- 能力矩阵按钮 -->
+            <button class="btn btn-primary" id="ability-matrix-btn">能力矩阵</button>
+            <!-- 历史记录按钮，点击可弹出历史记录页面 -->
+            <button class="btn btn-primary" id="history-btn">历史记录</button>
+            <!-- 收藏记录按钮，点击可弹出收藏记录页面 -->
+            <button class="btn btn-primary" id="favorites-btn">收藏记录</button>
+            <!-- 退出登录按钮 -->
+            <button class="btn btn-primary" id="logout-btn">退出登录</button>
+			<!-- 退出页面按钮 -->
+            <button class="btn btn-primary" id="exit-profile-btn">退出页面</button>
+        </div>
+    </div>
+</body>
+</html>

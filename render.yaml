@@ -1,0 +1,35 @@
+services:
+  - type: web
+    name: codemind-backend
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn -w 2 -b 0.0.0.0:10000 app:app"
+    envVars:
+      - key: SECRET_KEY
+        value: "your-production-secret-key-change-me"
+      - key: DATABASE_URL
+        value: "mysql+mysqlconnector://cms:Cms123456@120.79.252.236:3306/cms_test"
+      - key: FLASK_ENV
+        value: "production"
+      - key: CORS_ORIGINS
+        value: "https://codemind-studio.netlify.app,http://localhost:5173"
+      - key: SMTP_SERVER
+        value: "smtp.163.com"
+      - key: SMTP_PORT
+        value: "465"
+      - key: EMAIL_ACCOUNT
+        value: "cms202504@163.com"
+      - key: EMAIL_PASSWORD
+        value: "BEmzU33pqVynpG7r"
+      - key: MYSQL_HOST
+        value: "120.79.252.236"
+      - key: MYSQL_PORT
+        value: "3306"
+      - key: MYSQL_USER
+        value: "cms"
+      - key: MYSQL_PASSWORD
+        value: "Cms123456"
+      - key: MYSQL_DATABASE
+        value: "cms_test"
+    healthCheckPath: "/apidocs/"
+    autoDeploy: true

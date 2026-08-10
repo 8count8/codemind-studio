@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>历史记录 - CMS</title>
+    <!-- 引用 home.css 以保持风格一致 -->
+    <link rel="stylesheet" href="/static/css/home.css">
+    <script src="/static/js/home.js" defer></script>
+    <script src="/static/js/history.js" defer></script>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <a class="logo">
+            <img src="/static/img/logo.jpg" alt="Logo" id="logo-img">
+            <span>CodeMind Studio</span>
+        </a>
+        <div class="nav-buttons">
+            <button class="btn btn-theme" id="theme-toggle">
+                <span id="theme-icon">🌞</span>
+                <span id="theme-text">亮色</span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="profile-container">
+        <div class="profile-info">
+            <h2>历史记录</h2>
+        </div>
+        <div class="history-list" id="history-list"></div>
+        <div class="profile-actions">
+            <!-- 返回仪表盘页面 -->
+            <a href="/dashboard">返回</a>
+        </div>
+    </div>
+</body>
+</html>

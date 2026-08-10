@@ -1,0 +1,95 @@
+[build]
+  command = "cd frontend && npm install && npm run build"
+  publish = "frontend/dist"
+
+# ====== API 反向代理规则（按优先级排列）======
+# 将后端部署到 Render.com 后，替换下方 YOUR_BACKEND_URL
+# 例如：https://codemind-backend.onrender.com
+
+# /api/* 代理（所有 REST API）
+[[redirects]]
+  from = "/api/*"
+  to = "https://YOUR_BACKEND_URL/api/:splat"
+  status = 200
+
+# 认证相关路径
+[[redirects]]
+  from = "/login"
+  to = "https://YOUR_BACKEND_URL/login"
+  status = 200
+
+[[redirects]]
+  from = "/logout"
+  to = "https://YOUR_BACKEND_URL/logout"
+  status = 200
+
+[[redirects]]
+  from = "/register"
+  to = "https://YOUR_BACKEND_URL/register"
+  status = 200
+
+[[redirects]]
+  from = "/reset"
+  to = "https://YOUR_BACKEND_URL/reset"
+  status = 200
+
+[[redirects]]
+  from = "/reset_password"
+  to = "https://YOUR_BACKEND_URL/reset_password"
+  status = 200
+
+[[redirects]]
+  from = "/get_verification_code"
+  to = "https://YOUR_BACKEND_URL/get_verification_code"
+  status = 200
+
+[[redirects]]
+  from = "/get_forgot_password_code"
+  to = "https://YOUR_BACKEND_URL/get_forgot_password_code"
+  status = 200
+
+[[redirects]]
+  from = "/auth"
+  to = "https://YOUR_BACKEND_URL/auth"
+  status = 200
+
+# 代码审查提交接口
+[[redirects]]
+  from = "/process_code"
+  to = "https://YOUR_BACKEND_URL/process_code"
+  status = 200
+
+# Flask 静态资源（图片等）
+[[redirects]]
+  from = "/static/*"
+  to = "https://YOUR_BACKEND_URL/static/:splat"
+  status = 200
+
+# ====== SPA 路由回退（Vue Router history 模式）======
+# 所有未匹配的路径重定向到 index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# ====== 安全头 ======
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+
+# ====== 单页应用缓存策略 ======
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# ====== Cookie 域配置 ======
+# 如果需要跨域携带 Cookie，确保后端设置 SameSite=None; Secure
+# 此配置告知 Netlify 添加相关 CORS 头
+[[headers]]
+  for = "/api/*"
+  [headers.values]
+    Access-Control-Allow-Credentials = "true"

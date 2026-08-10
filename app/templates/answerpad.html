@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>CMS_answerpad</title>
+    <link rel="stylesheet" href="/static/css/answerpad.css">
+    <link rel="stylesheet" href="/static/css/ai_review.css">
+    <script src="/static/js/answerpad.js" defer></script>
+    <script src="/static/js/home.js" defer></script>
+    <link rel="stylesheet" href="/static/css/home.css">
+    <!-- 引入 highlight.js 样式 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+
+    <!-- 替换为本地ACE资源 -->
+    <link rel="stylesheet" href="/static/css/Ace/theme/monokai.css">
+    <link rel="stylesheet" href="/static/css/Ace/ace.css">
+    <script src="/static/js/Ace/ace.js"></script>
+    <script src="/static/js/Ace/mode-python.js"></script>
+    <script src="/static/js/Ace/mode-java.js"></script>
+    <script src="/static/js/Ace/mode-c_cpp.js"></script>
+    <script src="/static/js/Ace/ext-language_tools.js"></script>
+    <!-- 添加Markdown解析库 -->
+    <script src="/static/js/Marked/marked.min.js"></script>
+    <!-- 添加Markdown样式 -->
+    <link rel="stylesheet" href="/static/css/Marked/github-markdown.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <script src="/static/js/Marked/marked.umd.js"></script>
+    <style>
+        /* 内联样式处理换行问题 */
+        .backend-results {
+            display: block !important;
+        }
+        .result-section {
+            display: block !important;
+        }
+        .result-content {
+            display: block !important;
+        }
+        /* 移除所有可能的换行 */
+        .result-container, .ai-review-container, 
+        .result-container *, .ai-review-container * {
+            display: block;
+        }
+        /* 特定元素恢复布局 */
+        .result-header, .ai-review-header {
+            display: flex !important;
+        }
+        .result-status, .ai-score {
+            display: flex !important;
+        }
+        .result-metrics {
+            display: flex !important;
+        }
+        /* 修复内联空白问题 */
+        .ai-score > span, .result-metrics > span, .status-icon, .result-status > span {
+            display: inline-block !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <a class="logo">
+            <img src="/static/img/logo.jpg" alt="Logo" id="logo-img">
+            <span>CodeMind Studio</span>
+        </a>
+        <div class="nav-buttons">
+            <button class="btn btn-theme" id="theme-toggle">
+                <span id="theme-icon">🌞</span>
+                <span id="theme-text">亮色</span>
+            </button>
+        </div>
+    </nav>
+    
+    <!-- 添加隐藏的question-data元素 -->
+    <div id="question-data" style="display:none;">{{ question | tojson }}</div>
+    
+    <div class="main-container">
+        <!-- 左侧题目信息区域 -->
+        <div class="left-panel">
+            <div class="question-header">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3>题目信息</h3>
+                    <button id="favorite-btn" class="btn-favorite">收藏题目</button>
+                </div>
+            </div>
+            <div class="question-content" id="question-content">
+                <h2 id="question-title">{{ question.title }}</h2>
+                <div id="question-description" class="markdown-body">
+                    {{ question.content | safe }}
+                </div>
+                <div class="question-meta">
+                    <span>难度：{{ question.difficulty }}</span>
+                    <span>标签：{{ question.tags }}</span>
+                </div>
+            </div>
+
+            <!-- 新增的异步结果显示区域 -->
+            <div class="backend-results" id="backend-results">
+                <div class="result-section" id="run-result-container">
+                    <h3>代码运行结果</h3>
+                    <div class="result-content" id="run-result"></div>
+                </div>
+                <div class="result-section" id="ai-review-container">
+                    <h3>AI批改结果</h3>
+                    <div class="result-content" id="ai-review-result">还没有内容哦！</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧答题区域 -->
+        <div class="right-panel">
+            <div class="container">
+                <!-- 实时答题系统 -->
+                <section class="coding-section">
+                    <div class="toolbar">
+                        <!-- 语言选项增加C++支持 -->
+                        <select id="language-select" class="language-select">
+                            <option value="python">Python</option>
+                            <option value="javascript">JavaScript</option>
+                            <option value="java">Java</option>
+                            <option value="c++">C++</option>
+                        </select>
+                        <button id="save-status" class="save-btn">已保存</button>
+                    </div>
+
+                    <div class="editor-container">
+                        <div id="editor" class="code-editor"></div>
+                        <div class="result-panel" style="display: none;">
+                            <div class="metrics" id="metrics"></div>
+                            <div class="ai-feedback" id="ai-feedback"></div>
+                        </div>
+                    </div>
+
+                    <button class="submit-btn" id="submit-btn">提交评估</button>
+                </section>
+
+                <!-- 错题诊断引擎 -->
+                <section class="diagnosis-section">
+                    <div class="weakness-analysis">
+                        <h3>知识薄弱点分析</h3>
+                        <div id="weakness-list"></div>
+                        <button id="export-pdf">导出诊断报告</button>
+                    </div>
+
+                    <div class="recommendations">
+                        <h3>推荐练习题目</h3>
+                        <div id="recommended-questions"></div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <!-- 引入 highlight.js 库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+    <!-- 自动检测代码语言 -->
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

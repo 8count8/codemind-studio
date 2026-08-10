@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>登录 - CMS</title>
+  <!-- 引用 home.css 以保持风格一致 -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+  <script src="{{ url_for('static', filename='js/home.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/login.js') }}" defer></script>
+</head>
+
+  <body>
+
+  <!-- 导航栏 -->
+    <nav class="navbar">
+        <a class="logo">
+            <img src="/static/img/logo.jpg" alt="Logo" id="logo-img">
+            <span>CodeMind Studio</span>
+        </a>
+
+        <div class="nav-buttons">
+            <button class="btn btn-theme" id="theme-toggle">
+                <span id="theme-icon">🌞</span>
+                <span id="theme-text">亮色</span>
+            </button>
+			</div>
+    </nav>
+
+  <div id="login-form-popup" class="popup show">
+    <form id="login-form" action="/login" method="post" class="auth-form">
+      <h2>登录</h2>
+      <label for="username">用户名：</label>
+      <input type="text" id="username" name="username" required autocomplete="username">
+      <label for="password">密码：</label>
+      <input type="password" id="password" name="password" required autocomplete="current-password">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">  <!-- 添加CSRF令牌以防止跨站请求伪造 -->
+      <input type="submit" value="登录">
+      <button type="button" onclick="window.location.href='/'">关闭</button>
+      <p>还没有账号？<a href="/register">立即注册</a></p>
+      <p><a href="/reset" id="forgot-password-link">忘记密码？</a></p>
+    </form>
+  </div>
+</body>
+</html>

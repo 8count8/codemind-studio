@@ -1,0 +1,73 @@
+"""
+Model 层封装了对数据库的操作，调用 favorites_topics 中的函数。
+提供更清晰的接口供 Service 层使用。
+"""
+
+from app.models.favorites_topics import (
+    create_mysql_connection,
+    add_favorite as original_add_favorite,
+    get_favorites_with_question as original_get_favorites_with_question,
+    get_favorites_without_question as original_get_favorites_without_question,
+    search_favorites_by_title as original_search_favorites_by_title,
+    delete_favorite as original_delete_favorite,  # 新增导入
+)
+
+
+class FavoriteModel:
+    @staticmethod
+    def add_favorite(user_id, title, question, difficulty, tags):
+        """
+        添加收藏到数据库。
+        :param user_id: 用户 ID
+        :param title: 收藏标题
+        :param question: 题目内容（Markdown 格式）
+        :param difficulty: 难度等级
+        :param tags: 标签列表（JSON 格式）
+        :return: 操作结果（成功或错误信息）
+        """
+        # 合法的难度值
+        valid_difficulties = ["简单", "中等", "困难"]
+
+        # 验证 difficulty 是否合法
+        if difficulty not in valid_difficulties:
+            return {"error": f"Invalid difficulty. Valid values are: {valid_difficulties}"}, 400
+
+        return original_add_favorite(user_id, title, question, difficulty, tags)
+
+    @staticmethod
+    def get_favorites_with_question(user_id):
+        """
+        获取按时间排序的收藏列表（包含题目具体内容）。
+        :param user_id: 用户 ID
+        :return: 收藏列表（成功或错误信息）
+        """
+        return original_get_favorites_with_question(user_id)
+
+    @staticmethod
+    def get_favorites_without_question(user_id):
+        """
+        获取按时间排序的收藏列表（不包含题目具体内容）。
+        :param user_id: 用户 ID
+        :return: 收藏列表（成功或错误信息）
+        """
+        return original_get_favorites_without_question(user_id)
+
+    @staticmethod
+    def search_favorites_by_title(user_id, title=None):
+        """
+        根据标题进行高级搜索（支持模糊匹配）。
+        :param user_id: 用户 ID
+        :param title: 搜索标题
+        :return: 搜索结果（成功或错误信息）
+        """
+        return original_search_favorites_by_title(user_id, title)
+
+    @staticmethod
+    def delete_favorite(user_id, title):
+        """
+        删除指定用户的收藏题目。
+        :param user_id: 用户 ID
+        :param title: 收藏标题
+        :return: 操作结果（成功或错误信息）
+        """
+        return original_delete_favorite(user_id, title)

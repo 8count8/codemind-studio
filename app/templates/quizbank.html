@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>CMS_quizbank</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+  <!-- 引用 home.css 以保持风格一致 -->
+    <link rel="stylesheet" href="/static/css/home.css">
+    <link rel="stylesheet" href="/static/css/quizbank.css">
+    <script src="/static/js/quizbank.js"></script>
+    <script src="/static/js/home.js"></script>
+</head>
+<body>
+<!-- 导航栏 -->
+    <nav class="navbar">
+        <a class="logo">
+            <img src="/static/img/logo.jpg" alt="Logo" id="logo-img">
+            <span>CodeMind Studio</span>
+        </a>
+        <div class="nav-buttons">
+            <button class="btn btn-theme" id="theme-toggle">
+                <span id="theme-icon">🌞</span>
+                <span id="theme-text">亮色</span>
+            </button>
+        </div>
+    </nav>
+
+<div class="container">
+        <!-- 筛选面板 -->
+        <aside class="filter-panel">
+            <div class="filter-section">
+                <h3>难度等级</h3>
+                <div class="difficulty-filter" id="difficulty-filter"></div>
+            </div>
+
+            <div class="filter-section">
+                <h3>知识点标签</h3>
+                <div class="tag-filter" id="tag-filter"></div>
+            </div>
+        </aside>
+
+        <!-- 主要内容区 -->
+        <main class="main-content">
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="输入关键词搜索题目...">
+                <button id="search-btn">搜索</button>
+            </div>
+
+            <div class="question-list" id="question-list"></div>
+        </main>
+    </div>
+
+
+</body>
+</html>

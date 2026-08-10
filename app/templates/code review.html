@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>代码审查-CMS</title>
+  <!-- 引用 home.css 以保持风格一致 -->
+    <link rel="stylesheet" href="/static/css/home.css">
+    <link rel="stylesheet" href="/static/css/code_review.css">
+    <!-- 引入 marked.js 用于解析 Markdown -->
+    <script src="/static/js/Marked/marked.min.js"></script>
+    <link rel="stylesheet" href="/static/css/bootstrap/bootstrap.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <a class="logo">
+            <img src="/static/img/logo.jpg" alt="Logo" id="logo-img">
+            <span>CodeMind Studio</span>
+        </a>
+        <div class="nav-buttons">
+            <button class="btn btn-theme" id="theme-toggle">
+                <span id="theme-icon">🌞</span>
+                <span id="theme-text">亮色</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- 主内容区域 -->
+    <div class="code-review-container container-fluid">
+        <div class="row p-1">
+            <!-- 用户代码展示区（始终左侧） -->
+            <div class="Submit-code-display col-md-6 col-12 p-3" id="Submit-code-display" style="display:none;">
+                <div class="Card-content">
+                    <h4>提交的代码</h4>
+                    <div id="Submit-code-container">
+                        <pre id="Submit-code-display-text"></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 审查结果区（始终右侧） -->
+            <div class="Result-display col-md-6 col-12 p-3" id="Result-display" style="display:none;">
+                <div class="Card-content">
+                    <h4>审查结果</h4>
+                    <div id="result-container"></div>
+                </div>
+            </div>
+
+
+            <div class="Submit-code col-md-6 col-12 p-3 el-col-md-offset-3" id="Submit-code-form">
+                <div class="Card-content row">
+                    <h2>代码审查说明</h2>
+                    <p>请选择要审查的代码文件，并根据需要选择功能说明文档。</p>
+
+                    <form id="main-form" action="/process_code" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">                    <!-- 功能选择导航栏 -->
+                        <ul class="nav nav-tabs" id="functionTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link active" id="code-commenting-tab" data-bs-toggle="tab" href="#code-commenting" role="tab" aria-controls="code-commenting" aria-selected="true">代码注释和功能校对</a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" id="code-documentation-tab" data-bs-toggle="tab" href="#code-documentation" role="tab" aria-controls="code-documentation" aria-selected="false">代码文档和功能校对</a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" id="missing-comment-tab" data-bs-toggle="tab" href="#missing-comment" role="tab" aria-controls="missing-comment" aria-selected="false">缺失注释和文档预警</a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" id="code-conformance-tab" data-bs-toggle="tab" href="#code-conformance" role="tab" aria-controls="code-conformance" aria-selected="false">代码规范性预警</a>
+                            </li>
+                        </ul>
+
+                        <!-- 功能内容区域 -->
+                        <div class="tab-content" id="functionTabsContent">
+                            <!-- 代码注释校对Tab -->
+                            <div class="tab-pane fade show active" id="code-commenting" role="tabpanel" aria-labelledby="code-commenting-tab">
+                                <div class="form-group">
+                                    <label for="code-file-comment">选择代码文件：</label>
+                                    <input type="file" class="form-control-file input-mutex" id="code-file-comment" name="code-file" accept=".java,.py,.js">
+                                </div>
+                                <div class="form-group">
+                                    <label for="code-paste-comment">或粘贴代码：</label>
+                                    <textarea class="form-control input-mutex" id="code-paste-comment" name="paste_code" rows="10" placeholder="在此粘贴需要检查注释的代码..."></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary mt-3">开始审查</button>
+                            </div>
+
+                            <!-- 代码文档校对Tab -->
+                            <div class="tab-pane fade" id="code-documentation" role="tabpanel" aria-labelledby="code-documentation-tab">
+                                <div class="form-group">
+                                    <label for="code-file-doc">选择代码文件：</label>
+                                    <input type="file" class="form-control-file input-mutex" id="code-file-doc" name="code-file" accept=".java,.py,.js">
+                                </div>
+                                <div class="form-group">
+                                    <label for="doc-file-doc">选择文档文件：</label>
+                                    <input type="file" class="form-control-file" id="doc-file-doc" name="doc-file" accept=".md,.pdf">
+                                </div>
+                                <button type="submit" class="btn btn-primary mt-3">文档校验</button>
+                            </div>
+
+                            <!-- 缺失注释预警Tab -->
+                            <div class="tab-pane fade" id="missing-comment" role="tabpanel" aria-labelledby="missing-comment-tab">
+                                <div class="form-group">
+                                    <label for="code-file-missing">选择代码文件：</label>
+                                    <input type="file" class="form-control-file" id="code-file-missing" name="code-file" accept=".java,.py,.js">
+                                </div>
+                                <div class="form-group">
+                                    <label>检测范围：</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="check-class" checked>
+                                        <label class="form-check-label" for="check-class">类注释</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="check-method" checked>
+                                        <label class="form-check-label" for="check-method">方法注释</label>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary mt-3">扫描缺失</button>
+                            </div>
+
+                            <!-- 代码规范预警Tab -->
+                            <div class="tab-pane fade" id="code-conformance" role="tabpanel" aria-labelledby="code-conformance-tab">
+                                <div class="form-group">
+                                    <label for="code-file-standard">选择代码文件：</label>
+                                    <input type="file" class="form-control-file" id="code-file-standard" name="code-file" accept=".java,.py,.js">
+                                </div>
+                                <div class="form-group">
+                                    <label>规范标准：</label>
+                                    <select class="form-select" id="code-standard">
+                                        <option value="google">Google代码规范</option>
+                                        <option value="alibaba">阿里巴巴开发规范</option>
+                                        <option value="iso">ISO/IEC标准</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary mt-3">规范检查</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="/static/js/home.js" defer></script>
+<script src="/static/js/code review.js"></script>
+<script src="/static/js/bootstrap/bootstrap.bundle.js" ></script>
+<script src="/static/js/bootstrap/bootstrap.js" ></script>
+</html>
