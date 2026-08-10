@@ -1,52 +1,24 @@
-import os
-import mysql.connector
-from mysql.connector import Error
-from dotenv import load_dotenv
-# 加载环境变量
-load_dotenv()
-# MySQL 数据库配置
-MYSQL_HOST = os.getenv("MYSQL_HOST")
-MYSQL_PORT = os.getenv("MYSQL_PORT")
-MYSQL_USER = os.getenv("MYSQL_USER")
-MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD")
-MYSQL_DATABASE = os.getenv("MYSQL_DATABASE")
+"""用户代码保存 - SQLite 版本"""
+
+from app.models.sqlite_db import get_db_connection
 
 
-# 创建 MySQL 数据库连接
 def create_mysql_connection():
-    """
-    创建到 MySQL 数据库的连接。
-    :return: 数据库连接对象
-    """
-    try:
-        connection = mysql.connector.connect(
-            host=MYSQL_HOST,
-            port=MYSQL_PORT,
-            user=MYSQL_USER,
-            password=MYSQL_PASSWORD,
-            database=MYSQL_DATABASE
-        )
-        return connection
-    except Error as e:
-        print(f"Error while connecting to MySQL: {e}")
-        return None
+    """创建数据库连接（兼容旧接口）"""
+    return get_db_connection()
 
-# 插入用户代码到数据库
+
 def save_code_to_db(title, language, code_content):
-    connection = create_mysql_connection()
-    if connection is None:
-        return {"error": "Database connection failed"}, 500
-
+    """保存用户代码到数据库"""
     try:
+        connection = get_db_connection()
         cursor = connection.cursor()
-        insert_query = """
-        INSERT INTO user_code (title, language, code_content)
-        VALUES (%s, %s, %s)
-        """
-        cursor.execute(insert_query, (title, language, code_content))
+        cursor.execute("""
+        INSERT INTO answer_records (question_id, question_title, user_answer, is_correct, created_at)
+        VALUES (?, ?, ?, 0, datetime('now', 'localtime'))
+        """, (title, title, code_content))
         connection.commit()
-        cursor.close()
         connection.close()
         return {"message": "Code saved successfully"}, 200
-    except Error as e:
+    except Exception as e:
         return {"error": f"Database error: {str(e)}"}, 500

@@ -1,12 +1,9 @@
 flask
 flask-restx
 flask_wtf
-dotenv
 python-dotenv
 bcrypt
 requests
-mysql
-mysql-connector-python==8.1.0
 redis
 flasgger
 flask-cors

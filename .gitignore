@@ -18,6 +18,11 @@ frontend/dist/
 .env.local
 .env.*.local
 
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
 # IDE
 .idea/
 .vscode/
@@ -31,6 +36,8 @@ logs/
 # OS
 .DS_Store
 Thumbs.db
+ehthumbs.db
+Desktop.ini
 
 # Project specific
 .qoder/
