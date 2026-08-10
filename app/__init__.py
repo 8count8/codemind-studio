@@ -34,7 +34,7 @@ def init_logging(app):
 
 def create_app(config=None):
     """ 创建Flask应用实例 """
-    app = Flask(__name__, template_folder="templates", static_folder='static')
+    app = Flask(__name__)
 
     # 加载配置
     if config is not None:

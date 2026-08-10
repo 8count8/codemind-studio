@@ -60,12 +60,6 @@
   to = "/.netlify/functions/app"
   status = 200
 
-# Flask 静态资源
-[[redirects]]
-  from = "/static/*"
-  to = "/.netlify/functions/app"
-  status = 200
-
 # 健康检查
 [[redirects]]
   from = "/health"

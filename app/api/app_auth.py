@@ -4,7 +4,7 @@
 from app.api.flasgger_compat import swag_from
 
 from . import auth_bp
-from flask import redirect, url_for, request, session, current_app, render_template, jsonify
+from flask import redirect, url_for, request, session, current_app, jsonify
 
 from app.service import UserLoginService
 
@@ -32,8 +32,8 @@ def login():
                 current_app.logger.warning(f'用户登录失败: {username}, 原因: {result["message"]}')
                 return {"status": 400, "message": result["message"]}
 
-        # GET 请求，返回登录页面
-        return render_template('login.html')
+        # GET 请求（页面由 Vue Router 渲染）
+        return jsonify({"status": 200, "message": "请使用 Vue 前端访问"})
     except Exception as e:
         current_app.logger.error(f"登录错误: {str(e)}")
         return f"服务器错误: {str(e)}", 500
@@ -74,8 +74,8 @@ def register():
                 current_app.logger.warning(f'用户注册失败: {username}, 原因: {result["message"]}')
                 return {"status": 400, "message": result["message"]}
 
-        # GET 请求，返回注册页面
-        return render_template('register.html')
+        # GET 请求（页面由 Vue Router 渲染）
+        return jsonify({"status": 200, "message": "请使用 Vue 前端访问"})
     except Exception as e:
         current_app.logger.error(f"注册错误: {str(e)}")
         return f"服务器错误: {str(e)}", 500
@@ -148,10 +148,10 @@ def reset():
                 return redirect(url_for('auth.login'))  # 重置成功，跳转到登录页
             else:
                 current_app.logger.warning(f'密码重置失败: {email}, 原因: {result["message"]}')
-                return render_template('reset.html', error=result["message"])  # 重置失败，返回重置页并显示错误信息
+                return {"status": 400, "message": result["message"]}
 
-        # GET 请求，返回重置密码页面
-        return render_template('reset.html')
+        # GET 请求（页面由 Vue Router 渲染）
+        return jsonify({"status": 200, "message": "请使用 Vue 前端访问"})
     except Exception as e:
         current_app.logger.error(f"重置密码错误: {str(e)}")
         return f"服务器错误: {str(e)}", 500

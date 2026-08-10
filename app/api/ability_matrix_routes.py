@@ -10,7 +10,7 @@
 6. 获取学习推荐 API
 """
 
-from flask import Blueprint, request, jsonify, render_template, session, current_app
+from flask import Blueprint, request, jsonify, session, current_app
 from app.api.flasgger_compat import swag_from
 
 from . import ability_matrix_bp
@@ -20,20 +20,20 @@ from app.service.ability_matrix_service import AbilityMatrixService
 @ability_matrix_bp.route('/ability-matrix', methods=['GET'])
 @swag_from({
     'tags': ['能力矩阵'],
-    'description': '能力矩阵页面',
+    'description': '能力矩阵页面（页面由 Vue Router 渲染）',
     'responses': {
         200: {'description': '成功加载能力矩阵页面'},
         401: {'description': '用户未登录'}
     }
 })
 def ability_matrix_page():
-    """加载能力矩阵页面"""
+    """能力矩阵页面（页面由 Vue Router 渲染）"""
     user_id = session.get('user_id')
     if not user_id:
         return jsonify({"status": 401, "message": "请先登录"}), 401
 
     current_app.logger.info(f'用户 {user_id} 访问能力矩阵页面')
-    return render_template('ability_matrix.html', user_id=user_id)
+    return jsonify({"status": 200})
 
 
 @ability_matrix_bp.route('/api/ability-matrix', methods=['GET'])

@@ -1,5 +1,5 @@
 from . import profile_bp
-from flask import render_template, session, url_for, redirect, current_app
+from flask import session, url_for, redirect, current_app, jsonify
 
 from ..models.user_login import get_user_profile
 
@@ -7,25 +7,21 @@ from ..models.user_login import get_user_profile
 @profile_bp.route('/profile', methods=['GET', 'POST'])
 def profile():
     """
-    个人资料页面
+    个人资料页面（页面由 Vue Router 渲染）
     """
-    # 检查用户是否已登录
     user_id = session.get('user_id')
     if not user_id:
-        return redirect(url_for('auth.login'))
+        return jsonify({"status": 401, "message": "请先登录"}), 401
 
-    # 记录访问日志
     current_app.logger.info(f'用户访问个人资料页面: {user_id}')
-
-    # 数据库查询获取用户信息
     user_info = get_user_profile(username=user_id)
 
-
-    user = {
-        'username': user_info['username'],
-        'email': user_info['email'],
-        "user_avatar": "/static/img/user_icon.png"
-    }
-
-    return render_template('profile.html', user=user)
+    return jsonify({
+        "status": 200,
+        "user": {
+            "username": user_info['username'],
+            "email": user_info['email'],
+            "user_avatar": "/static/img/user_icon.png"
+        }
+    })
 

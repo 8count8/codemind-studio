@@ -1,20 +1,13 @@
-from flask import Blueprint, request, jsonify, render_template, current_app
+from flask import Blueprint, request, jsonify, current_app
 from app.api.flasgger_compat import swag_from
 from app.service.algorithm_service import generate_and_save_algorithm_problem
 from . import ai_question_bp
 
 
 @ai_question_bp.route('/ai-question', methods=['GET'])
-@swag_from({
-    'tags': ['AI出题'],
-    'description': 'AI出题页面',
-    'responses': {
-        200: {'description': '成功加载AI出题页面'}
-    }
-})
 def ai_question():
-    """加载AI出题页面"""
-    return render_template('ai_question.html')
+    """AI出题页面（页面由 Vue Router 渲染）"""
+    return jsonify({"status": 200})
 
 
 @ai_question_bp.route('/api/generate-question', methods=['POST'])
