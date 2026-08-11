@@ -6,6 +6,6 @@ from .processing_operations import (
 )
 from .UserLoginService import UserLoginService
 from .algorithm_service import generate_and_save_algorithm_problem  #AI算法题目生成并保存到数据库
-from .QusetionSevice import QuestionService
+from .QuestionService import QuestionService
 from .FavoriteService import FavoriteService
 from .ability_matrix_service import AbilityMatrixService  # 能力矩阵服务

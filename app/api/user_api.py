@@ -1,13 +1,21 @@
 import uuid
 from threading import Thread
 import re
+import json
 
 from app.api import user_api_bp
 
-from flask import jsonify, request, session, current_app
+from flask import jsonify, request, current_app
+from app.utils.auth import require_auth, get_current_user_id
 from app.service import QuestionService
 from app.service import FavoriteService
 from app.service.ai import CodeCheckerService, check_code, CodeReviewService, get_algorithm_review_result
+from app.models.user_operation_records import (
+    log_function_usage,
+    upload_file_to_db,
+    log_api_response,
+    get_user_history_combined,
+)
 
 
 @user_api_bp.route('/api/questions', methods=['GET'])
@@ -58,7 +66,7 @@ def process_code():
         return jsonify({
             "status": 400,
             "message": "缺少代码文件或粘贴的代码"
-        })
+        }), 400
     if standard:
         submit_code = f"使用标准：{standard}\ncode:{submit_code}"
     # 根据不同类型处理附加字段
@@ -67,6 +75,25 @@ def process_code():
     if review_type in CodeCheckerService.function_mapping:
         print(submit_code)
         result = check_code(CodeCheckerService.function_mapping[review_type], submit_code, doc_file)
+
+    # 写入用户操作历史到数据库
+    user_id = get_current_user_id()
+    if user_id:
+        try:
+            log_function_usage(user_id, f"code_review_{review_type}")
+            upload_id = upload_file_to_db(
+                user_id,
+                f"code_review_{review_type}_{uuid.uuid4().hex[:8]}.py",
+                "python"
+            )
+            if upload_id:
+                log_api_response(
+                    upload_id,
+                    f"review_result_{review_type}.md",
+                    json.dumps(result, ensure_ascii=False)
+                )
+        except Exception as e:
+            current_app.logger.error(f"写入历史记录失败: {e}")
 
     return jsonify({
         "status": 200,
@@ -232,6 +259,25 @@ def process_algorithm_code():
             task_id=task_id
         )
 
+        # 写入用户操作历史到数据库
+        user_id = get_current_user_id()
+        if user_id:
+            try:
+                log_function_usage(user_id, "algorithm_submit")
+                upload_id = upload_file_to_db(
+                    user_id,
+                    f"algorithm_{question_id}_{uuid.uuid4().hex[:8]}.{language}",
+                    language
+                )
+                if upload_id:
+                    log_api_response(
+                        upload_id,
+                        f"algorithm_result_{task_id}.md",
+                        json.dumps(run_result, ensure_ascii=False)
+                    )
+            except Exception as e:
+                current_app.logger.error(f"写入算法提交历史失败: {e}")
+
         return jsonify({
             "status": 200,
             "message": "运行结果已返回，AI 批改正在处理中",
@@ -262,11 +308,10 @@ def get_ai_review_status(task_id):
 
 
 @user_api_bp.route('/api/user/favorites', methods=['GET'])
+@require_auth
 def get_user_favorites():
     try:
-        user_id = session.get('user_id')
-        if not user_id:
-            return jsonify({"status": 401, "message": "未登录"}), 401
+        user_id = get_current_user_id()
         
         result = FavoriteService.get_favorites_without_question(user_id)
         
@@ -289,19 +334,50 @@ def get_user_favorites():
         }), 500
 
 @user_api_bp.route('/api/user/favorites', methods=['POST'])
+@require_auth
 def handle_favorite():
     try:
+        user_id = get_current_user_id()
+
         data = request.get_json()
         question_id = data.get('questionId')
         action = data.get('action')
-        
+        title = data.get('title', question_id)
+        difficulty = data.get('difficulty', '中等')
+        tags = data.get('tags', [])
+        question_content = data.get('content', '')
+
         if action == 'add':
-            result = FavoriteService.add_favorite(current_user.id, question_id)
+            result = FavoriteService.add_favorite(user_id, title, question_content, difficulty, tags)
         elif action == 'remove':
-            result = FavoriteService.delete_favorite(current_user.id, question_id)
+            try:
+                favorite_id = int(question_id)
+            except (TypeError, ValueError):
+                favorite_id = question_id
+            result = FavoriteService.delete_favorite(favorite_id, user_id)
         else:
             return jsonify({"status": 400, "message": "无效操作"}), 400
             
         return jsonify(result)
     except Exception as e:
         return jsonify({"status": 500, "message": str(e)}), 500
+
+
+@user_api_bp.route('/api/user/history', methods=['GET'])
+@require_auth
+def get_user_history():
+    """获取当前登录用户的历史记录（功能使用 + 上传文件 + API响应）"""
+    try:
+        user_id = get_current_user_id()
+
+        records = get_user_history_combined(user_id)
+        if records is None:
+            records = []
+
+        return jsonify({
+            "status": 200,
+            "data": records
+        })
+    except Exception as e:
+        current_app.logger.error(f"获取用户历史记录错误: {str(e)}")
+        return jsonify({"status": 500, "message": "服务器错误"}), 500

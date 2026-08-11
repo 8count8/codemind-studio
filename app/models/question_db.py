@@ -1,36 +1,16 @@
-"""题库管理 - 支持 SQLite 和 PostgreSQL"""
+"""题库管理 - Supabase PostgreSQL"""
 
 import json
 import logging
 
-from app.models.db import get_db_connection, fetch_dict, fetch_one_dict, USE_POSTGRESQL
+from app.models.db import get_db_connection, fetch_dict, fetch_one_dict, dict_to_markdown, VALID_DIFFICULTIES
 
 logging.basicConfig(level=logging.INFO)
 
 
-def create_mysql_connection():
-    """兼容旧接口"""
-    return get_db_connection()
-
-
-def dict_to_markdown(content_dict):
-    """将字典格式转换为 Markdown"""
-    if isinstance(content_dict, str):
-        return content_dict
-
-    markdown_content = ""
-    for section, text in content_dict.items():
-        if isinstance(text, list):
-            markdown_content += f"### {section}\n"
-            for example in text:
-                markdown_content += f"- {example}\n"
-        else:
-            markdown_content += f"### {section}\n{text}\n\n"
-    return markdown_content.strip()
-
-
 def get_all_questions():
     """获取所有题目列表"""
+    conn = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -40,14 +20,17 @@ def get_all_questions():
         ORDER BY created_at ASC
         """)
         results = fetch_dict(cursor)
-        conn.close()
         return {"questions": results}, 200
     except Exception as e:
         return {"error": f"Database error: {str(e)}"}, 500
+    finally:
+        if conn:
+            conn.close()
 
 
 def get_question_by_id(question_id):
     """根据 ID 获取题目详情"""
+    conn = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -57,13 +40,15 @@ def get_question_by_id(question_id):
         WHERE id = %s
         """, (question_id,))
         result = fetch_one_dict(cursor)
-        conn.close()
         if result:
             return {"question": result}, 200
         else:
             return {"error": "Question not found"}, 404
     except Exception as e:
         return {"error": f"Database error: {str(e)}"}, 500
+    finally:
+        if conn:
+            conn.close()
 
 
 def search_questions_by_title(title=None):
@@ -71,6 +56,7 @@ def search_questions_by_title(title=None):
     if not title:
         return {"error": "'title' must be provided"}, 400
 
+    conn = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -81,18 +67,20 @@ def search_questions_by_title(title=None):
         ORDER BY created_at ASC
         """, (f"%{title}%",))
         results = fetch_dict(cursor)
-        conn.close()
         return {"questions": results}, 200
     except Exception as e:
         return {"error": f"Database error: {str(e)}"}, 500
+    finally:
+        if conn:
+            conn.close()
 
 
 def update_question(question_id, title=None, difficulty=None, tags=None, content=None):
     """更新题目信息"""
-    valid_difficulties = ["简单", "中等", "困难"]
-    if difficulty and difficulty not in valid_difficulties:
-        return {"error": f"Invalid difficulty. Valid values are: {valid_difficulties}"}, 400
+    if difficulty and difficulty not in VALID_DIFFICULTIES:
+        return {"error": f"Invalid difficulty. Valid values are: {VALID_DIFFICULTIES}"}, 400
 
+    conn = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -113,7 +101,6 @@ def update_question(question_id, title=None, difficulty=None, tags=None, content
             params.append(content)
 
         if not updates:
-            conn.close()
             return {"message": "No changes needed"}, 200
 
         params.append(question_id)
@@ -122,23 +109,24 @@ def update_question(question_id, title=None, difficulty=None, tags=None, content
         conn.commit()
 
         if cursor.rowcount == 0:
-            conn.close()
             return {"error": "Question not found or no changes made"}, 404
 
-        conn.close()
         return {"message": "Question updated successfully"}, 200
     except Exception as e:
         return {"error": f"Database error: {str(e)}"}, 500
+    finally:
+        if conn:
+            conn.close()
 
 
 def insert_question(title, content_dict, difficulty, tags):
     """插入新题目"""
-    valid_difficulties = ["简单", "中等", "困难"]
-    if difficulty not in valid_difficulties:
-        return {"error": f"Invalid difficulty. Valid values are: {valid_difficulties}"}, 400
+    if difficulty not in VALID_DIFFICULTIES:
+        return {"error": f"Invalid difficulty. Valid values are: {VALID_DIFFICULTIES}"}, 400
 
     content = dict_to_markdown(content_dict)
 
+    conn = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -147,7 +135,9 @@ def insert_question(title, content_dict, difficulty, tags):
         VALUES (%s, %s, %s, %s)
         """, (title, content, difficulty, tags))
         conn.commit()
-        conn.close()
         return {"message": "Question inserted successfully"}, 201
     except Exception as e:
         return {"error": f"Database error: {str(e)}"}, 500
+    finally:
+        if conn:
+            conn.close()

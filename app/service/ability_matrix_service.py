@@ -14,6 +14,7 @@ import logging
 import random
 from datetime import datetime
 from app.models import ability_matrix_model
+from app.utils.ability_matrix_calculator import get_recommended_tasks
 
 
 class AbilityMatrixService:
@@ -306,37 +307,4 @@ class AbilityMatrixService:
             return {"error": f"服务器错误: {str(e)}"}, 500
 
 
-def get_recommended_tasks(dimension):
-    """
-    根据薄弱维度返回推荐的练习任务。
-    :param dimension: 能力维度
-    :return: 推荐任务列表
-    """
-    tasks = {
-        'syntax_score': [
-            {"title": "Python 基础语法练习", "type": "quiz", "difficulty": "简单"},
-            {"title": "代码规范改进挑战", "type": "practice", "difficulty": "中等"},
-            {"title": "PEP8 规范应用", "type": "reading", "difficulty": "简单"}
-        ],
-        'algorithm_score': [
-            {"title": "排序算法实现", "type": "practice", "difficulty": "中等"},
-            {"title": "二分查找专题", "type": "quiz", "difficulty": "中等"},
-            {"title": "动态规划入门", "type": "practice", "difficulty": "困难"}
-        ],
-        'project_score': [
-            {"title": "迷你项目：计算器", "type": "project", "difficulty": "简单"},
-            {"title": "模块化代码重构", "type": "practice", "difficulty": "中等"},
-            {"title": "设计模式实践", "type": "project", "difficulty": "困难"}
-        ],
-        'debug_score': [
-            {"title": "Bug 排查练习", "type": "practice", "difficulty": "中等"},
-            {"title": "异常处理综合应用", "type": "quiz", "difficulty": "中等"},
-            {"title": "调试工具使用指南", "type": "reading", "difficulty": "简单"}
-        ],
-        'security_score': [
-            {"title": "SQL注入防御实战", "type": "practice", "difficulty": "中等"},
-            {"title": "XSS攻击与防御", "type": "quiz", "difficulty": "中等"},
-            {"title": "Web安全基础", "type": "reading", "difficulty": "简单"}
-        ]
-    }
-    return tasks.get(dimension, [])
+# get_recommended_tasks 已迁移至 app.utils.ability_matrix_calculator

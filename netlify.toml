@@ -1,73 +1,90 @@
 [build]
   command = "cd frontend && npm install && npm run build"
   publish = "frontend/dist"
-  functions = "netlify/functions"
 
-# ====== API 路由规则 ======
-# 后端 Flask 已集成到 Netlify Functions
-# 所有 /api/* 和其他后端路径直接由 Functions 处理
+# ====== Python 运行时 ======
+[build.environment]
+  PYTHON_VERSION = "3.10.0"
 
-# /api/* 路由（所有 REST API）
+# ====== API 路由重定向到 Netlify Function (app.py) ======
+# 使用 200 rewrite 状态码，event.path 会保留原始请求路径
+# 这些规则必须在 SPA fallback 之前
+
+# Flask API 端点
 [[redirects]]
   from = "/api/*"
-  to = "/.netlify/functions/app"
+  to = "/api/app"
   status = 200
 
-# 认证相关路径
+# 认证端点（非 /api 前缀）
 [[redirects]]
   from = "/login"
-  to = "/.netlify/functions/app"
+  to = "/api/app"
   status = 200
 
 [[redirects]]
   from = "/logout"
-  to = "/.netlify/functions/app"
+  to = "/api/app"
   status = 200
 
 [[redirects]]
   from = "/register"
-  to = "/.netlify/functions/app"
+  to = "/api/app"
   status = 200
 
 [[redirects]]
   from = "/reset"
-  to = "/.netlify/functions/app"
+  to = "/api/app"
   status = 200
 
 [[redirects]]
   from = "/reset_password"
-  to = "/.netlify/functions/app"
+  to = "/api/app"
   status = 200
 
 [[redirects]]
   from = "/get_verification_code"
-  to = "/.netlify/functions/app"
+  to = "/api/app"
   status = 200
 
 [[redirects]]
   from = "/get_forgot_password_code"
-  to = "/.netlify/functions/app"
+  to = "/api/app"
   status = 200
 
 [[redirects]]
-  from = "/auth"
-  to = "/.netlify/functions/app"
+  from = "/auth/*"
+  to = "/api/app"
   status = 200
 
-# 代码审查提交接口
 [[redirects]]
   from = "/process_code"
-  to = "/.netlify/functions/app"
+  to = "/api/app"
   status = 200
 
-# 健康检查
 [[redirects]]
   from = "/health"
-  to = "/.netlify/functions/app"
+  to = "/api/app"
+  status = 200
+
+# Flask 静态资源
+[[redirects]]
+  from = "/static/*"
+  to = "/api/app"
+  status = 200
+
+# Swagger / API 文档
+[[redirects]]
+  from = "/apidocs/*"
+  to = "/api/app"
+  status = 200
+
+[[redirects]]
+  from = "/flasgger_static/*"
+  to = "/api/app"
   status = 200
 
 # ====== SPA 路由回退（Vue Router history 模式）======
-# 所有未匹配的路径重定向到 index.html
 [[redirects]]
   from = "/*"
   to = "/index.html"
@@ -87,8 +104,6 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
-# ====== Cookie 域配置 ======
-[[headers]]
-  for = "/api/*"
-  [headers.values]
-    Access-Control-Allow-Credentials = "true"
+# ====== Function 超时（秒） ======
+[functions]
+  node_bundler = "esbuild"

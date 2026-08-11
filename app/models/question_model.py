@@ -9,26 +9,10 @@ from .question_db import (
     search_questions_by_title as original_search_questions_by_title,
     update_question as original_update_question,
 )
+from app.models.db import dict_to_markdown, VALID_DIFFICULTIES
 
 
 class QuestionModel:
-    @staticmethod
-    def dict_to_markdown(content_dict):
-        """
-        将字典格式的内容转换为 Markdown 格式的字符串。
-        :param content_dict: 题目内容（字典格式）
-        :return: Markdown 格式的字符串
-        """
-        markdown_content = ""
-        for section, text in content_dict.items():
-            if isinstance(text, list):  # 处理示例部分
-                markdown_content += f"### {section}\n"
-                for example in text:
-                    markdown_content += f"- {example}\n"
-            else:
-                markdown_content += f"### {section}\n{text}\n\n"
-        return markdown_content.strip()
-
     @staticmethod
     def get_all_questions():
         """
@@ -44,7 +28,7 @@ class QuestionModel:
         # 转换 content 字段为 Markdown 格式
         for question in result.get("questions", []):
             if "content" in question and isinstance(question["content"], dict):
-                question["content"] = QuestionModel.dict_to_markdown(question["content"])
+                question["content"] = dict_to_markdown(question["content"])
 
         return result
 
@@ -56,12 +40,14 @@ class QuestionModel:
         :return: 题目详情（成功或错误信息）
         """
         result = original_get_question_by_id(question_id)
+        if isinstance(result, tuple):
+            result = result[0]
         if "error" in result:
             return result
 
         # 转换 content 字段为 Markdown 格式
         if "content" in result and isinstance(result["content"], dict):
-            result["content"] = QuestionModel.dict_to_markdown(result["content"])
+            result["content"] = dict_to_markdown(result["content"])
 
         return result
 
@@ -73,13 +59,15 @@ class QuestionModel:
         :return: 搜索结果（成功或错误信息）
         """
         result = original_search_questions_by_title(title)
+        if isinstance(result, tuple):
+            result = result[0]
         if "error" in result:
             return result
 
         # 转换 content 字段为 Markdown 格式
         for question in result.get("questions", []):
             if "content" in question and isinstance(question["content"], dict):
-                question["content"] = QuestionModel.dict_to_markdown(question["content"])
+                question["content"] = dict_to_markdown(question["content"])
 
         return result
 
@@ -94,12 +82,9 @@ class QuestionModel:
         :param content: 新的题目内容（Markdown 格式，可选）
         :return: 操作结果（成功或错误信息）
         """
-        # 合法的难度值
-        valid_difficulties = ["简单", "中等", "困难"]
-
         # 如果提供了 difficulty 参数，则验证其合法性
-        if difficulty and difficulty not in valid_difficulties:
-            return {"error": f"Invalid difficulty. Valid values are: {valid_difficulties}"}, 400
+        if difficulty and difficulty not in VALID_DIFFICULTIES:
+            return {"error": f"Invalid difficulty. Valid values are: {VALID_DIFFICULTIES}"}, 400
 
         # 调用底层函数更新题目信息AlgorithmProblemGenerator
         return original_update_question(question_id, title, difficulty, tags, content)

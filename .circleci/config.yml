@@ -1,0 +1,164 @@
+version: 2.1
+
+executors:
+  python-exec:
+    docker:
+      - image: cimg/python:3.11
+    environment:
+      PYTHON_ENV: venv
+      CIRCLE_TEST_REPORTS: test-reports
+      DATABASE_URL: ${DATABASE_URL}
+      EMAIL_TYPE: ${EMAIL_TYPE}
+      EMAIL_ADDRESS: ${EMAIL_ADDRESS}
+      EMAIL_PASSWORD: ${EMAIL_PASSWORD}
+
+commands:
+  setup-env:
+    description: "Set up Python virtual environment and install dependencies"
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v2-deps-{{ checksum "requirements.txt" }}
+            - v2-deps-
+      - run:
+          name: Create virtual env and install deps
+          command: |
+            python3.11 -m venv venv
+            . venv/bin/activate
+            pip install --upgrade pip --quiet
+            pip install -r requirements.txt --quiet
+      - save_cache:
+          paths:
+            - venv/
+          key: v2-deps-{{ checksum "requirements.txt" }}
+
+  validate-config:
+    description: "Validate SQL schema integrity and email configuration"
+    steps:
+      - run:
+          name: Validate SQL + Email config
+          command: |
+            . venv/bin/activate
+            python check_sql_and_email.py 2>&1 | tee test-reports/config-validate.log
+            echo "VALIDATE_EXIT=$?"
+          no_output_timeout: 2m
+
+  run-unit-tests:
+    description: "Run unit tests (no DB required)"
+    parameters:
+      report_dir:
+        type: string
+        default: test-reports
+    steps:
+      - run:
+          name: Run unit tests
+          command: |
+            . venv/bin/activate
+            mkdir -p << parameters.report_dir >>
+            python -m unittest discover \
+              -s software-testing/unit-tests \
+              -p "test_*.py" \
+              -v 2>&1 | tee << parameters.report_dir >>/unit-tests.log
+            echo "UNIT_EXIT=$?"
+
+  run-db-tests:
+    description: "Run DB integration tests (requires DATABASE_URL)"
+    steps:
+      - run:
+          name: Run DB chain tests
+          command: |
+            . venv/bin/activate
+            mkdir -p test-reports
+            if [ -n "$DATABASE_URL" ]; then
+              python software-testing/db-tests/test_db_all.py 2>&1 | tee test-reports/db-tests.log
+              echo "DB_EXIT=$?"
+            else
+              echo "⚠️  DATABASE_URL not set — skipping DB tests"
+              echo "SKIPPED (no DATABASE_URL)" > test-reports/db-tests.log
+            fi
+
+  run-api-tests:
+    description: "Run API integration tests (requires DATABASE_URL)"
+    steps:
+      - run:
+          name: Run API integration tests
+          command: |
+            . venv/bin/activate
+            mkdir -p test-reports
+            if [ -n "$DATABASE_URL" ]; then
+              python software-testing/api-tests/test_api_all.py 2>&1 | tee test-reports/api-tests.log
+              echo "API_EXIT=$?"
+            else
+              echo "⚠️  DATABASE_URL not set — skipping API tests"
+              echo "SKIPPED (no DATABASE_URL)" > test-reports/api-tests.log
+            fi
+
+  store-results:
+    description: "Store test results and artifacts"
+    steps:
+      - store_test_results:
+          path: test-reports
+      - store_artifacts:
+          path: test-reports
+
+jobs:
+  validate-config:
+    executor: python-exec
+    steps:
+      - setup-env
+      - validate-config
+      - store-results
+
+  unit-tests:
+    executor: python-exec
+    requires:
+      - validate-config
+    steps:
+      - setup-env
+      - run-unit-tests
+      - store-results
+
+  db-tests:
+    executor: python-exec
+    requires:
+      - validate-config
+    steps:
+      - setup-env
+      - run-db-tests
+      - store-results
+
+  api-tests:
+    executor: python-exec
+    requires:
+      - validate-config
+    steps:
+      - setup-env
+      - run-api-tests
+      - store-results
+
+  full-test:
+    executor: python-exec
+    requires:
+      - unit-tests
+      - db-tests
+      - api-tests
+    steps:
+      - setup-env
+      - run:
+          name: Generate final test summary
+          command: |
+            . venv/bin/activate
+            python software-testing/run_all_tests.py 2>&1 | tee test-reports/all-tests.log
+          when: always
+      - store-results
+
+workflows:
+  version: 2
+  full-test-suite:
+    jobs:
+      - validate-config
+      - unit-tests
+      - db-tests
+      - api-tests
+      - full-test

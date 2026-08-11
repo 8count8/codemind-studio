@@ -1,0 +1,40 @@
+# Render.com 部署配置 - CodeMind Studio 后端
+# 文档: https://render.com/docs
+# 
+# 重要: DATABASE_URL 需在 Render 控制台手动设置为 Supabase 连接字符串
+# Supabase 数据库保持独立，不使用 Render 内置数据库
+
+services:
+  - name: codemind-studio-backend
+    type: web
+    runtime: python
+    region: singapore
+    plan: free
+    autoDeploy: true
+    buildCommand: pip install -r requirements.txt
+    startCommand: python run_backend.py
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: PORT
+        value: "10000"
+      - key: HOST
+        value: 0.0.0.0
+      - key: FLASK_ENV
+        value: production
+      - key: SECRET_KEY
+        value: codemind_studio_secret_key_2024
+      - key: DATABASE_URL
+        value: postgresql://postgres:0zRH7mlijXinntXg@db.xqwbtufemsickddncnsm.supabase.co:5432/postgres
+      - key: EMAIL_TYPE
+        value: NETEASE_EMAIL_SMTP_SSL
+      - key: EMAIL_ADDRESS
+        value: support@codemind.studio
+      - key: EMAIL_PASSWORD
+        value: codemind2024
+      - key: SMTP_SERVER
+        value: smtp.163.com
+      - key: SMTP_PORT
+        value: "465"
+      - key: CORS_ORIGINS
+        value: https://codemind-studio.netlify.app,http://localhost:5173

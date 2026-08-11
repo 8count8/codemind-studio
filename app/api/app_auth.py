@@ -4,9 +4,10 @@
 from app.api.flasgger_compat import swag_from
 
 from . import auth_bp
-from flask import redirect, url_for, request, session, current_app, jsonify
+from flask import redirect, url_for, request, current_app, jsonify
 
 from app.service import UserLoginService
+from app.utils.auth import set_user_session, clear_session, get_current_user_id
 
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
@@ -25,7 +26,7 @@ def login():
 
             # 根据登录结果进行处理
             if result["status"] == "success":
-                session['user_id'] = username  # 将用户名存入 session
+                set_user_session(username)
                 current_app.logger.info(f'用户登录成功: {username}')
                 return {"status": 200, "message": "用户登录成功", "redirect": url_for('main.dashboard')}
             else:
@@ -44,8 +45,9 @@ def logout():
     """
     退出登录
     """
-    user_id = session.pop('user_id', None)
+    user_id = get_current_user_id()
     if user_id:
+        clear_session()
         current_app.logger.info(f'用户退出: {user_id}')
     return jsonify({"status": 200, "message": "退出成功"})
 
@@ -178,7 +180,7 @@ def get_forgot_password_code():
 
 @auth_bp.route('/status', methods=['GET'])
 def check_login_status():
-    user_id = session.get('user_id')
+    user_id = get_current_user_id()
     if user_id:
         return {"isAuthenticated": True, "user": {"username": user_id, "avatar": "default-avatar.png"}}
     else:
@@ -217,8 +219,7 @@ def auth_status():
     检查用户认证状态。
     """
     try:
-        # 检查用户是否已登录
-        user_id = session.get('user_id')
+        user_id = get_current_user_id()
         if user_id:
             return jsonify({"isAuthenticated": True, "user": {"username": user_id, "avatar": "/static/img/user_icon.png"}}), 200
         else:

@@ -1,15 +1,16 @@
-"""用户操作记录 - 支持 SQLite 和 PostgreSQL"""
+"""用户操作记录 - Supabase PostgreSQL"""
 import os
 from datetime import datetime
 import logging
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
-from app.models.db import get_db_connection, get_current_timestamp, fetch_dict, USE_POSTGRESQL
+from app.models.db import get_db_connection, get_current_timestamp, fetch_dict
 
 
 def log_function_usage(user_id, function_name):
     """记录用户功能使用日志"""
+    connection = None
     try:
         connection = get_db_connection()
         cursor = connection.cursor()
@@ -21,11 +22,13 @@ def log_function_usage(user_id, function_name):
     except Exception as e:
         logging.error(f"记录功能使用失败: {e}")
     finally:
-        connection.close()
+        if connection:
+            connection.close()
 
 
 def upload_file_to_db(user_id, file_path, file_type):
-    """处理上传文件并存储到数据库"""
+    """处理上传文件并存储到数据库，返回 upload_id"""
+    connection = None
     try:
         connection = get_db_connection()
         cursor = connection.cursor()
@@ -36,17 +39,23 @@ def upload_file_to_db(user_id, file_path, file_type):
         INSERT INTO user_uploads 
         (user_id, upload_time, file_name, file_type, file_path)
         VALUES (%s, %s, %s, %s, %s)
+        RETURNING id
         ''', (user_id, timestamp, file_name, file_type, file_path))
+        upload_id = cursor.fetchone()[0]
         connection.commit()
-        logging.info(f"文件 {file_name} 上传成功！")
+        logging.info(f"文件 {file_name} 上传成功！upload_id={upload_id}")
+        return upload_id
     except Exception as e:
         logging.error(f"文件上传失败: {e}")
+        return None
     finally:
-        connection.close()
+        if connection:
+            connection.close()
 
 
 def log_api_response(upload_id, response_file_name, response_file_content):
     """记录后端 API 返回的代码文件"""
+    connection = None
     try:
         connection = get_db_connection()
         cursor = connection.cursor()
@@ -61,18 +70,20 @@ def log_api_response(upload_id, response_file_name, response_file_content):
     except Exception as e:
         logging.error(f"记录 API 响应失败: {e}")
     finally:
-        connection.close()
+        if connection:
+            connection.close()
 
 
 def get_user_history_combined(user_id):
     """查询用户的历史记录（整合版）"""
+    connection = None
     try:
         connection = get_db_connection()
         cursor = connection.cursor()
 
         # 查询 functions_used 表
         cursor.execute('''
-        SELECT 'function' AS record_type, function_name AS name, timestamp 
+        SELECT id, 'function' AS record_type, function_name AS name, timestamp 
         FROM functions_used 
         WHERE user_id = %s
         ''', (user_id,))
@@ -80,7 +91,7 @@ def get_user_history_combined(user_id):
 
         # 查询 user_uploads 表
         cursor.execute('''
-        SELECT 'upload' AS record_type, file_name AS name, upload_time AS timestamp, file_type, file_path 
+        SELECT id, 'upload' AS record_type, file_name AS name, upload_time AS timestamp, file_type, file_path 
         FROM user_uploads 
         WHERE user_id = %s
         ''', (user_id,))
@@ -88,7 +99,7 @@ def get_user_history_combined(user_id):
 
         # 查询 api_responses 表
         cursor.execute('''
-        SELECT 'api_response' AS record_type, response_file_name AS name, timestamp, response_file_content AS content 
+        SELECT id, 'api_response' AS record_type, response_file_name AS name, timestamp, response_file_content AS content 
         FROM api_responses 
         WHERE user_upload_id IN (
             SELECT id FROM user_uploads WHERE user_id = %s
@@ -102,18 +113,20 @@ def get_user_history_combined(user_id):
         # 按时间排序
         all_records.sort(key=lambda x: str(x.get('timestamp', '')), reverse=True)
 
-        logging.info(f"成功获取用户 {user_id} 的历史记录！")
+        logging.info(f"成功获取用户 {user_id} 的历史记录！共 {len(all_records)} 条")
         return all_records
 
     except Exception as e:
         logging.error(f"查询用户历史记录失败: {e}")
         return None
     finally:
-        connection.close()
+        if connection:
+            connection.close()
 
 
 def delete_history_record(user_id, record_type, record_id):
     """删除某条历史记录"""
+    connection = None
     try:
         connection = get_db_connection()
         cursor = connection.cursor()
@@ -154,4 +167,5 @@ def delete_history_record(user_id, record_type, record_id):
         logging.error(f"删除历史记录失败: {e}")
         return False
     finally:
-        connection.close()
+        if connection:
+            connection.close()

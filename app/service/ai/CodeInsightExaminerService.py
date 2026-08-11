@@ -17,8 +17,8 @@ from flask import current_app, Flask
 from app.service.CodeRunService import review_algorithm_code
 from app.models.ai import CodeInsightExaminer
 from app.service.ai.volcengine_api_caller import volcengine_api_caller
-from app.service.QusetionSevice import QuestionService
-from app.utils import *
+from app.service.QuestionService import QuestionService
+from app.utils.response_processor import APIResponseProcessor
 
 
 # 修复 JSON 字符串中的换行符问题（将字符串内的换行符转义为 \n）

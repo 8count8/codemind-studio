@@ -1,5 +1,30 @@
+# Netlify 部署环境变量
+# 这些变量需同时在 Netlify Dashboard (Site Settings → Environment) 中设置
+# 此文件用于本地 netlify dev 调试
+
+# Flask 配置
 FLASK_ENV=production
-DATABASE_URL=postgresql://postgres:0zRH7mlijXinntXg@db.xqwbtufemsickddncnsm.supabase.co:5432/postgres
 SECRET_KEY=codemind_studio_secret_key_2024
+
+# 数据库连接 (Supabase PostgreSQL)
+DATABASE_URL=postgresql://postgres:0zRH7mlijXinntXg@db.xqwbtufemsickddncnsm.supabase.co:5432/postgres
+
+# CORS 配置 (Netlify 同源部署，主要允许本地开发)
 CORS_ORIGINS=https://codemind-studio.netlify.app,http://localhost:5173
+
+# 邮件服务配置 (CMS 官方邮箱 support@codemind.studio)
+EMAIL_TYPE=NETEASE_EMAIL_SMTP_SSL
+EMAIL_ADDRESS=support@codemind.studio
+EMAIL_PASSWORD=codemind2024
+EMAIL_RECEIVERS=
+
+# 兼容旧代码
+SMTP_SERVER=smtp.163.com
+SMTP_PORT=465
+EMAIL_ACCOUNT=support@codemind.studio
+
+# Serverless 标记 (用于日志和数据库初始化适配)
+SERVERLESS=true
+
+# Python 版本
 PYTHON_VERSION=3.10.0

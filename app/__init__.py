@@ -5,31 +5,39 @@ import os
 
 
 def init_logging(app):
-    """ 初始化日志记录 """
-    if not app.debug:
-        # 如果应用不在调试模式下，则配置日志记录
-        if not os.path.exists('logs'):
-            # 如果日志目录不存在，则创建日志目录
-            os.mkdir('logs')
+    """初始化日志记录 (Netlify Serverless 环境使用 stdout)"""
+    # Serverless 环境: 日志直接输出到 stdout/stderr，由平台收集
+    # 本地开发: 使用文件日志
+    is_serverless = os.environ.get('SERVERLESS', '').lower() == 'true'
 
-        # 创建一个RotatingFileHandler，用于将日志写入文件，并设置文件大小和备份数量
-        file_handler = RotatingFileHandler('logs/app.log', maxBytes=10240, backupCount=3)
-
-        # 设置日志格式，包括时间戳、日志级别、日志消息以及代码路径和行号
-        file_handler.setFormatter(logging.Formatter(
+    if is_serverless:
+        # Serverless: 使用 StreamHandler 输出到 stdout
+        stream_handler = logging.StreamHandler()
+        stream_handler.setFormatter(logging.Formatter(
             '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
-
-        # 设置日志处理器的日志级别为INFO
-        file_handler.setLevel(logging.INFO)
-
-        # 将日志处理器添加到应用的日志记录器中
-        app.logger.addHandler(file_handler)
-
-        # 设置应用日志记录器的日志级别为INFO
+        stream_handler.setLevel(logging.INFO)
+        app.logger.addHandler(stream_handler)
         app.logger.setLevel(logging.INFO)
+    elif not app.debug:
+        # 本地非调试: 文件日志
+        try:
+            if not os.path.exists('logs'):
+                os.mkdir('logs')
+            file_handler = RotatingFileHandler('logs/app.log', maxBytes=10240, backupCount=3)
+            file_handler.setFormatter(logging.Formatter(
+                '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
+            file_handler.setLevel(logging.INFO)
+            app.logger.addHandler(file_handler)
+            app.logger.setLevel(logging.INFO)
+        except (OSError, PermissionError):
+            # 无法创建日志目录时回退到 stdout
+            stream_handler = logging.StreamHandler()
+            stream_handler.setFormatter(logging.Formatter(
+                '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
+            app.logger.addHandler(stream_handler)
+            app.logger.setLevel(logging.INFO)
 
-        # 记录应用启动的日志信息
-        app.logger.info('Application startup')
+    app.logger.info('Application startup')
 
 
 def create_app(config=None):
@@ -39,6 +47,17 @@ def create_app(config=None):
     # 加载配置
     if config is not None:
         app.config.from_object(config)
+
+    # ---- 跨域 Session Cookie 配置 ----
+    # 生产环境 (Render/Deta) 使用 HTTPS，需设置 Secure + SameSite=None
+    is_production = os.environ.get('FLASK_ENV') == 'production'
+    app.config.update(
+        SESSION_COOKIE_SECURE=is_production,
+        SESSION_COOKIE_SAMESITE='None',
+        SESSION_COOKIE_HTTPONLY=True,
+        SESSION_COOKIE_NAME='codemind_session',
+        PERMANENT_SESSION_LIFETIME=86400
+    )
 
     # 设置日志
     init_logging(app)
@@ -77,20 +96,22 @@ def create_app(config=None):
     app.register_blueprint(ai_question_bp)
     app.register_blueprint(profile_bp)
     app.register_blueprint(ability_matrix_bp)
-    # 请求拦截器
+
+    # ---- 请求拦截器 ----
     @app.before_request
     def before_request():
         """
-        请求拦截器，用于拦截未登录用户的请求
-        :return: 如果请求不在白名单中且用户未登录，则重定向到登录页面
+        API 请求返回 JSON 401，页面请求返回 HTML 重定向
+        支持前后端分离架构（前端 SPA 在 Netlify，后端在 Render）
         """
         if 'user_id' in session:
             return
-        elif request.blueprint in current_app.config.get('WHITELIST_BLUEPRINTS', []) \
+        if request.blueprint in current_app.config.get('WHITELIST_BLUEPRINTS', []) \
                 or request.endpoint in current_app.config.get('WHITELIST_ROUTES', []):
             return
-        # 记录未授权访问的日志
         app.logger.warning(f'未授权访问: {request.endpoint}')
+        if request.path.startswith('/api/') or request.endpoint and '.api' in request.endpoint:
+            return jsonify(status='error', message='未登录或登录已过期', code=401), 401
         return redirect(url_for('auth.login'))
 
     # 错误处理器（统一处理CSRF错误）

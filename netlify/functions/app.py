@@ -1,33 +1,54 @@
 """
-Netlify Serverless Function for Flask App
-使用自定义 WSGI 适配器将 Flask 应用适配到 Netlify Functions
+Netlify Serverless Function for CodeMind Studio (Flask + Supabase PostgreSQL)
+
+架构: 前端(Vue) + 后端(Flask) 一体化部署到 Netlify
+数据库: Supabase PostgreSQL (通过 DATABASE_URL 环境变量连接)
+
+路由重定向:
+  netlify.toml 将 /api/*, /login, /register 等路径 rewrite 到 /api/app
+  本函数通过 rawPath 获取原始请求路径，正确转发给 Flask 路由
+
+Set-Cookie: 使用 multiValueHeaders 确保多个 Cookie (session + csrf) 正确下发
 """
 import os
 import sys
 import json
+import base64
 from urllib.parse import urlencode
+from io import BytesIO
 
-# 添加项目根目录到路径
+# 添加项目根目录到路径，使 Function 能导入 app.* 模块
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if ROOT_DIR not in sys.path:
     sys.path.insert(0, ROOT_DIR)
 
-# 设置环境变量
 os.environ.setdefault('FLASK_ENV', 'production')
 
 
 def create_wsgi_environ(event):
-    """将 Netlify/AWS Lambda 事件转换为 WSGI environ"""
+    """将 Netlify/AWS Lambda 事件转换为 WSGI environ
+    
+    关键: 使用 rawPath (而非 path) 获取原始请求路径
+    因为 netlify.toml 的 rewrite 会将 /login 等路径内部转发到 /api/app
+    rawPath 保留了用户浏览器请求的原始路径
+    """
     headers = event.get('headers', {}) or {}
-    # 转为小写键
     headers_lower = {k.lower(): v for k, v in headers.items()}
 
     http_method = event.get('httpMethod', 'GET')
-    path = event.get('path', '/')
+    
+    # 获取原始请求路径 (rawPath 优先于 path)
+    path = event.get('rawPath') or event.get('path', '/')
+    
+    # 去除可能的 /api 前缀 (如果 rewrite 添加了)
+    # 当 rawPath 不可用时，event.path 可能是 /api/app，需要从其他信息推断
+    if path.startswith('/api/') and path != '/api/app':
+        # 这是 API 重定向过来的，尝试从 header 或 event 中获取原始路径
+        # Netlify 在 rewrite 时会保留 rawPath
+        path = event.get('rawPath', path)
+    
     query_string = event.get('queryStringParameters', {}) or {}
-    body = event.get('body', '') or ''
-
-    # 如果有多个查询参数
+    
     multi_value_query = event.get('multiValueQueryStringParameters') or None
     if multi_value_query:
         query_string_str = urlencode(
@@ -36,35 +57,37 @@ def create_wsgi_environ(event):
     else:
         query_string_str = urlencode(query_string) if query_string else ''
 
-    # 处理 body
+    body = event.get('body', '') or ''
     if event.get('isBase64Encoded'):
-        import base64
         body = base64.b64decode(body)
 
     content_length = len(body) if body else 0
-    if isinstance(body, bytes):
-        body_data = body
+    body_data = body if isinstance(body, bytes) else (body.encode('utf-8') if body else b'')
+
+    host = headers_lower.get('host', 'localhost')
+    if ':' in host:
+        server_name, server_port = host.rsplit(':', 1)
     else:
-        body_data = body.encode('utf-8') if body else b''
+        server_name, server_port = host, '443'
 
     environ = {
         'REQUEST_METHOD': http_method,
         'SCRIPT_NAME': '',
         'PATH_INFO': path,
         'QUERY_STRING': query_string_str,
-        'SERVER_NAME': headers_lower.get('host', 'localhost').split(':')[0],
-        'SERVER_PORT': headers_lower.get('host', '443').split(':')[-1] if ':' in headers_lower.get('host', '443') else '443',
+        'SERVER_NAME': server_name,
+        'SERVER_PORT': server_port,
         'SERVER_PROTOCOL': 'HTTP/1.1',
         'wsgi.version': (1, 0),
         'wsgi.url_scheme': 'https',
-        'wsgi.input': __import__('io').BytesIO(body_data),
+        'wsgi.input': BytesIO(body_data),
         'wsgi.errors': sys.stderr,
         'wsgi.multiprocess': False,
         'wsgi.multithread': False,
         'wsgi.run_once': False,
         'CONTENT_LENGTH': str(content_length),
         'CONTENT_TYPE': headers_lower.get('content-type', 'application/x-www-form-urlencoded'),
-        'HTTP_HOST': headers_lower.get('host', 'localhost'),
+        'HTTP_HOST': host,
         'HTTP_USER_AGENT': headers_lower.get('user-agent', ''),
         'HTTP_ACCEPT': headers_lower.get('accept', '*/*'),
     }
@@ -81,7 +104,7 @@ def create_wsgi_environ(event):
 def handler(event, context):
     """Netlify Serverless Function 入口"""
     try:
-        # 延迟导入 Flask 应用（冷启动优化）
+        # 延迟初始化 Flask 应用（冷启动优化）
         if not hasattr(handler, 'flask_app'):
             import config
             from app import create_app
@@ -89,12 +112,12 @@ def handler(event, context):
             app_config = config.ProductionConfig
             flask_app = create_app(config=app_config)
 
-            # 初始化数据库
+            # 初始化数据库（幂等操作，安全可重复执行）
             try:
                 from app.models.db import init_database
                 init_database()
             except Exception as e:
-                print(f"数据库初始化警告: {e}")
+                print(f"[WARN] 数据库初始化跳过: {e}")
 
             handler.flask_app = flask_app
 
@@ -103,9 +126,7 @@ def handler(event, context):
         # 创建 WSGI environ
         environ = create_wsgi_environ(event)
 
-        # 调用 Flask 应用
-        from io import BytesIO
-
+        # WSGI 协议: 调用 Flask 应用
         response_started = []
         response_headers = []
         response_status = []
@@ -115,10 +136,9 @@ def handler(event, context):
             response_headers.extend(headers)
             response_started.append(True)
 
-        # 获取响应
         result = flask_app(environ, start_response)
 
-        # 处理响应
+        # 读取响应体
         body = b''
         for chunk in result:
             if chunk:
@@ -133,31 +153,47 @@ def handler(event, context):
             status_str = response_status[0]
             status_code = int(status_str.split(' ')[0])
 
-        # 转换响应头
+        # 构建响应头 (Set-Cookie 需要 multiValueHeaders)
         headers_dict = {}
+        multi_value_headers = {}
+
         for key, value in response_headers:
-            if key.lower() not in ('set-cookie',):
+            key_lower = key.lower()
+            if key_lower == 'set-cookie':
+                if key not in multi_value_headers:
+                    multi_value_headers[key] = []
+                multi_value_headers[key].append(value)
+                headers_dict[key] = value
+            else:
                 headers_dict[key] = value
 
-        # 返回 Lambda 响应
-        import base64
+        # 编码响应体
         is_base64 = False
-        if body and not all(32 <= b < 127 or b in (9, 10, 13) for b in body):
-            is_base64 = True
-            body_str = base64.b64encode(body).decode('utf-8')
+        if body:
+            try:
+                body_str = body.decode('utf-8')
+            except UnicodeDecodeError:
+                is_base64 = True
+                body_str = base64.b64encode(body).decode('utf-8')
         else:
-            body_str = body.decode('utf-8') if body else ''
+            body_str = ''
 
-        return {
+        response = {
             'statusCode': status_code,
             'headers': headers_dict,
             'body': body_str,
             'isBase64Encoded': is_base64
         }
 
+        # multiValueHeaders 确保所有 Set-Cookie 都能下发 (session + csrf)
+        if multi_value_headers:
+            response['multiValueHeaders'] = multi_value_headers
+
+        return response
+
     except Exception as e:
         import traceback
-        print(f"Error processing request: {e}")
+        print(f"[ERROR] Function 执行失败: {e}")
         print(traceback.format_exc())
         return {
             'statusCode': 500,

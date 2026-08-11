@@ -1,0 +1,50 @@
+{
+  "started_at": "2026-08-10T23:41:13.129094",
+  "environment": "no_db (unit-tests only)",
+  "suites": {
+    "单元测试": {
+      "ok": true,
+      "duration_ms": 2787,
+      "skipped": false
+    },
+    "DB 链路测试": {
+      "ok": true,
+      "duration_ms": 0,
+      "skipped": true,
+      "detail": "skipped (no DB)"
+    },
+    "API 集成测试": {
+      "ok": true,
+      "duration_ms": 0,
+      "skipped": true,
+      "detail": "skipped (no DB)"
+    }
+  },
+  "db_report": {
+    "started_at": "2026-08-10T20:21:13.605304",
+    "database": "PostgreSQL (Supabase)",
+    "total": 1,
+    "passed": 0,
+    "failed": 1,
+    "tests": [
+      {
+        "name": "T1-01 初始化数据库连接 + 建表",
+        "passed": false,
+        "detail": "could not translate host name \"db.xqwbtufemsickddncnsm.supabase.co\" to address: Name or service not known\n",
+        "duration_ms": 96
+      }
+    ],
+    "finished_at": "2026-08-10T20:21:13.819296"
+  },
+  "finished_at": "2026-08-10T23:41:15.919371",
+  "overall": {
+    "total_cases": 260,
+    "unit_tests_passed": 259,
+    "db_cases": 1,
+    "api_cases": 0,
+    "passed": 259,
+    "failed": 0,
+    "pass_rate": 99.6,
+    "suite_level_pass": true
+  }
+}

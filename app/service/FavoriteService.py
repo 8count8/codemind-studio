@@ -3,6 +3,7 @@ Service 层封装了业务逻辑，调用 Model 层的方法。
 提供更高层次的接口供控制器或路由层使用。
 """
 
+from app.models.db import VALID_DIFFICULTIES
 from app.models.favorites_models_db import FavoriteModel
 
 
@@ -18,12 +19,9 @@ class FavoriteService:
         :param tags: 标签列表（JSON 格式）
         :return: 操作结果（成功或错误信息）
         """
-        # 合法的难度值
-        valid_difficulties = ["简单", "中等", "困难"]
-
         # 如果提供了 difficulty 参数，则验证其合法性
-        if difficulty not in valid_difficulties:
-            return {"error": f"Invalid difficulty. Valid values are: {valid_difficulties}"}, 400
+        if difficulty not in VALID_DIFFICULTIES:
+            return {"error": f"Invalid difficulty. Valid values are: {VALID_DIFFICULTIES}"}, 400
 
         # 调用 Model 层方法添加收藏
         return FavoriteModel.add_favorite(user_id, title, question, difficulty, tags)
@@ -65,36 +63,3 @@ class FavoriteService:
         :return: 操作结果（成功或错误信息）
         """
         return FavoriteModel.delete_favorite(user_id, title)
-
-    @staticmethod
-    def add_favorite(user_id, question_id):
-        connection = create_mysql_connection()
-        try:
-            cursor = connection.cursor()
-            cursor.execute("""
-                INSERT INTO user_favorites (user_id, question_id, favorite)
-                VALUES (%s, %s, TRUE)
-                ON DUPLICATE KEY UPDATE favorite = TRUE
-            """, (user_id, question_id))
-            connection.commit()
-            return {"status": "success", "message": "收藏成功"}
-        except Error as e:
-            return {"status": "error", "message": str(e)}
-        finally:
-            if connection: connection.close()
-    
-    @staticmethod 
-    def delete_favorite(user_id, question_id):
-        connection = create_mysql_connection()
-        try:
-            cursor = connection.cursor()
-            cursor.execute("""
-                DELETE FROM user_favorites 
-                WHERE user_id = %s AND question_id = %s
-            """, (user_id, question_id))
-            connection.commit()
-            return {"status": "success", "message": "取消收藏成功"}
-        except Error as e:
-            return {"status": "error", "message": str(e)}
-        finally:
-            if connection: connection.close()

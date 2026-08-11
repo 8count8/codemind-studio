@@ -8,12 +8,7 @@ class Config:
     """基础配置类"""
 
     SECRET_KEY = os.environ.get('SECRET_KEY') or '123456'
-    
-    # SQLite 数据库配置
-    DATABASE_PATH = os.environ.get('DATABASE_PATH', 'codemind.db')
-    SQLALCHEMY_DATABASE_URI = f'sqlite:///{DATABASE_PATH}'
-    
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+
     DEBUG = False
     WHITELIST_ROUTES = []
     WHITELIST_BLUEPRINTS = ["auth", "main", "static", None]
@@ -53,11 +48,14 @@ class DevelopmentConfig(Config, API_Docs_Config):
 class TestingConfig(Config):
     """测试环境配置"""
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
 
 
 class ProductionConfig(Config):
-    """生产环境配置"""
+    """生产环境配置 (Netlify + Supabase)"""
     DEBUG = False
-    DATABASE_PATH = os.environ.get('DATABASE_PATH', '/data/codemind.db')
-    SQLALCHEMY_DATABASE_URI = f'sqlite:///{DATABASE_PATH}'
+    WHITELIST_BLUEPRINTS = [
+        "auth", "main", "static", None,
+        "api_doc", "answerpad", "flasgger", "code_review",
+        "quizbank", "favorites", "answer", "user_api",
+        "ai_question", "profile", "ability_matrix"
+    ]

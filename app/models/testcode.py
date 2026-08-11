@@ -1,11 +1,6 @@
-"""测试用例 - SQLite 版本"""
+"""测试用例 - Supabase PostgreSQL"""
 
-from app.models.sqlite_db import get_db_connection
-
-
-def create_mysql_connection():
-    """兼容旧接口"""
-    return get_db_connection()
+from app.models.db import get_db_connection
 
 
 def insert_test_case(connection, problem_id, input_data, expected_output):
@@ -14,7 +9,7 @@ def insert_test_case(connection, problem_id, input_data, expected_output):
         cursor = connection.cursor()
         cursor.execute("""
         INSERT INTO test_cases (problem_id, input_data, expected_output)
-        VALUES (?, ?, ?)
+        VALUES (%s, %s, %s)
         """, (problem_id, input_data, expected_output))
         connection.commit()
         return True

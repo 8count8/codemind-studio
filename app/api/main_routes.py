@@ -1,7 +1,8 @@
 """ 主页路由 """
 from . import main_bp
-from flask import session, current_app, jsonify
+from flask import current_app, jsonify
 from flask_wtf.csrf import generate_csrf
+from app.utils.auth import get_current_user_id
 
 
 @main_bp.route('/')
@@ -18,7 +19,7 @@ def dashboard():
     """
     仪表盘路由（页面由 Vue Router 渲染）
     """
-    current_app.logger.info(f'用户 {session.get("user_id")} 访问仪表盘')
+    current_app.logger.info(f'用户 {get_current_user_id()} 访问仪表盘')
     return jsonify({"status": 200})
 
 

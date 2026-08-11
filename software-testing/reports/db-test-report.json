@@ -1,0 +1,16 @@
+{
+  "started_at": "2026-08-10T20:21:13.605304",
+  "database": "PostgreSQL (Supabase)",
+  "total": 1,
+  "passed": 0,
+  "failed": 1,
+  "tests": [
+    {
+      "name": "T1-01 初始化数据库连接 + 建表",
+      "passed": false,
+      "detail": "could not translate host name \"db.xqwbtufemsickddncnsm.supabase.co\" to address: Name or service not known\n",
+      "duration_ms": 96
+    }
+  ],
+  "finished_at": "2026-08-10T20:21:13.819296"
+}

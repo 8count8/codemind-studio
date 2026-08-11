@@ -3,13 +3,13 @@ Model 层封装了对数据库的操作，调用 favorites_topics 中的函数�
 提供更清晰的接口供 Service 层使用。
 """
 
+from app.models.db import VALID_DIFFICULTIES
 from app.models.favorites_topics import (
-    create_mysql_connection,
     add_favorite as original_add_favorite,
     get_favorites_with_question as original_get_favorites_with_question,
     get_favorites_without_question as original_get_favorites_without_question,
     search_favorites_by_title as original_search_favorites_by_title,
-    delete_favorite as original_delete_favorite,  # 新增导入
+    delete_favorite as original_delete_favorite,
 )
 
 
@@ -25,12 +25,9 @@ class FavoriteModel:
         :param tags: 标签列表（JSON 格式）
         :return: 操作结果（成功或错误信息）
         """
-        # 合法的难度值
-        valid_difficulties = ["简单", "中等", "困难"]
-
         # 验证 difficulty 是否合法
-        if difficulty not in valid_difficulties:
-            return {"error": f"Invalid difficulty. Valid values are: {valid_difficulties}"}, 400
+        if difficulty not in VALID_DIFFICULTIES:
+            return {"error": f"Invalid difficulty. Valid values are: {VALID_DIFFICULTIES}"}, 400
 
         return original_add_favorite(user_id, title, question, difficulty, tags)
 

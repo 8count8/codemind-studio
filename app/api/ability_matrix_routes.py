@@ -12,6 +12,7 @@
 
 from flask import Blueprint, request, jsonify, session, current_app
 from app.api.flasgger_compat import swag_from
+from app.utils.auth import require_auth, get_authenticated_user_id
 
 from . import ability_matrix_bp
 from app.service.ability_matrix_service import AbilityMatrixService
@@ -26,12 +27,10 @@ from app.service.ability_matrix_service import AbilityMatrixService
         401: {'description': '用户未登录'}
     }
 })
+@require_auth
 def ability_matrix_page():
     """能力矩阵页面（页面由 Vue Router 渲染）"""
     user_id = session.get('user_id')
-    if not user_id:
-        return jsonify({"status": 401, "message": "请先登录"}), 401
-
     current_app.logger.info(f'用户 {user_id} 访问能力矩阵页面')
     return jsonify({"status": 200})
 
@@ -46,17 +45,13 @@ def ability_matrix_page():
         500: {'description': '服务器错误'}
     }
 })
+@require_auth
 def get_ability_matrix():
     """获取当前登录用户的能力矩阵"""
     user_id = session.get('user_id')
-    if not user_id:
-        return jsonify({"status": 401, "message": "请先登录"}), 401
 
     try:
-        # 确保用户矩阵已初始化
         AbilityMatrixService.init_user_matrix(user_id)
-
-        # 获取完整的能力矩阵数据（含薄弱维度分析）
         result, status = AbilityMatrixService.get_user_matrix(user_id)
 
         if status == 200:
@@ -101,11 +96,10 @@ def get_ability_matrix():
         500: {'description': '服务器错误'}
     }
 })
+@require_auth
 def submit_code_evaluation():
     """提交代码进行能力评估"""
     user_id = session.get('user_id')
-    if not user_id:
-        return jsonify({"status": 401, "message": "请先登录"}), 401
 
     try:
         data = request.get_json()
@@ -174,11 +168,10 @@ def submit_code_evaluation():
         500: {'description': '服务器错误'}
     }
 })
+@require_auth
 def submit_evaluation():
     """直接提交评分数据更新能力矩阵"""
     user_id = session.get('user_id')
-    if not user_id:
-        return jsonify({"status": 401, "message": "请先登录"}), 401
 
     try:
         data = request.get_json()
@@ -237,15 +230,14 @@ def submit_evaluation():
         500: {'description': '服务器错误'}
     }
 })
+@require_auth
 def get_submission_history():
     """获取用户的提交历史记录"""
     user_id = session.get('user_id')
-    if not user_id:
-        return jsonify({"status": 401, "message": "请先登录"}), 401
 
     try:
         limit = request.args.get('limit', 30, type=int)
-        limit = min(max(1, limit), 100)  # 限制在1-100之间
+        limit = min(max(1, limit), 100)
 
         result, status = AbilityMatrixService.get_submission_history(user_id, limit)
 
@@ -290,22 +282,19 @@ def get_submission_history():
         500: {'description': '服务器错误'}
     }
 })
+@require_auth
 def get_ability_trend():
     """获取用户的能力趋势数据"""
     user_id = session.get('user_id')
-    if not user_id:
-        return jsonify({"status": 401, "message": "请先登录"}), 401
 
     try:
         dimension = request.args.get('dimension')
         days = request.args.get('days', 30, type=int)
-        days = min(max(7, days), 365)  # 限制在7-365天
+        days = min(max(7, days), 365)
 
         if dimension:
-            # 获取单个维度的趋势
             result, status = AbilityMatrixService.get_ability_trend(user_id, dimension, days)
         else:
-            # 获取所有维度的趋势
             result, status = AbilityMatrixService.get_all_trends(user_id, days)
 
         if status == 200:
@@ -334,11 +323,10 @@ def get_ability_trend():
         500: {'description': '服务器错误'}
     }
 })
+@require_auth
 def get_recommendations():
     """获取个性化学习推荐"""
     user_id = session.get('user_id')
-    if not user_id:
-        return jsonify({"status": 401, "message": "请先登录"}), 401
 
     try:
         result, status = AbilityMatrixService.get_learning_recommendations(user_id)

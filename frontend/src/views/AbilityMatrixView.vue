@@ -86,7 +86,10 @@
           <h2 class="card-title">学习推荐</h2>
           <div class="recommend-list">
             <p v-if="recommendations.length === 0" class="empty-hint">完成评估后将为您生成推荐</p>
-            <div v-for="(r, i) in recommendations" :key="i" class="recommend-item">{{ r }}</div>
+            <div v-for="(r, i) in recommendations" :key="i" class="recommend-item">
+              <strong>{{ r.label }}</strong>（{{ r.current_score }}分）
+              <p class="recommend-suggestion">{{ r.suggestion }}</p>
+            </div>
           </div>
         </div>
         <div class="card submit-card">
@@ -182,7 +185,14 @@ async function loadMatrix() {
   try {
     const res = await http.get('/api/ability-matrix')
     if (res.data.status === 200) {
-      matrix.value = res.data.data || {}
+      const data = res.data.data || {}
+      // 把 matrix 内部字段平铺到顶层，同时保留 weak_dimensions / average_score
+      const m = data.matrix || {}
+      matrix.value = {
+        ...m,
+        weak_dimensions: data.weak_dimensions || [],
+        average_score: data.average_score || 0,
+      }
       await nextTick()
       renderChart()
     }
@@ -192,14 +202,20 @@ async function loadMatrix() {
 async function loadHistory() {
   try {
     const res = await http.get('/api/ability-matrix/history')
-    if (res.data.status === 200) history.value = res.data.data || []
+    if (res.data.status === 200) {
+      const data = res.data.data || {}
+      history.value = data.history || []
+    }
   } catch (e) { console.error('加载历史失败:', e) }
 }
 
 async function loadRecommendations() {
   try {
     const res = await http.get('/api/ability-matrix/recommendations')
-    if (res.data.status === 200) recommendations.value = res.data.data || []
+    if (res.data.status === 200) {
+      const data = res.data.data || {}
+      recommendations.value = data.recommendations || []
+    }
   } catch (e) { console.error('加载推荐失败:', e) }
 }
 
