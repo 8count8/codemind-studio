@@ -71,18 +71,21 @@ def register_user(username, password, email):
 
 def send_verification_code(email, code):
     try:
+        print(f"[EMAIL] 准备发送验证码: email={email}, code={code}")
         email_tool = EmailTool(storage_type="env")
+        print(f"[EMAIL] EmailTool 初始化成功: host={email_tool.email_server_host}, port={email_tool.email_server_port}")
         email_content = render_template_string(email_template, verification_code=code)
         email_tool.set_message(subject="验证码", content=email_content, content_type=ContentType.HTML)
+        print(f"[EMAIL] 开始发送邮件...")
         email_tool.send(email)
-        print(f"验证码已发送至邮箱: {email}")
+        print(f"[EMAIL] 验证码已发送至邮箱: {email}")
     except smtplib.SMTPRecipientsRefused:
         raise Exception("邮箱地址无效或被拒绝")
     except smtplib.SMTPAuthenticationError:
         raise Exception("SMTP认证失败，请检查邮箱账户和密码")
     except Exception as e:
-        print(f"发送邮件失败: {e}")
-        raise Exception("邮件发送失败")
+        print(f"[EMAIL] 发送邮件失败: {type(e).__name__}: {e}")
+        raise Exception(f"邮件发送失败: {str(e)}")
     else:
         insert_verification_code(email, code)
 
@@ -199,8 +202,8 @@ def handle_get_verification_code(email):
         send_verification_code(email, code)
         return {"status": "success", "message": "验证码已发送，请查收邮箱！"}
     except Exception as e:
-        print(f"验证码发送失败: {e}")
-        return {"status": "error", "message": "验证码发送失败，请稍后再试！"}
+        print(f"[EMAIL] handle_get_verification_code 异常: {type(e).__name__}: {e}")
+        return {"status": "error", "message": f"验证码发送失败: {str(e)}"}
 
 
 def handle_register(username, password, email, user_input_code):

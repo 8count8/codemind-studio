@@ -229,3 +229,64 @@ def auth_status():
         return jsonify({"isAuthenticated": False}), 500
 
 
+# /health - 系统健康检查
+@auth_bp.route('/health', methods=['GET'])
+def health_check():
+    """
+    系统健康检查端点，检查邮件配置和数据库连接。
+    """
+    import os
+    import smtplib
+    import socket
+
+    result = {
+        "status": "ok",
+        "timestamp": "2026-08-12",
+        "checks": {}
+    }
+
+    # 检查邮件环境变量
+    email_vars = {
+        "EMAIL_TYPE": os.getenv("EMAIL_TYPE", ""),
+        "EMAIL_ADDRESS": os.getenv("EMAIL_ADDRESS", ""),
+        "EMAIL_PASSWORD": os.getenv("EMAIL_PASSWORD", ""),
+        "EMAIL_RECEIVERS": os.getenv("EMAIL_RECEIVERS", ""),
+    }
+    result["checks"]["email_env"] = {
+        k: ("SET" if v else "MISSING") for k, v in email_vars.items()
+    }
+
+    # 检查 EMAIL_TYPE 是否正确
+    expected_type = "NETEASE_EMAIL_SMTP_SSL"
+    result["checks"]["email_type_valid"] = email_vars["EMAIL_TYPE"] == expected_type
+
+    # 检查 SMTP 连接
+    smtp_host = "smtp.163.com"
+    smtp_port = 465
+    try:
+        socket.setdefaulttimeout(5)
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect((smtp_host, smtp_port))
+        s.close()
+        result["checks"]["smtp_connect"] = "ok"
+    except Exception as e:
+        result["checks"]["smtp_connect"] = f"failed: {str(e)}"
+
+    # 检查数据库连接
+    try:
+        from app.models.db import get_db_connection
+        conn = get_db_connection()
+        conn.close()
+        result["checks"]["database"] = "ok"
+    except Exception as e:
+        result["checks"]["database"] = f"failed: {str(e)}"
+
+    # 如果任何检查失败
+    failed = [k for k, v in result["checks"].items() if v not in ("ok", True)]
+    if failed:
+        result["status"] = "degraded"
+        result["failed_checks"] = failed
+
+    return jsonify(result), 200
+
+

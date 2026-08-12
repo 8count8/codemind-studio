@@ -154,11 +154,19 @@ def read_env_config():
     except ImportError:
         pass
 
+    email_type = os.getenv('EMAIL_TYPE', '')
+    email_address = os.getenv('EMAIL_ADDRESS', '')
+    email_password = os.getenv('EMAIL_PASSWORD', '')
     receivers_str = os.getenv('EMAIL_RECEIVERS', '')
+
+    print(f"[EMAIL] 环境变量检查: EMAIL_TYPE={'SET' if email_type else 'MISSING'}, "
+          f"EMAIL_ADDRESS={'SET' if email_address else 'MISSING'}, "
+          f"EMAIL_PASSWORD={'SET' if email_password else 'MISSING'}")
+
     return {
-        "email_type": os.getenv('EMAIL_TYPE'),
-        "address": os.getenv('EMAIL_ADDRESS'),
-        "password": os.getenv('EMAIL_PASSWORD'),
+        "email_type": email_type,
+        "address": email_address,
+        "password": email_password,
         "receivers": [r.strip() for r in receivers_str.split(',')] if receivers_str else []
     }
 
@@ -176,19 +184,26 @@ class EmailConfig:
         else:
             raise ValueError(f"不支持的存储类型: {storage_type}")
 
-        self.email_type = EmailType[config['email_type']]
-        self.address = config['address']
-        self.password = config['password']
-        self.receivers = config['receivers']
+        self.email_type = config.get('email_type', '')
+        self.address = config.get('address', '')
+        self.password = config.get('password', '')
+        self.receivers = config.get('receivers', [])
+
+        # 延迟转换 EmailType，允许 None 以支持更早的错误诊断
+        if self.email_type:
+            try:
+                self.email_type = EmailType[self.email_type]
+            except KeyError:
+                print(f"[EMAIL] 未知的邮件类型: {self.email_type}")
 
     def validate(self):
         """验证配置有效性"""
+        if not self.email_type or not isinstance(self.email_type, EmailType):
+            raise ValueError("邮件类型未配置或无效")
         if not self.address or not validate_email(self.address):
             raise ValueError("发送者邮箱地址无效")
         if not self.password:
             raise ValueError("授权码不能为空")
-        if not isinstance(self.email_type, EmailType):
-            raise ValueError("无效的邮件类型")
 
 
 class Email:
