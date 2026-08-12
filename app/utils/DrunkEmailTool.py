@@ -146,10 +146,13 @@ def check_and_create_env_config():
 
 
 def read_env_config():
-    """读取.env配置文件"""
-    check_and_create_env_config()
-    from dotenv import load_dotenv
-    load_dotenv()
+    """读取环境变量配置 (支持 .env 文件和系统环境变量)"""
+    # 优先尝试加载 .env 文件（仅本地开发使用）
+    try:
+        from dotenv import load_dotenv
+        load_dotenv(override=False)  # 不覆盖已存在的环境变量
+    except ImportError:
+        pass
 
     receivers_str = os.getenv('EMAIL_RECEIVERS', '')
     return {
@@ -283,19 +286,32 @@ class EmailTool:
 
     def send(self, receiver: str):
         if not self.email.address or not self.config.password:
-            print(self.email.address, self.config.password)
+            print(f"[EMAIL] 配置缺失: address={self.email.address}, password={'***' if self.config.password else 'MISSING'}")
             raise ValueError("发送者邮箱地址和授权码必须设置")
+
+        print(f"[EMAIL] 正在连接 SMTP 服务器: {self.email_server_host}:{self.email_server_port}")
+        print(f"[EMAIL] 登录账号: {self.email.address}")
+        print(f"[EMAIL] 发送至: {receiver}")
 
         context = ssl.create_default_context()
         try:
-            with smtplib.SMTP_SSL(self.email_server_host, self.email_server_port, context=context) as smtp:
+            with smtplib.SMTP_SSL(self.email_server_host, self.email_server_port, context=context, timeout=30) as smtp:
                 smtp.login(self.email.address, self.email_password)
                 self.set_receivers(receiver)
                 smtp.send_message(self.email.to_email_message())
+                print(f"[EMAIL] 邮件发送成功: {receiver}")
+        except smtplib.SMTPAuthenticationError as e:
+            print(f"[EMAIL] SMTP 认证失败: {e}")
+            raise Exception("SMTP 认证失败，请检查邮箱账号和授权码")
+        except smtplib.SMTPRecipientsRefused as e:
+            print(f"[EMAIL] 收件人被拒绝: {e}")
+            raise Exception("收件人地址无效或被拒绝")
         except smtplib.SMTPException as e:
-            print(f"邮件发送失败: {e}")
+            print(f"[EMAIL] SMTP 错误: {type(e).__name__}: {e}")
+            raise Exception(f"SMTP 错误: {e}")
         except Exception as e:
-            print(f"未知错误: {e}")
+            print(f"[EMAIL] 未知错误: {type(e).__name__}: {e}")
+            raise Exception(f"邮件发送失败: {e}")
 
 
 # 示例用法
