@@ -1,226 +1,63 @@
 """
-Netlify Serverless Function for CodeMind Studio (Flask + Supabase PostgreSQL)
-
-架构: 前端(Vue) + 后端(Flask) 一体化部署到 Netlify
-数据库: Supabase PostgreSQL (通过 DATABASE_URL 环境变量连接)
-
-路由重定向:
-  netlify.toml 将 /api/*, /login, /register 等路径 rewrite 到 /.netlify/functions/app
-  本函数通过 rawPath (或 headers) 获取原始请求路径，正确转发给 Flask 路由
-
-Set-Cookie: 使用 multiValueHeaders 确保多个 Cookie (session + csrf) 正确下发
+Netlify Function - 极简测试版
+不依赖任何 Flask 或项目模块
 """
+import json
 import os
 import sys
-import json
-import base64
-from urllib.parse import urlencode
-from io import BytesIO
-
-# 添加项目根目录到路径，使 Function 能导入 app.* 模块
-# 当前文件: netlify/functions/app.py
-# 需要向上 2 级到达项目根目录
-ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-if ROOT_DIR not in sys.path:
-    sys.path.insert(0, ROOT_DIR)
-
-os.environ.setdefault('FLASK_ENV', 'production')
-
-
-def get_original_path(event):
-    """获取原始请求路径
-
-    Netlify 在 rewrite (status 200) 时:
-    - event.path = rewrite 后的路径 (/.netlify/functions/app)
-    - event.rawPath = 用户请求的原始路径
-
-    优先级: rawPath > 从 headers 推断 > event.path
-    """
-    raw_path = event.get('rawPath')
-    path = event.get('path', '/')
-
-    # 如果 rawPath 存在且不是 Function 自身路径，使用 rawPath
-    if raw_path and not raw_path.startswith('/.netlify/functions'):
-        return raw_path
-
-    # 如果 path 已经是正确的业务路径 (不以 /.netlify 开头)
-    if not path.startswith('/.netlify/functions'):
-        return path
-
-    # 从 headers 中查找原始路径
-    headers = event.get('headers', {}) or {}
-    headers_lower = {k.lower(): v for k, v in headers.items()}
-
-    # 检查 x-forwarded-path 或类似头
-    for header_name in ['x-forwarded-path', 'x-original-path', 'x-netlify-path']:
-        if header_name in headers_lower:
-            return headers_lower[header_name]
-
-    # 如果都找不到，返回原始 path (可能是 Function 自身路径)
-    # 尝试从 referer 或其他信息推断
-    return raw_path or path
-
-
-def create_wsgi_environ(event):
-    """将 Netlify/AWS Lambda 事件转换为 WSGI environ"""
-    headers = event.get('headers', {}) or {}
-    headers_lower = {k.lower(): v for k, v in headers.items()}
-
-    http_method = event.get('httpMethod', 'GET')
-
-    # 获取原始请求路径
-    path = get_original_path(event)
-
-    query_string = event.get('queryStringParameters', {}) or {}
-
-    multi_value_query = event.get('multiValueQueryStringParameters') or None
-    if multi_value_query:
-        query_string_str = urlencode(
-            [(k, v) if isinstance(v, str) else (k, v[0]) for k, v in query_string.items()]
-        )
-    else:
-        query_string_str = urlencode(query_string) if query_string else ''
-
-    body = event.get('body', '') or ''
-    if event.get('isBase64Encoded'):
-        body = base64.b64decode(body)
-
-    content_length = len(body) if body else 0
-    body_data = body if isinstance(body, bytes) else (body.encode('utf-8') if body else b'')
-
-    host = headers_lower.get('host', 'localhost')
-    if ':' in host:
-        server_name, server_port = host.rsplit(':', 1)
-    else:
-        server_name, server_port = host, '443'
-
-    environ = {
-        'REQUEST_METHOD': http_method,
-        'SCRIPT_NAME': '',
-        'PATH_INFO': path,
-        'QUERY_STRING': query_string_str,
-        'SERVER_NAME': server_name,
-        'SERVER_PORT': server_port,
-        'SERVER_PROTOCOL': 'HTTP/1.1',
-        'wsgi.version': (1, 0),
-        'wsgi.url_scheme': 'https',
-        'wsgi.input': BytesIO(body_data),
-        'wsgi.errors': sys.stderr,
-        'wsgi.multiprocess': False,
-        'wsgi.multithread': False,
-        'wsgi.run_once': False,
-        'CONTENT_LENGTH': str(content_length),
-        'CONTENT_TYPE': headers_lower.get('content-type', 'application/x-www-form-urlencoded'),
-        'HTTP_HOST': host,
-        'HTTP_USER_AGENT': headers_lower.get('user-agent', ''),
-        'HTTP_ACCEPT': headers_lower.get('accept', '*/*'),
-    }
-
-    # 添加其他 HTTP 头
-    for key, value in headers_lower.items():
-        if key not in ('host', 'content-type', 'user-agent', 'accept', 'content-length'):
-            wsgi_key = 'HTTP_' + key.upper().replace('-', '_')
-            environ[wsgi_key] = value
-
-    return environ
-
 
 def handler(event, context):
-    """Netlify Serverless Function 入口"""
-    try:
-        # 延迟初始化 Flask 应用（冷启动优化）
-        if not hasattr(handler, 'flask_app'):
-            import config
-            from app import create_app
-
-            app_config = config.ProductionConfig
-            flask_app = create_app(config=app_config)
-
-            # 初始化数据库（幂等操作，安全可重复执行）
-            try:
-                from app.models.db import init_database
-                init_database()
-            except Exception as e:
-                print(f"[WARN] 数据库初始化跳过: {e}")
-
-            handler.flask_app = flask_app
-
-        flask_app = handler.flask_app
-
-        # 创建 WSGI environ
-        environ = create_wsgi_environ(event)
-
-        # WSGI 协议: 调用 Flask 应用
-        response_started = []
-        response_headers = []
-        response_status = []
-
-        def start_response(status, headers, exc_info=None):
-            response_status.append(status)
-            response_headers.extend(headers)
-            response_started.append(True)
-
-        result = flask_app(environ, start_response)
-
-        # 读取响应体
-        body = b''
-        for chunk in result:
-            if chunk:
-                if isinstance(chunk, str):
-                    body += chunk.encode('utf-8')
-                else:
-                    body += chunk
-
-        # 解析状态码
-        status_code = 200
-        if response_status:
-            status_str = response_status[0]
-            status_code = int(status_str.split(' ')[0])
-
-        # 构建响应头 (Set-Cookie 需要 multiValueHeaders)
-        headers_dict = {}
-        multi_value_headers = {}
-
-        for key, value in response_headers:
-            key_lower = key.lower()
-            if key_lower == 'set-cookie':
-                if key not in multi_value_headers:
-                    multi_value_headers[key] = []
-                multi_value_headers[key].append(value)
-                headers_dict[key] = value
-            else:
-                headers_dict[key] = value
-
-        # 编码响应体
-        is_base64 = False
-        if body:
-            try:
-                body_str = body.decode('utf-8')
-            except UnicodeDecodeError:
-                is_base64 = True
-                body_str = base64.b64encode(body).decode('utf-8')
-        else:
-            body_str = ''
-
-        response = {
-            'statusCode': status_code,
-            'headers': headers_dict,
-            'body': body_str,
-            'isBase64Encoded': is_base64
+    """最小化的 Function handler - 测试 Netlify Functions 是否工作"""
+    path = event.get('rawPath') or event.get('path', '/')
+    
+    # 基本信息
+    info = {
+        "function": "app",
+        "status": "working",
+        "path": path,
+        "rawPath": event.get('rawPath', ''),
+        "eventPath": event.get('path', ''),
+        "httpMethod": event.get('httpMethod', ''),
+    }
+    
+    # 如果是 /health，返回更多诊断信息
+    if path == '/health' or path == '/.netlify/functions/app':
+        import socket
+        
+        # 邮件环境变量
+        email_vars = {
+            "EMAIL_TYPE": os.getenv("EMAIL_TYPE", "NOT_SET"),
+            "EMAIL_ADDRESS": os.getenv("EMAIL_ADDRESS", "NOT_SET"),
+            "EMAIL_PASSWORD": "SET" if os.getenv("EMAIL_PASSWORD") else "NOT_SET",
         }
-
-        # multiValueHeaders 确保所有 Set-Cookie 都能下发 (session + csrf)
-        if multi_value_headers:
-            response['multiValueHeaders'] = multi_value_headers
-
-        return response
-
-    except Exception as e:
-        import traceback
-        print(f"[ERROR] Function 执行失败: {e}")
-        print(traceback.format_exc())
-        return {
-            'statusCode': 500,
-            'headers': {'Content-Type': 'application/json'},
-            'body': json.dumps({'error': 'Internal Server Error', 'message': str(e)})
-        }
+        info["email_env"] = email_vars
+        
+        # SMTP 连接测试
+        try:
+            socket.setdefaulttimeout(3)
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.connect(("smtp.163.com", 465))
+            s.close()
+            info["smtp"] = "ok"
+        except Exception as e:
+            info["smtp"] = f"failed: {str(e)}"
+        
+        # 数据库测试
+        try:
+            import psycopg2
+            conn = psycopg2.connect(os.getenv("DATABASE_URL", ""))
+            conn.close()
+            info["database"] = "ok"
+        except ImportError:
+            info["database"] = "skipped (no psycopg2)"
+        except Exception as e:
+            info["database"] = f"failed: {str(e)}"
+    
+    return {
+        'statusCode': 200,
+        'headers': {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+        },
+        'body': json.dumps(info)
+    }
