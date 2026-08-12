@@ -5,8 +5,8 @@ Netlify Serverless Function for CodeMind Studio (Flask + Supabase PostgreSQL)
 数据库: Supabase PostgreSQL (通过 DATABASE_URL 环境变量连接)
 
 路由重定向:
-  netlify.toml 将 /api/*, /login, /register 等路径 rewrite 到 /api/app
-  本函数通过 rawPath 获取原始请求路径，正确转发给 Flask 路由
+  netlify.toml 将 /api/*, /login, /register 等路径 rewrite 到 /.netlify/functions/app
+  本函数通过 rawPath (或 headers) 获取原始请求路径，正确转发给 Flask 路由
 
 Set-Cookie: 使用 multiValueHeaders 确保多个 Cookie (session + csrf) 正确下发
 """
@@ -18,39 +18,61 @@ from urllib.parse import urlencode
 from io import BytesIO
 
 # 添加项目根目录到路径，使 Function 能导入 app.* 模块
-# 当前文件: netlify/functions/api/app.py
-# 需要向上 3 级到达项目根目录
-ROOT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# 当前文件: netlify/functions/app.py
+# 需要向上 2 级到达项目根目录
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if ROOT_DIR not in sys.path:
     sys.path.insert(0, ROOT_DIR)
 
 os.environ.setdefault('FLASK_ENV', 'production')
 
 
-def create_wsgi_environ(event):
-    """将 Netlify/AWS Lambda 事件转换为 WSGI environ
-    
-    关键: 使用 rawPath (而非 path) 获取原始请求路径
-    因为 netlify.toml 的 rewrite 会将 /login 等路径内部转发到 /api/app
-    rawPath 保留了用户浏览器请求的原始路径
+def get_original_path(event):
+    """获取原始请求路径
+
+    Netlify 在 rewrite (status 200) 时:
+    - event.path = rewrite 后的路径 (/.netlify/functions/app)
+    - event.rawPath = 用户请求的原始路径
+
+    优先级: rawPath > 从 headers 推断 > event.path
     """
+    raw_path = event.get('rawPath')
+    path = event.get('path', '/')
+
+    # 如果 rawPath 存在且不是 Function 自身路径，使用 rawPath
+    if raw_path and not raw_path.startswith('/.netlify/functions'):
+        return raw_path
+
+    # 如果 path 已经是正确的业务路径 (不以 /.netlify 开头)
+    if not path.startswith('/.netlify/functions'):
+        return path
+
+    # 从 headers 中查找原始路径
+    headers = event.get('headers', {}) or {}
+    headers_lower = {k.lower(): v for k, v in headers.items()}
+
+    # 检查 x-forwarded-path 或类似头
+    for header_name in ['x-forwarded-path', 'x-original-path', 'x-netlify-path']:
+        if header_name in headers_lower:
+            return headers_lower[header_name]
+
+    # 如果都找不到，返回原始 path (可能是 Function 自身路径)
+    # 尝试从 referer 或其他信息推断
+    return raw_path or path
+
+
+def create_wsgi_environ(event):
+    """将 Netlify/AWS Lambda 事件转换为 WSGI environ"""
     headers = event.get('headers', {}) or {}
     headers_lower = {k.lower(): v for k, v in headers.items()}
 
     http_method = event.get('httpMethod', 'GET')
-    
-    # 获取原始请求路径 (rawPath 优先于 path)
-    path = event.get('rawPath') or event.get('path', '/')
-    
-    # 去除可能的 /api 前缀 (如果 rewrite 添加了)
-    # 当 rawPath 不可用时，event.path 可能是 /api/app，需要从其他信息推断
-    if path.startswith('/api/') and path != '/api/app':
-        # 这是 API 重定向过来的，尝试从 header 或 event 中获取原始路径
-        # Netlify 在 rewrite 时会保留 rawPath
-        path = event.get('rawPath', path)
-    
+
+    # 获取原始请求路径
+    path = get_original_path(event)
+
     query_string = event.get('queryStringParameters', {}) or {}
-    
+
     multi_value_query = event.get('multiValueQueryStringParameters') or None
     if multi_value_query:
         query_string_str = urlencode(
