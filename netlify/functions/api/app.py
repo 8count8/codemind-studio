@@ -18,7 +18,9 @@ from urllib.parse import urlencode
 from io import BytesIO
 
 # 添加项目根目录到路径，使 Function 能导入 app.* 模块
-ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# 当前文件: netlify/functions/api/app.py
+# 需要向上 3 级到达项目根目录
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 if ROOT_DIR not in sys.path:
     sys.path.insert(0, ROOT_DIR)
 
