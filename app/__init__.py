@@ -97,6 +97,23 @@ def create_app(config=None):
     app.register_blueprint(profile_bp)
     app.register_blueprint(ability_matrix_bp)
 
+    # 豁免公开 API 的 CSRF 检查
+    # 这些路由不需要登录即可访问，且由前端直接调用
+    csrf_exempt_endpoints = [
+        'auth.get_verification_code',
+        'auth.get_forgot_password_code',
+        'auth.register',
+        'auth.login',
+        'auth.logout',
+        'auth.auth_status',
+        'auth.health_check',
+        'auth.reset',
+        'auth.reset_password',
+    ]
+    for endpoint in csrf_exempt_endpoints:
+        if endpoint in app.view_functions:
+            csrf.exempt(app.view_functions[endpoint])
+
     # ---- 请求拦截器 ----
     @app.before_request
     def before_request():
