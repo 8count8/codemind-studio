@@ -1,0 +1,21 @@
+# Railway 部署配置
+# 后端 Flask API 服务
+services:
+  - name: cms-backend
+    # Railway 会自动检测为 Python 项目
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn run:app --bind 0.0.0.0:$PORT
+    env:
+      - name: FLASK_ENV
+        value: production
+      - name: PYTHON_VERSION
+        value: "3.10.0"
+      # 以下环境变量在 Railway 控制台中手动配置
+      # - name: DATABASE_URL
+      #   value: (从 Supabase 获取)
+      # - name: EMAIL_TYPE
+      #   value: NETEASE_EMAIL_SMTP_SSL
+      # - name: EMAIL_ADDRESS
+      #   value: cms202504@163.com
+      # - name: EMAIL_PASSWORD
+      #   value: (授权码)

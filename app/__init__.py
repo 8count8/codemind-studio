@@ -68,7 +68,7 @@ def create_app(config=None):
 
     # CORS 支持（允许 Vue 前端跨域访问）
     from flask_cors import CORS
-    cors_origins = os.environ.get('CORS_ORIGINS', 'http://localhost:5173')
+    cors_origins = os.environ.get('CORS_ORIGINS', 'http://localhost:5173,https://codemind-mind.netlify.app')
     origins = [o.strip() for o in cors_origins.split(',') if o.strip()]
     CORS(app, supports_credentials=True, origins=origins)
 

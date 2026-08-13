@@ -6,4 +6,4 @@ requests
 flasgger
 flask-cors
 psycopg2-binary
-waitress
+gunicorn

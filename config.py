@@ -51,11 +51,15 @@ class TestingConfig(Config):
 
 
 class ProductionConfig(Config):
-    """生产环境配置 (Netlify + Supabase)"""
+    """生产环境配置 (Railway 后端 + Netlify 前端)"""
     DEBUG = False
     WHITELIST_BLUEPRINTS = [
         "auth", "main", "static", None,
         "api_doc", "answerpad", "flasgger", "code_review",
         "quizbank", "favorites", "answer", "user_api",
         "ai_question", "profile", "ability_matrix"
+    ]
+    WHITELIST_ROUTES = [
+        "health_check",   # Railway 健康检查
+        "root",           # 根路径
     ]
