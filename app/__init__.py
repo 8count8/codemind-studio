@@ -64,6 +64,9 @@ def create_app(config=None):
 
     # 初始化扩展
     from flask_wtf.csrf import CSRFProtect
+    # 禁用默认 CSRF 检查，改为手动在需要的路由上启用
+    # 公开 API（注册、登录、验证码）不需要 CSRF 保护
+    app.config['WTF_CSRF_CHECK_DEFAULT'] = False
     csrf = CSRFProtect(app)
 
     # CORS 支持（允许 Vue 前端跨域访问）
@@ -97,30 +100,28 @@ def create_app(config=None):
     app.register_blueprint(profile_bp)
     app.register_blueprint(ability_matrix_bp)
 
-    # 豁免公开 API 的 CSRF 检查
-    # 这些路由不需要登录即可访问，且由前端直接调用
-    csrf_exempt_endpoints = [
-        'auth.get_verification_code',
-        'auth.get_forgot_password_code',
-        'auth.register',
-        'auth.login',
-        'auth.logout',
-        'auth.auth_status',
-        'auth.health_check',
-        'auth.reset',
-        'auth.reset_password',
-    ]
-    for endpoint in csrf_exempt_endpoints:
-        if endpoint in app.view_functions:
-            csrf.exempt(app.view_functions[endpoint])
-
     # ---- 请求拦截器 ----
     @app.before_request
     def before_request():
         """
-        API 请求返回 JSON 401，页面请求返回 HTML 重定向
-        支持前后端分离架构（前端 SPA 在 Netlify，后端在 Render）
+        公开 API 豁免认证检查
         """
+        # 公开路由列表（不需要登录）
+        public_routes = [
+            '/get_verification_code',
+            '/get_forgot_password_code',
+            '/register',
+            '/login',
+            '/health',
+            '/auth/status',
+            '/reset',
+            '/reset_password',
+        ]
+        if request.path in public_routes and request.method in ('POST', 'PUT', 'PATCH', 'DELETE', 'GET'):
+            # 公开 API 直接放行
+            return None
+
+        # 已登录用户直接放行
         if 'user_id' in session:
             return
         if request.blueprint in current_app.config.get('WHITELIST_BLUEPRINTS', []) \
