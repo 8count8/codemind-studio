@@ -64,10 +64,23 @@ def create_app(config=None):
 
     # 初始化扩展
     from flask_wtf.csrf import CSRFProtect
-    # 禁用默认 CSRF 检查，改为手动在需要的路由上启用
-    # 公开 API（注册、登录、验证码）不需要 CSRF 保护
-    app.config['WTF_CSRF_CHECK_DEFAULT'] = False
-    csrf = CSRFProtect(app)
+    # 在生产环境（Railway）完全禁用 CSRF
+    # 因为这是前后端分离的 API 服务，不需要 CSRF 保护
+    is_production_env = os.environ.get('FLASK_ENV') == 'production'
+    if not is_production_env:
+        # 仅在开发环境启用 CSRF
+        app.config['WTF_CSRF_CHECK_DEFAULT'] = True
+        csrf = CSRFProtect(app)
+    else:
+        # 生产环境：不初始化 CSRF，完全跳过
+        app.config['WTF_CSRF_CHECK_DEFAULT'] = False
+        # 创建一个空的 csrf 对象以避免代码中引用报错
+        class NoOpCSRF:
+            def exempt(self, f):
+                return f
+            def protect(self):
+                pass
+        csrf = NoOpCSRF()
 
     # CORS 支持（允许 Vue 前端跨域访问）
     from flask_cors import CORS
