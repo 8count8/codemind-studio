@@ -63,23 +63,24 @@ def create_app(config=None):
     init_logging(app)
 
     # 初始化扩展
-    from flask_wtf.csrf import CSRFProtect
     # 在生产环境（Railway）完全禁用 CSRF
     # 因为这是前后端分离的 API 服务，不需要 CSRF 保护
     is_production_env = os.environ.get('FLASK_ENV') == 'production'
+    
+    class NoOpCSRF:
+        """空的 CSRF 实现，完全跳过检查"""
+        def exempt(self, f):
+            return f
+        def protect(self):
+            pass
+    
     if not is_production_env:
         # 仅在开发环境启用 CSRF
-        app.config['WTF_CSRF_CHECK_DEFAULT'] = True
+        from flask_wtf.csrf import CSRFProtect
         csrf = CSRFProtect(app)
     else:
-        # 生产环境：不初始化 CSRF，完全跳过
-        app.config['WTF_CSRF_CHECK_DEFAULT'] = False
-        # 创建一个空的 csrf 对象以避免代码中引用报错
-        class NoOpCSRF:
-            def exempt(self, f):
-                return f
-            def protect(self):
-                pass
+        # 生产环境：使用空实现，完全跳过 CSRF 检查
+        # 并且不导入 flask_wtf 模块
         csrf = NoOpCSRF()
 
     # CORS 支持（允许 Vue 前端跨域访问）
@@ -145,13 +146,15 @@ def create_app(config=None):
             return jsonify(status='error', message='未登录或登录已过期', code=401), 401
         return redirect(url_for('auth.login'))
 
-    # 错误处理器（统一处理CSRF错误）
-    @app.errorhandler(400)
-    @app.errorhandler(403)
-    def handle_csrf_error(e):
-        if e.description.startswith('The CSRF token'):
-            current_app.logger.warning(f'CSRF验证失败: {request.path}')
-            return jsonify(status='error', message='安全验证失败'), 403
-        return e
+    # 错误处理器（生产环境不再处理 CSRF 错误）
+    # 在生产环境（Railway），我们已经完全禁用了 CSRF
+    if not is_production_env:
+        @app.errorhandler(400)
+        @app.errorhandler(403)
+        def handle_csrf_error(e):
+            if e.description.startswith('The CSRF token'):
+                current_app.logger.warning(f'CSRF验证失败: {request.path}')
+                return jsonify(status='error', message='安全验证失败'), 403
+            return e
 
     return app
