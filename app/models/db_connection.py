@@ -18,7 +18,16 @@ logger = logging.getLogger(__name__)
 def get_db_connection():
     """获取 PostgreSQL 数据库连接"""
     try:
-        conn = psycopg2.connect(os.environ.get('DATABASE_URL'))
+        conn_str = os.environ.get('DATABASE_URL', '')
+        
+        # 确保 Supabase 连接使用 SSL
+        if 'supabase' in conn_str and 'sslmode' not in conn_str:
+            if '?' in conn_str:
+                conn_str += '&sslmode=require'
+            else:
+                conn_str += '?sslmode=require'
+        
+        conn = psycopg2.connect(conn_str)
         conn.autocommit = True
         return conn
     except Exception as e:
