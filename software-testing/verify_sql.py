@@ -1,4 +1,4 @@
-import sys
+﻿import sys
 sys.path.insert(0, '.')
 from app.models.db import get_create_statements
 

@@ -1,4 +1,4 @@
-"""题库管理 - Supabase PostgreSQL"""
+﻿"""题库管理 - MySQL"""
 
 import json
 import logging

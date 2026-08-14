@@ -1,4 +1,4 @@
-# 导入常用的功能函数和类
+﻿# 导入常用的功能函数和类
 from .processing_operations import (
     detect_language,  # 判断文件内容的语言类型
     convert_to_code,  # 将非代码文件转换为对应的代码内容

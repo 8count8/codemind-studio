@@ -1,4 +1,4 @@
-"""用户操作记录 - Supabase PostgreSQL"""
+﻿"""用户操作记录 - MySQL"""
 import os
 from datetime import datetime
 import logging

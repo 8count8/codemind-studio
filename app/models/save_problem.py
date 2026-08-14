@@ -1,4 +1,4 @@
-"""保存题目 - Supabase PostgreSQL"""
+﻿"""保存题目 - MySQL"""
 
 import json
 import logging

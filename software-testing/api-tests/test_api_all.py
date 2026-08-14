@@ -1,4 +1,4 @@
-"""
+﻿"""
 CodeMind Studio - 后端 Flask API 集成测试（真实 DB，不使用 Mock）
 - 使用 Flask test_client 发请求，避免依赖 netlify/functions/wsgi 部署形态
 - 覆盖: 注册/登录/CSRF/状态检查  +  题库 CRUD  +  收藏夹  +  能力矩阵
@@ -89,7 +89,7 @@ def create_test_client():
     with app.app_context():
         try:
             init_database()
-            print("  🔗 Supabase PostgreSQL 初始化成功")
+            print("  🔗 MySQL 初始化成功")
         except Exception as e:
             print(f"  ⚠️  初始化数据库跳过: {e}")
 
@@ -695,7 +695,7 @@ def cleanup_test_users_db():
 def main():
     os.makedirs(os.path.dirname(RESULT_FILE), exist_ok=True)
     print("=" * 60)
-    print("CodeMind Studio Flask API 集成测试（真实 Supabase PostgreSQL）")
+    print("CodeMind Studio Flask API 集成测试（真实 MySQL）")
     print("=" * 60)
     print(f"测试用户名: {USERNAME}")
     if not os.environ.get("DATABASE_URL"):

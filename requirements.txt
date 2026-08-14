@@ -5,5 +5,5 @@ bcrypt
 requests
 flasgger
 flask-cors
-psycopg2-binary
+pymysql
 gunicorn

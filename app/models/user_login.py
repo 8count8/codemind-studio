@@ -1,4 +1,4 @@
-"""用户登录/注册 - Supabase PostgreSQL"""
+﻿"""用户登录/注册 - MySQL"""
 from datetime import datetime, timedelta
 from flask import render_template_string
 import random
@@ -136,7 +136,7 @@ def verify_verification_code(email, user_input_code):
             if expires_at is None:
                 return False
             if hasattr(expires_at, 'tzinfo'):
-                # PostgreSQL 返回的 datetime 对象，直接比较
+                # MySQL 返回的 datetime 对象，直接比较
                 now = datetime.now(expires_at.tzinfo) if expires_at.tzinfo else datetime.now()
             else:
                 now = datetime.now()

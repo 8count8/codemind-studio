@@ -1,4 +1,4 @@
-import re
+﻿import re
 
 def parse_markdown_problem(markdown_text):
     """

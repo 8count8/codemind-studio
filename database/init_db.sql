@@ -1,132 +1,126 @@
 -- ============================================================
 -- CodeMind Studio - 完整数据库初始化脚本
--- 目标数据库: Supabase PostgreSQL
+-- 目标数据库: MySQL 8.0+
 -- 包含: 建表 + 种子数据（题目/测试用例/管理员账户）
--- 用法: 在 Supabase SQL Editor 中整段粘贴执行
+-- 用法: 在 MySQL 客户端中整段执行
 -- ============================================================
 
 -- ============================================================
--- 第一部分：建表（与代码 db.py / ability_matrix_model.py 完全一致）
+-- 第一部分：建表
 -- ============================================================
 
 -- 1. 用户表
 CREATE TABLE IF NOT EXISTS users (
-    id SERIAL PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    last_login TIMESTAMP
-);
+    last_login TIMESTAMP NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 2. 验证码表
 CREATE TABLE IF NOT EXISTS verification_codes (
-    id SERIAL PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(100) UNIQUE NOT NULL,
     code VARCHAR(10) NOT NULL,
     sent_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    expires_at TIMESTAMP
-);
+    expires_at TIMESTAMP NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 3. 功能使用日志表
 CREATE TABLE IF NOT EXISTS functions_used (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL,
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
     function_name VARCHAR(100) NOT NULL,
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 4. 用户上传文件表
 CREATE TABLE IF NOT EXISTS user_uploads (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL,
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
     upload_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     file_name VARCHAR(255) NOT NULL,
     file_type VARCHAR(50),
     file_path TEXT
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 5. API 响应记录表
 CREATE TABLE IF NOT EXISTS api_responses (
-    id SERIAL PRIMARY KEY,
-    user_upload_id INTEGER NOT NULL,
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_upload_id INT NOT NULL,
     response_file_name VARCHAR(255),
     response_file_content TEXT,
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 6. 收藏夹表
 CREATE TABLE IF NOT EXISTS favorites (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL,
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
     question_id VARCHAR(50) NOT NULL,
     question_title VARCHAR(255),
     question_content TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 7. 答题记录表
 CREATE TABLE IF NOT EXISTS answer_records (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL,
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
     question_id VARCHAR(50) NOT NULL,
     user_answer TEXT,
-    is_correct INTEGER DEFAULT 0,
-    time_spent INTEGER,
+    is_correct INT DEFAULT 0,
+    time_spent INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 8. 能力矩阵表
 CREATE TABLE IF NOT EXISTS ability_matrix (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL UNIQUE,
-    syntax_score REAL DEFAULT 0,
-    algorithm_score REAL DEFAULT 0,
-    project_score REAL DEFAULT 0,
-    debug_score REAL DEFAULT 0,
-    security_score REAL DEFAULT 0,
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL UNIQUE,
+    syntax_score FLOAT DEFAULT 0,
+    algorithm_score FLOAT DEFAULT 0,
+    project_score FLOAT DEFAULT 0,
+    debug_score FLOAT DEFAULT 0,
+    security_score FLOAT DEFAULT 0,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 9. 题目表
 CREATE TABLE IF NOT EXISTS problems (
-    id SERIAL PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     content TEXT,
     difficulty VARCHAR(20),
     tags TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 10. 测试用例表
 CREATE TABLE IF NOT EXISTS test_cases (
-    id SERIAL PRIMARY KEY,
-    problem_id INTEGER NOT NULL,
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    problem_id INT NOT NULL,
     input_data TEXT,
     expected_output TEXT
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 11. 能力评估提交记录表（ability_matrix_model.py 中 _ensure_submission_table 建表）
+-- 11. 能力评估提交记录表
 CREATE TABLE IF NOT EXISTS ability_submissions (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL,
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
     source_type VARCHAR(50) NOT NULL,
     source_id VARCHAR(100),
     scores_json TEXT,
     detail_json TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
 -- ============================================================
 -- 第二部分：种子数据 —— 题目（problems）
--- content 字段为 Markdown 格式（与 question_db.py 的 dict_to_markdown 输出一致）
--- difficulty 取值: "简单" / "中等" / "困难"（与代码 valid_difficulties 一致）
 -- ============================================================
-
--- 清空旧数据（可选，首次执行不需要）
--- DELETE FROM test_cases;
--- DELETE FROM problems;
 
 INSERT INTO problems (title, content, difficulty, tags) VALUES
 (
@@ -150,7 +144,7 @@ INSERT INTO problems (title, content, difficulty, tags) VALUES
 - 只会存在一个有效答案',
     '简单',
     '数组,哈希表'
-) ON CONFLICT DO NOTHING;
+) ON DUPLICATE KEY UPDATE title=title;
 
 INSERT INTO problems (title, content, difficulty, tags) VALUES
 (
@@ -171,7 +165,7 @@ INSERT INTO problems (title, content, difficulty, tags) VALUES
 链表可以选用迭代或递归方式完成反转。你能否用两种方法解决这道题？',
     '简单',
     '链表,递归'
-) ON CONFLICT DO NOTHING;
+) ON DUPLICATE KEY UPDATE title=title;
 
 INSERT INTO problems (title, content, difficulty, tags) VALUES
 (
@@ -196,7 +190,7 @@ INSERT INTO problems (title, content, difficulty, tags) VALUES
 - s 仅由括号 ''()[]{}'' 组成',
     '简单',
     '栈,字符串'
-) ON CONFLICT DO NOTHING;
+) ON DUPLICATE KEY UPDATE title=title;
 
 INSERT INTO problems (title, content, difficulty, tags) VALUES
 (
@@ -213,7 +207,7 @@ INSERT INTO problems (title, content, difficulty, tags) VALUES
 - s 仅由数字和英文字母组成',
     '中等',
     '字符串,动态规划'
-) ON CONFLICT DO NOTHING;
+) ON DUPLICATE KEY UPDATE title=title;
 
 INSERT INTO problems (title, content, difficulty, tags) VALUES
 (
@@ -233,7 +227,7 @@ INSERT INTO problems (title, content, difficulty, tags) VALUES
 - -10^5 <= nums[i] <= 10^5',
     '中等',
     '数组,双指针,排序'
-) ON CONFLICT DO NOTHING;
+) ON DUPLICATE KEY UPDATE title=title;
 
 INSERT INTO problems (title, content, difficulty, tags) VALUES
 (
@@ -253,7 +247,7 @@ INSERT INTO problems (title, content, difficulty, tags) VALUES
 - 0 <= starti <= endi <= 10^4',
     '中等',
     '数组,排序'
-) ON CONFLICT DO NOTHING;
+) ON DUPLICATE KEY UPDATE title=title;
 
 INSERT INTO problems (title, content, difficulty, tags) VALUES
 (
@@ -271,7 +265,7 @@ INSERT INTO problems (title, content, difficulty, tags) VALUES
 - -1000 <= Node.val <= 1000',
     '中等',
     '树,广度优先搜索,二叉树'
-) ON CONFLICT DO NOTHING;
+) ON DUPLICATE KEY UPDATE title=title;
 
 INSERT INTO problems (title, content, difficulty, tags) VALUES
 (
@@ -292,7 +286,7 @@ INSERT INTO problems (title, content, difficulty, tags) VALUES
 - 选择基准元素时有多种策略（首元素/末元素/随机/三数取中），注意最坏情况退化',
     '中等',
     '排序,分治,递归'
-) ON CONFLICT DO NOTHING;
+) ON DUPLICATE KEY UPDATE title=title;
 
 INSERT INTO problems (title, content, difficulty, tags) VALUES
 (
@@ -318,7 +312,7 @@ INSERT INTO problems (title, content, difficulty, tags) VALUES
 - 最多调用 2 * 10^5 次 get 和 put',
     '中等',
     '设计,哈希表,链表,双向链表'
-) ON CONFLICT DO NOTHING;
+) ON DUPLICATE KEY UPDATE title=title;
 
 INSERT INTO problems (title, content, difficulty, tags) VALUES
 (
@@ -341,7 +335,7 @@ INSERT INTO problems (title, content, difficulty, tags) VALUES
 - -1000 <= Node.val <= 1000',
     '困难',
     '树,深度优先搜索,动态规划,二叉树'
-) ON CONFLICT DO NOTHING;
+) ON DUPLICATE KEY UPDATE title=title;
 
 INSERT INTO problems (title, content, difficulty, tags) VALUES
 (
@@ -362,7 +356,7 @@ INSERT INTO problems (title, content, difficulty, tags) VALUES
 能否用 O(n) 时间复杂度和 O(1) 空间复杂度解决？',
     '困难',
     '数组,双指针,动态规划,栈'
-) ON CONFLICT DO NOTHING;
+) ON DUPLICATE KEY UPDATE title=title;
 
 INSERT INTO problems (title, content, difficulty, tags) VALUES
 (
@@ -385,7 +379,7 @@ INSERT INTO problems (title, content, difficulty, tags) VALUES
 - word1 和 word2 由小写英文字母组成',
     '困难',
     '字符串,动态规划'
-) ON CONFLICT DO NOTHING;
+) ON DUPLICATE KEY UPDATE title=title;
 
 INSERT INTO problems (title, content, difficulty, tags) VALUES
 (
@@ -403,7 +397,7 @@ INSERT INTO problems (title, content, difficulty, tags) VALUES
 - 1 <= n <= 45',
     '简单',
     '动态规划,数学'
-) ON CONFLICT DO NOTHING;
+) ON DUPLICATE KEY UPDATE title=title;
 
 INSERT INTO problems (title, content, difficulty, tags) VALUES
 (
@@ -424,7 +418,7 @@ INSERT INTO problems (title, content, difficulty, tags) VALUES
 - 0 <= prices[i] <= 10^4',
     '简单',
     '数组,动态规划'
-) ON CONFLICT DO NOTHING;
+) ON DUPLICATE KEY UPDATE title=title;
 
 INSERT INTO problems (title, content, difficulty, tags) VALUES
 (
@@ -442,22 +436,18 @@ INSERT INTO problems (title, content, difficulty, tags) VALUES
 - s 由英文字母、数字、符号和空格组成',
     '中等',
     '哈希表,字符串,滑动窗口'
-) ON CONFLICT DO NOTHING;
+) ON DUPLICATE KEY UPDATE title=title;
 
 
 -- ============================================================
 -- 第三部分：种子数据 —— 测试用例（test_cases）
--- 对应上面插入的题目，problem_id 从 1 开始递增
 -- ============================================================
 
 -- 题目 1: 两数之和
 INSERT INTO test_cases (problem_id, input_data, expected_output) VALUES
-(1, '[2,7,11,15]
-9', '[0,1]'),
-(1, '[3,2,4]
-6', '[1,2]'),
-(1, '[3,3]
-6', '[0,1]');
+(1, '[2,7,11,15]\n9', '[0,1]'),
+(1, '[3,2,4]\n6', '[1,2]'),
+(1, '[3,3]\n6', '[0,1]');
 
 -- 题目 2: 反转链表
 INSERT INTO test_cases (problem_id, input_data, expected_output) VALUES
@@ -519,10 +509,8 @@ INSERT INTO test_cases (problem_id, input_data, expected_output) VALUES
 
 -- 题目 12: 编辑距离
 INSERT INTO test_cases (problem_id, input_data, expected_output) VALUES
-(12, 'horse
-ros', '3'),
-(12, 'intention
-execution', '5');
+(12, 'horse\nros', '3'),
+(12, 'intention\nexecution', '5');
 
 -- 题目 13: 爬楼梯
 INSERT INTO test_cases (problem_id, input_data, expected_output) VALUES
@@ -543,13 +531,7 @@ INSERT INTO test_cases (problem_id, input_data, expected_output) VALUES
 
 
 -- ============================================================
--- 第四部分：预置账户（可选）
--- 密码使用 bcrypt 加密（与 user_login.py 的 register_user 逻辑一致）
--- 注册流程说明：
---   前端注册 → POST /get_verification_code → 后端生成验证码写入
---   verification_codes 表 → 发邮件 → 用户填验证码 → POST /register
---   → verify_verification_code 从表读取校验 → 注册成功 → 删除验证码
---   所以 verification_codes 表是运行时动态读写的，不需要预置数据
+-- 第四部分：预置账户
 -- ============================================================
 
 -- 管理员账户: admin / admin123456
@@ -558,39 +540,31 @@ INSERT INTO users (username, password, email) VALUES
     'admin',
     '$2b$12$lneFaHZ/E/1Fhwb9nVlI5OUhzocw8Z0YHKvorYqqfZN8JzOevcb/a',
     'admin@codemind.studio'
-) ON CONFLICT (username) DO NOTHING;
+) ON DUPLICATE KEY UPDATE username=username;
 
--- 测试账户: testuser / test123456（方便登录测试，不需要走邮箱验证码流程）
+-- 测试账户: testuser / test123456
 INSERT INTO users (username, password, email) VALUES
 (
     'testuser',
     '$2b$12$F9GfopyoCTNkmYc7vjEJ5.92YWums0a7NRdgrah/IPL4cXI5YZRQ6',
     'testuser@codemind.studio'
-) ON CONFLICT (username) DO NOTHING;
+) ON DUPLICATE KEY UPDATE username=username;
 
 
 -- ============================================================
--- 第五部分：创建索引（提升查询性能）
+-- 第五部分：创建索引
 -- ============================================================
 
-CREATE INDEX IF NOT EXISTS idx_problems_difficulty ON problems(difficulty);
-CREATE INDEX IF NOT EXISTS idx_problems_tags ON problems(tags);
-CREATE INDEX IF NOT EXISTS idx_favorites_user_id ON favorites(user_id);
-CREATE INDEX IF NOT EXISTS idx_answer_records_user_id ON answer_records(user_id);
-CREATE INDEX IF NOT EXISTS idx_functions_used_user_id ON functions_used(user_id);
-CREATE INDEX IF NOT EXISTS idx_user_uploads_user_id ON user_uploads(user_id);
-CREATE INDEX IF NOT EXISTS idx_api_responses_upload_id ON api_responses(user_upload_id);
-CREATE INDEX IF NOT EXISTS idx_ability_matrix_user_id ON ability_matrix(user_id);
-CREATE INDEX IF NOT EXISTS idx_ability_submissions_user_id ON ability_submissions(user_id);
-CREATE INDEX IF NOT EXISTS idx_test_cases_problem_id ON test_cases(problem_id);
-
--- ============================================================
--- 第六部分：兼容迁移（已有旧表补充新字段，安全可重复执行）
--- ============================================================
-
--- users 表新增审计字段（如果旧表不存在这些列则添加）
-ALTER TABLE users ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
-ALTER TABLE users ADD COLUMN IF NOT EXISTS last_login TIMESTAMP;
+CREATE INDEX idx_problems_difficulty ON problems(difficulty);
+CREATE INDEX idx_problems_tags ON problems(tags);
+CREATE INDEX idx_favorites_user_id ON favorites(user_id);
+CREATE INDEX idx_answer_records_user_id ON answer_records(user_id);
+CREATE INDEX idx_functions_used_user_id ON functions_used(user_id);
+CREATE INDEX idx_user_uploads_user_id ON user_uploads(user_id);
+CREATE INDEX idx_api_responses_upload_id ON api_responses(user_upload_id);
+CREATE INDEX idx_ability_matrix_user_id ON ability_matrix(user_id);
+CREATE INDEX idx_ability_submissions_user_id ON ability_submissions(user_id);
+CREATE INDEX idx_test_cases_problem_id ON test_cases(problem_id);
 
 
 -- ============================================================

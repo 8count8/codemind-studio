@@ -29,7 +29,7 @@ except Exception as e:
 
 @app.route('/health')
 def health_check():
-    """健康检查端点 - Railway 需要此端点"""
+    """健康检查端点"""
     import json
     result = {
         "status": "ok",
@@ -39,7 +39,12 @@ def health_check():
             "EMAIL_ADDRESS": "SET" if os.getenv("EMAIL_ADDRESS") else "MISSING",
             "EMAIL_PASSWORD": "SET" if os.getenv("EMAIL_PASSWORD") else "MISSING",
         },
-        "database": "SET" if os.getenv("DATABASE_URL") else "MISSING",
+        "database": {
+            "DB_HOST": os.getenv("DB_HOST", "localhost"),
+            "DB_PORT": os.getenv("DB_PORT", "3306"),
+            "DB_USER": os.getenv("DB_USER", "root"),
+            "DB_NAME": os.getenv("DB_NAME", "codemind"),
+        },
     }
     
     # SMTP 连接测试
@@ -52,6 +57,15 @@ def health_check():
         result["smtp"] = "ok"
     except Exception as e:
         result["smtp"] = f"failed: {str(e)}"
+    
+    # 数据库连接测试
+    try:
+        from app.models.db_connection import get_db_connection
+        conn = get_db_connection()
+        conn.close()
+        result["database_status"] = "ok"
+    except Exception as e:
+        result["database_status"] = f"failed: {str(e)}"
     
     return app.response_class(
         response=json.dumps(result),

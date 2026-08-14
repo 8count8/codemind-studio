@@ -1,4 +1,4 @@
-import bcrypt
+﻿import bcrypt
 import sys
 
 admin_hash = b'$2b$12$lneFaHZ/E/1Fhwb9nVlI5OUhzocw8Z0YHKvorYqqfZN8JzOevcb/a'

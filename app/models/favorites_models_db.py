@@ -1,4 +1,4 @@
-"""
+﻿"""
 Model 层封装了对数据库的操作，调用 favorites_topics 中的函数。
 提供更清晰的接口供 Service 层使用。
 """

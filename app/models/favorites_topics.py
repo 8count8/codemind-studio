@@ -1,4 +1,4 @@
-"""收藏功能 - Supabase PostgreSQL"""
+﻿"""收藏功能 - MySQL"""
 
 from app.models.db import get_db_connection, fetch_dict, fetch_one_dict, VALID_DIFFICULTIES
 

@@ -1,8 +1,8 @@
-r"""
+﻿r"""
 CodeMind Studio - 一键运行所有测试
 用法：
     python software-testing\run_all_tests.py
-在能连接 Supabase PostgreSQL 的网络环境运行（Netlify 构建机 / 本地有代理均可）
+在能连接 MySQL 的网络环境运行（Netlify 构建机 / 本地有代理均可）
 无 DB 环境下仅运行单元测试
 """
 import os

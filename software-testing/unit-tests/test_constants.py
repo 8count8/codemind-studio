@@ -1,9 +1,9 @@
-"""
+﻿"""
 Phase 1 测试: 验证常量定义的正确性和一致性
 
 覆盖模块:
 - app.utils.constants (HTTPStatus, LevelThresholds, LEVEL_LABELS)
-- app.models.db_constants (VALID_DIFFICULTIES, USE_POSTGRESQL)
+- app.models.db_constants (VALID_DIFFICULTIES, USE_MYSQL)
 """
 
 import unittest
@@ -151,12 +151,12 @@ class TestDBConstants(unittest.TestCase):
     """验证数据库常量"""
 
     def setUp(self):
-        from app.models.db_constants import USE_POSTGRESQL, VALID_DIFFICULTIES
-        self.use_postgresql = USE_POSTGRESQL
+        from app.models.db_constants import USE_MYSQL, VALID_DIFFICULTIES
+        self.USE_MYSQL = USE_MYSQL
         self.valid_difficulties = VALID_DIFFICULTIES
 
-    def test_use_postgresql_is_bool(self):
-        self.assertIsInstance(self.use_postgresql, bool)
+    def test_USE_MYSQL_is_bool(self):
+        self.assertIsInstance(self.USE_MYSQL, bool)
 
     def test_valid_difficulties_is_list(self):
         self.assertIsInstance(self.valid_difficulties, list)

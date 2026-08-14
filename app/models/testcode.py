@@ -1,4 +1,4 @@
-"""测试用例 - Supabase PostgreSQL"""
+﻿"""测试用例 - MySQL"""
 
 from app.models.db import get_db_connection
 

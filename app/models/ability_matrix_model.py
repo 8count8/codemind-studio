@@ -1,4 +1,4 @@
-"""能力矩阵数据模型层 - Supabase PostgreSQL"""
+﻿"""能力矩阵数据模型层 - MySQL"""
 
 # ⚠️ 循环依赖约束（CRITICAL）
 # ❌ 禁止: from app.service.xxx import xxx

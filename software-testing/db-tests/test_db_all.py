@@ -1,4 +1,4 @@
-"""
+﻿"""
 CodeMind Studio - 数据库链路测试（真实 DB，不使用 Mock）
 模块：app.models.db / user_login / question_db / favorites_topics / user_operation_records
 目录：software-testing/db-tests/
@@ -29,7 +29,7 @@ from app.models.db import (
     init_database,
     fetch_dict,
     fetch_one_dict,
-    USE_POSTGRESQL,
+    USE_MYSQL,
 )
 
 TEST_PREFIX = "TEST_DB_"
@@ -41,7 +41,7 @@ RESULT_FILE = os.path.join(
 
 results = {
     "started_at": datetime.now().isoformat(),
-    "database": "PostgreSQL (Supabase)" if USE_POSTGRESQL else "SQLite",
+    "database": "MySQL" if USE_MYSQL else "SQLite",
     "total": 0,
     "passed": 0,
     "failed": 0,
@@ -109,7 +109,7 @@ def test_connection_and_init():
         ok = init_database()
         duration = int((time.time() - t0) * 1000)
         record_case(name, ok,
-                    f"USE_POSTGRESQL={USE_POSTGRESQL}" if ok else "init_database 返回 False",
+                    f"USE_MYSQL={USE_MYSQL}" if ok else "init_database 返回 False",
                     duration)
         return ok
     except Exception as e:
@@ -558,7 +558,7 @@ def test_ability_matrix_module():
 def main():
     os.makedirs(os.path.dirname(RESULT_FILE), exist_ok=True)
     print("=" * 60)
-    print("CodeMind Studio 数据库链路测试（真实 Supabase PostgreSQL）")
+    print("CodeMind Studio 数据库链路测试（真实 MySQL）")
     print(f"开始时间: {results['started_at']}")
     print("=" * 60)
 

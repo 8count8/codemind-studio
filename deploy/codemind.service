@@ -1,0 +1,27 @@
+[Unit]
+Description=CodeMind Studio - Flask Backend
+After=network.target mysql.service
+
+[Service]
+Type=simple
+User=codemind
+Group=codemind
+WorkingDirectory=/opt/codemind
+EnvironmentFile=/opt/codemind/.env
+ExecStart=/opt/codemind/venv/bin/gunicorn \
+    --workers 4 \
+    --bind 127.0.0.1:8000 \
+    --timeout 120 \
+    --access-logfile /var/log/codemind/access.log \
+    --error-logfile /var/log/codemind/error.log \
+    run:app
+Restart=always
+RestartSec=5
+
+# 安全设置
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/opt/codemind /var/log/codemind
+
+[Install]
+WantedBy=multi-user.target
