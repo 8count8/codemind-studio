@@ -1,6 +1,5 @@
 """
 Flask 应用启动入口 - 供 gunicorn/Waitress 使用
-支持 Railway、Netlify、本地开发
 """
 import os
 import sys

@@ -1,8 +1,8 @@
-﻿r"""
+r"""
 CodeMind Studio - 一键运行所有测试
 用法：
     python software-testing\run_all_tests.py
-在能连接 MySQL 的网络环境运行（Netlify 构建机 / 本地有代理均可）
+在能连接 MySQL 的网络环境运行
 无 DB 环境下仅运行单元测试
 """
 import os
@@ -14,12 +14,12 @@ from datetime import datetime
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 PY = sys.executable
 
-HAS_DB = bool(os.environ.get('DATABASE_URL'))
+HAS_DB = bool(os.environ.get('DB_HOST'))
 
 TESTS = [
     ("单元测试",     "unit-tests",    True),   # always run
-    ("DB 链路测试",  "db-tests",      False),  # requires DATABASE_URL
-    ("API 集成测试", "api-tests",     False),  # requires DATABASE_URL
+    ("DB 链路测试",  "db-tests",      False),  # requires DB_HOST
+    ("API 集成测试", "api-tests",     False),  # requires DB_HOST
 ]
 
 
@@ -41,14 +41,14 @@ def run_one(name, test_dir, force=False):
     elif test_dir == "db-tests":
         if not HAS_DB and not force:
             dur = int((datetime.now() - t0).total_seconds() * 1000)
-            print(f"⚠️  跳过（DATABASE_URL 未配置）耗时 {dur} ms")
+            print(f"⚠️  跳过（DB_HOST 未配置）耗时 {dur} ms")
             return True, dur, True, "skipped (no DB)"
         script = os.path.join(test_path, "test_db_all.py")
         proc = subprocess.run([PY, script], cwd=ROOT, capture_output=False)
     elif test_dir == "api-tests":
         if not HAS_DB and not force:
-            dur = int((datetime.now() - t0).total_seconds() * 1000)
-            print(f"⚠️  跳过（DATABASE_URL 未配置）耗时 {dur} ms")
+            dur2 = int((datetime.now() - t0).total_seconds() * 1000)
+            print(f"⚠️  跳过（DB_HOST 未配置）耗时 {dur2} ms")
             return True, dur, True, "skipped (no DB)"
         script = os.path.join(test_path, "test_api_all.py")
         proc = subprocess.run([PY, script], cwd=ROOT, capture_output=False)
@@ -77,7 +77,7 @@ def main():
     print("=" * 60)
     print("CodeMind Studio 全链路测试")
     print(f"Python:  {PY}")
-    print(f"DATABASE_URL:  {'✅ 已配置' if HAS_DB else '⚠️  未配置（仅运行单元测试）'}")
+    print(f"DB_HOST:  {'✅ 已配置' if HAS_DB else '⚠️  未配置（仅运行单元测试）'}")
     print("=" * 60)
 
     summary = {

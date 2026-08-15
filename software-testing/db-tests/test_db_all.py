@@ -1,4 +1,4 @@
-﻿"""
+"""
 CodeMind Studio - 数据库链路测试（真实 DB，不使用 Mock）
 模块：app.models.db / user_login / question_db / favorites_topics / user_operation_records
 目录：software-testing/db-tests/
@@ -17,7 +17,7 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
-# 加载 .env（本地测试用；Netlify 部署时由环境变量注入）
+# 加载 .env（本地测试用；生产环境由环境变量注入）
 try:
     from dotenv import load_dotenv
     load_dotenv(os.path.join(ROOT, '.env'))
@@ -562,9 +562,9 @@ def main():
     print(f"开始时间: {results['started_at']}")
     print("=" * 60)
 
-    if not os.environ.get("DATABASE_URL"):
-        print("⚠️  未设置 DATABASE_URL —— 请先配置 .env 或环境变量")
-        print("   示例: postgresql://postgres:密码@db.xxx.supabase.co:5432/postgres")
+    if not os.environ.get("DB_HOST"):
+        print("⚠️  未设置 DB_HOST —— 请先配置 .env 或环境变量")
+        print("   示例: DB_HOST=localhost  DB_PORT=3306  DB_USER=codemind  DB_PASSWORD=xxx  DB_NAME=codemind")
         print("=" * 60)
 
     try:

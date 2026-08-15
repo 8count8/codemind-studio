@@ -1,6 +1,6 @@
-﻿"""
+"""
 CodeMind Studio - 后端 Flask API 集成测试（真实 DB，不使用 Mock）
-- 使用 Flask test_client 发请求，避免依赖 netlify/functions/wsgi 部署形态
+- 使用 Flask test_client 发请求
 - 覆盖: 注册/登录/CSRF/状态检查  +  题库 CRUD  +  收藏夹  +  能力矩阵
   操作记录  +  代码审查接口（需 AI_KEY 才通过全流程）
 目录：software-testing/api-tests/
@@ -20,7 +20,7 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
-# 加载 .env（本地测试用；Netlify 部署时由环境变量注入）
+# 加载 .env（本地测试用；生产环境由环境变量注入）
 try:
     from dotenv import load_dotenv
     load_dotenv(os.path.join(ROOT, '.env'))
@@ -77,7 +77,7 @@ def create_test_client():
     from app.models.db import init_database
 
     # 测试配置：使用 ProductionConfig（强制真实 DB；不伪造 SQLite）
-    # 如果本地没有 DATABASE_URL，就会抛异常
+    # 如果本地没有 DB_HOST，就会抛异常
     app = create_app(config=config.TestingConfig
                      if hasattr(config, 'TestingConfig')
                      else config.ProductionConfig)
@@ -698,8 +698,8 @@ def main():
     print("CodeMind Studio Flask API 集成测试（真实 MySQL）")
     print("=" * 60)
     print(f"测试用户名: {USERNAME}")
-    if not os.environ.get("DATABASE_URL"):
-        print("⚠️  未设置 DATABASE_URL —— 请先在 .env 或环境变量配置 Supabase 连接串")
+    if not os.environ.get("DB_HOST"):
+        print("⚠️  未设置 DB_HOST —— 请先在 .env 或环境变量配置 MySQL 连接")
 
     client = create_test_client()
 

@@ -51,7 +51,7 @@ class TestingConfig(Config):
 
 
 class ProductionConfig(Config):
-    """生产环境配置 (Railway 后端 + Netlify 前端)"""
+    """生产环境配置 (云服务器部署)"""
     DEBUG = False
     WHITELIST_BLUEPRINTS = [
         "auth", "main", "static", None,
@@ -60,6 +60,6 @@ class ProductionConfig(Config):
         "ai_question", "profile", "ability_matrix"
     ]
     WHITELIST_ROUTES = [
-        "health_check",   # Railway 健康检查
-        "root",           # 根路径
+        "health_check",
+        "root",
     ]

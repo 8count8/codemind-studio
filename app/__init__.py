@@ -5,13 +5,10 @@ import os
 
 
 def init_logging(app):
-    """初始化日志记录 (Netlify Serverless 环境使用 stdout)"""
-    # Serverless 环境: 日志直接输出到 stdout/stderr，由平台收集
-    # 本地开发: 使用文件日志
-    is_serverless = os.environ.get('SERVERLESS', '').lower() == 'true'
+    """初始化日志记录 (生产环境使用 stdout，本地开发使用文件日志)"""
+    is_production = os.environ.get('FLASK_ENV') == 'production'
 
-    if is_serverless:
-        # Serverless: 使用 StreamHandler 输出到 stdout
+    if is_production:
         stream_handler = logging.StreamHandler()
         stream_handler.setFormatter(logging.Formatter(
             '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
@@ -49,7 +46,7 @@ def create_app(config=None):
         app.config.from_object(config)
 
     # ---- 跨域 Session Cookie 配置 ----
-    # 生产环境 (Render/Deta) 使用 HTTPS，需设置 Secure + SameSite=None
+    # 生产环境使用 HTTPS，需设置 Secure + SameSite=None
     is_production = os.environ.get('FLASK_ENV') == 'production'
     app.config.update(
         SESSION_COOKIE_SECURE=is_production,
@@ -63,8 +60,7 @@ def create_app(config=None):
     init_logging(app)
 
     # 初始化扩展
-    # 在生产环境（Railway）完全禁用 CSRF
-    # 因为这是前后端分离的 API 服务，不需要 CSRF 保护
+    # 生产环境完全禁用 CSRF（前后端分离 API 服务）
     is_production_env = os.environ.get('FLASK_ENV') == 'production'
     
     class NoOpCSRF:
@@ -85,7 +81,7 @@ def create_app(config=None):
 
     # CORS 支持（允许 Vue 前端跨域访问）
     from flask_cors import CORS
-    cors_origins = os.environ.get('CORS_ORIGINS', 'http://localhost:5173,https://codemind-mind.netlify.app')
+    cors_origins = os.environ.get('CORS_ORIGINS', 'http://localhost:5173')
     origins = [o.strip() for o in cors_origins.split(',') if o.strip()]
     CORS(app, supports_credentials=True, origins=origins)
 
@@ -147,7 +143,7 @@ def create_app(config=None):
         return redirect(url_for('auth.login'))
 
     # 错误处理器（生产环境不再处理 CSRF 错误）
-    # 在生产环境（Railway），我们已经完全禁用了 CSRF
+    # 生产环境已完全禁用 CSRF
     if not is_production_env:
         @app.errorhandler(400)
         @app.errorhandler(403)
