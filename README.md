@@ -1,6 +1,6 @@
 # CodeMind Studio
 
-> 基于 AI 的编程学习与代码质量审查平台。采用**前后端分离架构**，Vue 3 前端 + Flask REST API 后端，全栈部署于 Netlify + Supabase PostgreSQL。
+> 基于 AI 的编程学习与代码质量审查平台。采用**前后端分离架构**，Vue 3 前端 + Flask REST API 后端，全栈部署于云服务器（Nginx + Gunicorn + MySQL）。
 
 ## 项目简介
 
@@ -13,7 +13,8 @@ CodeMind Studio 是一个面向编程初学者与从业者的智能学习平台�
 - **Flask-WTF** — CSRF 保护
 - **Flask-CORS** — 前后端分离跨域支持
 - **Flasgger** — Swagger API 文档自动生成
-- **psycopg2-binary** — PostgreSQL 驱动
+- **PyMySQL** — MySQL 驱动
+- **Gunicorn** — WSGI HTTP 服务器
 - **bcrypt** — 密码哈希加密
 - **python-dotenv** — 环境变量管理
 
@@ -27,11 +28,12 @@ CodeMind Studio 是一个面向编程初学者与从业者的智能学习平台�
 - **Ace Builds** — 在线代码编辑器
 
 ### 数据库
-- **Supabase PostgreSQL** — 11 张表，完整建表 + 种子数据脚本
+- **MySQL** 8.0+ — 11 张表，完整建表 + 种子数据脚本
 
 ### 部署
-- **Netlify** — 前端静态托管 + Serverless Functions 后端（统一平台）
-- **Supabase** — PostgreSQL 数据库（500MB 免费额度）
+- **Nginx** — 反向代理 + 静态资源托管
+- **Gunicorn** — Flask 应用服务器（4 Worker）
+- **MySQL** — 关系型数据库（InnoDB 引擎）
 
 ## 功能模块
 
@@ -67,7 +69,10 @@ CMS-master/
 │   │   ├── profile_routes.py         # 个人中心
 │   │   └── user_api.py              # 用户接口（代码审查/历史/收藏 API）
 │   ├── models/                       # 数据模型层
-│   │   ├── db.py                     # PostgreSQL 连接 + 建表（11 张表）
+│   │   ├── db.py                     # MySQL 连接 + 建表（11 张表）
+│   │   ├── db_connection.py          # 数据库连接管理
+│   │   ├── db_constants.py           # 数据库常量
+│   │   ├── db_utils.py               # 数据库工具函数
 │   │   ├── user_login.py            # 用户注册/登录/验证码（bcrypt + secrets.compare_digest）
 │   │   ├── question_db.py           # 题库 CRUD
 │   │   ├── favorites_topics.py      # 收藏 CRUD
@@ -90,10 +95,10 @@ CMS-master/
 │   └── package.json
 ├── database/
 │   └── init_db.sql                   # 完整建表 + 15 道种子题 + 42 组测试用例 + 预置账户
-├── netlify/
-│   ├── functions/
-│   │   └── app.py                    # Netlify Serverless Functions 入口（Flask WSGI 适配）
-│   └── toml                          # → netlify.toml
+├── deploy/                           # 部署配置
+│   ├── install.sh                    # 一键部署脚本
+│   ├── codemind.service              # Gunicorn systemd 服务
+│   └── nginx.conf                    # Nginx 配置模板
 ├── software-testing/                 # 测试代码（与业务代码隔离）
 │   ├── api-tests/                    # 20 条 Flask API 集成测试
 │   ├── db-tests/                     # 23 条数据库链路测试
@@ -101,7 +106,7 @@ CMS-master/
 │   └── run_all_tests.py             # 一键运行入口
 ├── config.py                         # 配置类（Dev/Prod/Test）
 ├── requirements.txt                  # Python 依赖
-├── netlify.toml                      # Netlify 构建配置 + SPA 路由 + API 重定向
+├── run.py                            # 应用启动入口
 └── .env.example                      # 环境变量示例
 ```
 
@@ -112,7 +117,7 @@ CMS-master/
 | 表名 | 用途 |
 |---|---|
 | `users` | 用户账户（username + bcrypt password + email + created_at + last_login） |
-| `verification_codes` | 邮箱验证码（10 分钟过期，ON CONFLICT 覆盖重发） |
+| `verification_codes` | 邮箱验证码（10 分钟过期，ON DUPLICATE KEY UPDATE 覆盖重发） |
 | `problems` | 题库（15 道种子题：简单 5 + 中等 7 + 困难 3） |
 | `test_cases` | 测试用例（42 组 input + expected_output） |
 | `answer_records` | 答题记录 |
@@ -125,12 +130,12 @@ CMS-master/
 
 ### 初始化
 
-在 Supabase SQL Editor 中粘贴执行 [database/init_db.sql](database/init_db.sql)：
+在 MySQL 客户端中粘贴执行 [database/init_db.sql](database/init_db.sql)：
 - 11 张表建表（`IF NOT EXISTS`，可重复执行）
 - 15 道编程题目 + 42 组测试用例
 - 2 个预置账户（admin / testuser，bcrypt 已验证）
 - 10 个性能索引
-- `ALTER TABLE ADD COLUMN IF NOT EXISTS` 兼容旧库迁移
+- `ON DUPLICATE KEY UPDATE` 兼容重复执行
 
 ### 安全设计
 
@@ -146,7 +151,7 @@ CMS-master/
 ### 环境要求
 - Python ≥ 3.10
 - Node.js ≥ 18
-- Supabase PostgreSQL 连接串
+- MySQL 8.0+
 
 ### 1. 启动后端
 
@@ -161,9 +166,10 @@ pip install -r requirements.txt
 
 # 配置环境变量
 cp .env.example .env
-# 编辑 .env 填入 DATABASE_URL 等
+# 编辑 .env 填入 DB_HOST、DB_PORT、DB_USER、DB_PASSWORD、DB_NAME 等
 
-# 启动 Flask（通过 Netlify Functions 本地模拟或直接运行）
+# 启动 Flask
+python run.py
 ```
 
 ### 2. 启动前端
@@ -189,37 +195,103 @@ npm run build      # 输出到 frontend/dist
 
 | 变量名 | 说明 | 示例 |
 |---|---|---|
-| `DATABASE_URL` | Supabase PostgreSQL 连接串 | `postgresql://postgres:pwd@db.xxx.supabase.co:5432/postgres` |
+| `DB_HOST` | MySQL 地址 | `localhost` |
+| `DB_PORT` | MySQL 端口 | `3306` |
+| `DB_USER` | 数据库用户名 | `codemind` |
+| `DB_PASSWORD` | 数据库密码 | `your-password` |
+| `DB_NAME` | 数据库名 | `codemind` |
 | `SECRET_KEY` | 会话加密密钥（生产必填） | 随机字符串 |
-| `CORS_ORIGINS` | 允许的前端来源（逗号分隔） | `http://localhost:5173,https://xxx.netlify.app` |
-| `SMTP_SERVER` | 邮件服务器 | `smtp.qq.com` |
-| `SMTP_PORT` | 邮件端口 | `465` |
-| `EMAIL_ACCOUNT` | 邮箱账号 | `you@qq.com` |
+| `CORS_ORIGINS` | 允许的前端来源（逗号分隔） | `http://localhost:5173,https://your-domain.com` |
+| `EMAIL_TYPE` | 邮件服务类型 | `NETEASE_EMAIL_SMTP_SSL` |
+| `EMAIL_ADDRESS` | 邮箱账号 | `you@163.com` |
 | `EMAIL_PASSWORD` | 邮箱 SMTP 授权码 | — |
 
 ## 部署
 
-### 架构：Netlify（全栈）+ Supabase（数据库）
+### 架构：云服务器（Nginx + Gunicorn + MySQL）
 
 ```
 用户浏览器
     ↓
-Netlify（统一平台）
+Nginx（80 端口）
     ├── 前端：Vue 3 → npm build → 静态托管
-    ├── 后端：Flask → netlify/functions/app.py（Serverless Functions）
-    └── 数据库：Supabase PostgreSQL（通过 DATABASE_URL 连接）
+    ├── 后端：Flask → Gunicorn（4 Worker，127.0.0.1:8000）
+    └── 数据库：MySQL（3306 端口，本地连接）
 ```
 
-### 部署步骤
+### 一键部署脚本
 
-1. **数据库**：在 [Supabase](https://supabase.com) 创建项目，执行 `database/init_db.sql`，获取连接串
-2. **代码推送**：将仓库推送到 GitHub
-3. **Netlify 部署**：在 [Netlify](https://netlify.com) 创建站点，选择仓库，`netlify.toml` 已配置：
-   - 构建命令：`cd frontend && npm install && npm run build`
-   - 发布目录：`frontend/dist`
-   - Functions 目录：`netlify/functions`
-4. **环境变量**：在 Netlify 站点设置中注入 `DATABASE_URL`、`SECRET_KEY`、`CORS_ORIGINS`、SMTP 相关变量
-5. **验证**：访问前端首页，测试注册/登录、题库浏览、代码审查、能力矩阵、历史记录
+项目提供了一键部署脚本 [deploy/install.sh](deploy/install.sh)，支持 Ubuntu 22.04 LTS：
+
+```bash
+# SSH 连接服务器
+ssh root@your-server-ip
+
+# 克隆代码
+git clone https://github.com/your-username/codemind-studio.git /opt/codemind
+
+# 执行部署脚本
+cd /opt/codemind/deploy
+bash install.sh
+```
+
+**脚本自动完成：**
+- ✅ 安装 Python、MySQL、Nginx、Gunicorn
+- ✅ 创建 MySQL 数据库和用户
+- ✅ 安装 Python 依赖
+- ✅ 配置 Gunicorn systemd 服务
+- ✅ 配置 Nginx 反向代理
+- ✅ 启动所有服务
+
+### 手动部署步骤
+
+1. **购买云服务器**：腾讯云/阿里云轻量应用服务器（2核2G足够），系统选择 Ubuntu 22.04 LTS
+2. **开放端口**：在云控制台安全组中开放 80 端口
+3. **SSH 连接**：`ssh root@your-server-ip`
+4. **安装依赖**：
+   ```bash
+   apt update && apt install -y python3 python3-pip python3-venv nginx mysql-server git
+   ```
+5. **配置 MySQL**：
+   ```bash
+   mysql -u root -e "CREATE DATABASE codemind CHARACTER SET utf8mb4; CREATE USER 'codemind'@'localhost' IDENTIFIED BY 'your-password'; GRANT ALL ON codemind.* TO 'codemind'@'localhost'; FLUSH PRIVILEGES;"
+   ```
+6. **部署代码**：
+   ```bash
+   git clone https://github.com/your-username/codemind-studio.git /opt/codemind
+   cd /opt/codemind
+   python3 -m venv venv && source venv/bin/activate
+   pip install -r requirements.txt gunicorn
+   ```
+7. **配置环境变量**：编辑 `/opt/codemind/.env`
+8. **配置 Gunicorn**：复制 [deploy/codemind.service](deploy/codemind.service) 到 `/etc/systemd/system/`
+9. **配置 Nginx**：复制 [deploy/nginx.conf](deploy/nginx.conf) 到 `/etc/nginx/sites-available/`
+10. **启动服务**：
+    ```bash
+    systemctl daemon-reload
+    systemctl start codemind && systemctl enable codemind
+    systemctl restart nginx
+    ```
+11. **验证**：访问 `http://your-server-ip/health`
+
+### 常用管理命令
+
+```bash
+# 查看服务状态
+systemctl status codemind     # Flask 后端
+systemctl status mysql        # MySQL 数据库
+systemctl status nginx        # Nginx
+
+# 查看日志
+tail -f /var/log/codemind/error.log
+tail -f /var/log/codemind/access.log
+
+# 重启服务
+systemctl restart codemind
+
+# MySQL 操作
+mysql -u codemind -p codemind
+```
 
 ## 测试
 
