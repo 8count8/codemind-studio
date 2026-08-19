@@ -43,3 +43,9 @@ Desktop.ini
 # Project specific
 .qoder/
 *.pyc
+
+# 部署无关内容（不推送到远程）
+software-testing/
+docs/
+app/models/user_db
+app/service/ai/test.txt
