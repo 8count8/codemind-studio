@@ -39,6 +39,11 @@ class CodeChecker(Model):
     model_prompt = prompt
     model_id = "10003"
     model_name = "Ai代码质量检查"
-    model_ark_url = "https://ark.cn-beijing.volces.com/api/v3/chat/completions"
-    model_ark_id = "ep-20250420105909-k9krn"
-    model_ark_key = "9bb28231-c3ae-4ee9-ac12-e9794efe0016"
+
+    # 生成参数：代码审查需要稳定、可重复的判断
+    temperature = 0.2
+    top_p = 0.9
+
+    # Ollama 模型名（None 则走全局 OLLAMA_MODEL 环境变量，默认 qwen2.5:7b）
+    # 推荐：deepseek-coder-v2:16b 或 qwen2.5-coder:7b（代码类模型效果更好）
+    ollama_model_name = None

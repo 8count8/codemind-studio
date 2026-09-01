@@ -60,11 +60,11 @@ class FavoriteModel:
         return original_search_favorites_by_title(user_id, title)
 
     @staticmethod
-    def delete_favorite(user_id, title):
+    def delete_favorite(user_id, question_id):
         """
         删除指定用户的收藏题目。
         :param user_id: 用户 ID
         :param title: 收藏标题
         :return: 操作结果（成功或错误信息）
         """
-        return original_delete_favorite(user_id, title)
+        return original_delete_favorite(question_id, user_id)

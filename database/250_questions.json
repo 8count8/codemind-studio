@@ -1,0 +1,6228 @@
+[
+  {
+    "title": "A+B 问题",
+    "difficulty": "简单",
+    "tags": [
+      "基础语法",
+      "输入输出",
+      "算术"
+    ],
+    "content": "# A+B 问题\n\n## 题目描述\n输入两个整数 `a` 和 `b`，输出它们的和。\n\n## 输入格式\n一行输入两个整数 `a b`。\n\n## 输出格式\n输出一个整数，表示 `a+b`。\n\n## 数据范围\n`-10^9 ≤ a,b ≤ 10^9`。",
+    "test_cases": [
+      {
+        "input": "1 2",
+        "output": "3",
+        "description": "基础用例"
+      },
+      {
+        "input": "-5 8",
+        "output": "3",
+        "description": "包含负数"
+      },
+      {
+        "input": "1000000000 1000000000",
+        "output": "2000000000",
+        "description": "大数"
+      }
+    ]
+  },
+  {
+    "title": "计算长方形面积与周长",
+    "difficulty": "简单",
+    "tags": [
+      "基础语法",
+      "算术",
+      "几何"
+    ],
+    "content": "# 计算长方形面积与周长\n\n## 题目描述\n给定长方形的长 `a` 和宽 `b`，输出面积与周长。\n\n## 输入格式\n一行输入两个正整数 `a b`。\n\n## 输出格式\n一行输出两个整数：面积和周长，中间用一个空格分隔。\n\n## 数据范围\n`1 ≤ a,b ≤ 10^6`。",
+    "test_cases": [
+      {
+        "input": "3 4",
+        "output": "12 14",
+        "description": "基础用例"
+      },
+      {
+        "input": "1 1",
+        "output": "1 4",
+        "description": "正方形"
+      },
+      {
+        "input": "10 2",
+        "output": "20 24",
+        "description": "长条矩形"
+      }
+    ]
+  },
+  {
+    "title": "摄氏度转华氏度",
+    "difficulty": "简单",
+    "tags": [
+      "基础语法",
+      "浮点数",
+      "公式"
+    ],
+    "content": "# 摄氏度转华氏度\n\n## 题目描述\n输入摄氏温度 `C`，按公式 `F=C×9/5+32` 转换为华氏温度。\n\n## 输入格式\n输入一个实数 `C`。\n\n## 输出格式\n输出华氏温度，保留两位小数。\n\n## 数据范围\n`-1000 ≤ C ≤ 1000`。",
+    "test_cases": [
+      {
+        "input": "0",
+        "output": "32.00",
+        "description": "冰点"
+      },
+      {
+        "input": "100",
+        "output": "212.00",
+        "description": "沸点"
+      },
+      {
+        "input": "-40",
+        "output": "-40.00",
+        "description": "相同温度点"
+      }
+    ]
+  },
+  {
+    "title": "判断奇偶性",
+    "difficulty": "简单",
+    "tags": [
+      "条件判断",
+      "整数",
+      "取模"
+    ],
+    "content": "# 判断奇偶性\n\n## 题目描述\n输入一个整数，判断它是奇数还是偶数。\n\n## 输入格式\n输入一个整数 `n`。\n\n## 输出格式\n若为偶数输出 `EVEN`，否则输出 `ODD`。\n\n## 数据范围\n`-10^18 ≤ n ≤ 10^18`。",
+    "test_cases": [
+      {
+        "input": "8",
+        "output": "EVEN",
+        "description": "偶数"
+      },
+      {
+        "input": "-3",
+        "output": "ODD",
+        "description": "负奇数"
+      },
+      {
+        "input": "0",
+        "output": "EVEN",
+        "description": "零"
+      }
+    ]
+  },
+  {
+    "title": "三个数中的最大值",
+    "difficulty": "简单",
+    "tags": [
+      "条件判断",
+      "基础语法",
+      "比较"
+    ],
+    "content": "# 三个数中的最大值\n\n## 题目描述\n输入三个整数，输出其中的最大值。\n\n## 输入格式\n一行输入三个整数 `a b c`。\n\n## 输出格式\n输出一个整数，表示最大值。\n\n## 数据范围\n`-10^9 ≤ a,b,c ≤ 10^9`。",
+    "test_cases": [
+      {
+        "input": "1 9 3",
+        "output": "9",
+        "description": "一般情况"
+      },
+      {
+        "input": "-1 -5 -3",
+        "output": "-1",
+        "description": "全为负数"
+      },
+      {
+        "input": "7 7 7",
+        "output": "7",
+        "description": "相等"
+      }
+    ]
+  },
+  {
+    "title": "成绩等级判定",
+    "difficulty": "简单",
+    "tags": [
+      "条件判断",
+      "分支",
+      "基础语法"
+    ],
+    "content": "# 成绩等级判定\n\n## 题目描述\n输入一个 0 到 100 的整数成绩：90~100 为 A，80~89 为 B，70~79 为 C，60~69 为 D，其余为 F。\n\n## 输入格式\n输入一个整数 `score`。\n\n## 输出格式\n输出对应等级字符。\n\n## 数据范围\n`0 ≤ score ≤ 100`。",
+    "test_cases": [
+      {
+        "input": "95",
+        "output": "A",
+        "description": "优秀"
+      },
+      {
+        "input": "60",
+        "output": "D",
+        "description": "及格线"
+      },
+      {
+        "input": "59",
+        "output": "F",
+        "description": "不及格"
+      }
+    ]
+  },
+  {
+    "title": "闰年判断",
+    "difficulty": "简单",
+    "tags": [
+      "条件判断",
+      "数学",
+      "日期"
+    ],
+    "content": "# 闰年判断\n\n## 题目描述\n判断给定年份是否为闰年。能被 400 整除，或能被 4 整除但不能被 100 整除的年份是闰年。\n\n## 输入格式\n输入一个正整数年份 `y`。\n\n## 输出格式\n闰年输出 `YES`，否则输出 `NO`。\n\n## 数据范围\n`1 ≤ y ≤ 9999`。",
+    "test_cases": [
+      {
+        "input": "2000",
+        "output": "YES",
+        "description": "世纪闰年"
+      },
+      {
+        "input": "1900",
+        "output": "NO",
+        "description": "世纪平年"
+      },
+      {
+        "input": "2024",
+        "output": "YES",
+        "description": "普通闰年"
+      }
+    ]
+  },
+  {
+    "title": "绝对值",
+    "difficulty": "简单",
+    "tags": [
+      "基础语法",
+      "数学",
+      "条件判断"
+    ],
+    "content": "# 绝对值\n\n## 题目描述\n输入一个整数，输出它的绝对值。\n\n## 输入格式\n输入一个整数 `n`。\n\n## 输出格式\n输出 `|n|`。\n\n## 数据范围\n`-10^18 < n < 10^18`。",
+    "test_cases": [
+      {
+        "input": "-7",
+        "output": "7",
+        "description": "负数"
+      },
+      {
+        "input": "0",
+        "output": "0",
+        "description": "零"
+      },
+      {
+        "input": "42",
+        "output": "42",
+        "description": "正数"
+      }
+    ]
+  },
+  {
+    "title": "两数交换",
+    "difficulty": "简单",
+    "tags": [
+      "基础语法",
+      "变量",
+      "输入输出"
+    ],
+    "content": "# 两数交换\n\n## 题目描述\n输入两个整数 `a`、`b`，交换它们的值后输出。\n\n## 输入格式\n一行输入两个整数 `a b`。\n\n## 输出格式\n输出交换后的 `a b`。\n\n## 数据范围\n`-10^9 ≤ a,b ≤ 10^9`。",
+    "test_cases": [
+      {
+        "input": "3 5",
+        "output": "5 3",
+        "description": "基础"
+      },
+      {
+        "input": "-1 8",
+        "output": "8 -1",
+        "description": "含负数"
+      }
+    ]
+  },
+  {
+    "title": "整数商与余数",
+    "difficulty": "简单",
+    "tags": [
+      "基础语法",
+      "整除",
+      "取模"
+    ],
+    "content": "# 整数商与余数\n\n## 题目描述\n输入两个整数 `a` 与正整数 `b`，输出 `a` 除以 `b` 的整数商和非负余数。按数学上的欧几里得除法定义，使 `a=q×b+r` 且 `0≤r<b`。\n\n## 输入格式\n一行输入 `a b`。\n\n## 输出格式\n输出 `q r`。\n\n## 数据范围\n`-10^9 ≤ a ≤ 10^9, 1 ≤ b ≤ 10^9`。",
+    "test_cases": [
+      {
+        "input": "17 5",
+        "output": "3 2",
+        "description": "正数"
+      },
+      {
+        "input": "-17 5",
+        "output": "-4 3",
+        "description": "负被除数"
+      }
+    ]
+  },
+  {
+    "title": "1 到 N 求和",
+    "difficulty": "简单",
+    "tags": [
+      "循环",
+      "数学",
+      "等差数列"
+    ],
+    "content": "# 1 到 N 求和\n\n## 题目描述\n计算 `1+2+...+N`。\n\n## 输入格式\n输入正整数 `N`。\n\n## 输出格式\n输出一个整数表示总和。\n\n## 数据范围\n`1 ≤ N ≤ 10^9`。",
+    "test_cases": [
+      {
+        "input": "5",
+        "output": "15",
+        "description": "基础"
+      },
+      {
+        "input": "1",
+        "output": "1",
+        "description": "边界"
+      },
+      {
+        "input": "100",
+        "output": "5050",
+        "description": "较大"
+      }
+    ]
+  },
+  {
+    "title": "N 的阶乘",
+    "difficulty": "简单",
+    "tags": [
+      "循环",
+      "数学",
+      "大整数"
+    ],
+    "content": "# N 的阶乘\n\n## 题目描述\n计算 `N!`。\n\n## 输入格式\n输入一个整数 `N`。\n\n## 输出格式\n输出 `N!`。\n\n## 数据范围\n`0 ≤ N ≤ 20`。",
+    "test_cases": [
+      {
+        "input": "5",
+        "output": "120",
+        "description": "基础"
+      },
+      {
+        "input": "0",
+        "output": "1",
+        "description": "零阶乘"
+      },
+      {
+        "input": "10",
+        "output": "3628800",
+        "description": "较大"
+      }
+    ]
+  },
+  {
+    "title": "输出乘法表的一行",
+    "difficulty": "简单",
+    "tags": [
+      "循环",
+      "格式化",
+      "乘法"
+    ],
+    "content": "# 输出乘法表的一行\n\n## 题目描述\n输入整数 `n`，输出 `n×1` 到 `n×9` 的结果。\n\n## 输入格式\n输入一个整数 `n`。\n\n## 输出格式\n一行输出 9 个整数，依次为 `n*1 ... n*9`，空格分隔。\n\n## 数据范围\n`1 ≤ n ≤ 1000`。",
+    "test_cases": [
+      {
+        "input": "2",
+        "output": "2 4 6 8 10 12 14 16 18",
+        "description": "基础"
+      },
+      {
+        "input": "9",
+        "output": "9 18 27 36 45 54 63 72 81",
+        "description": "九九表"
+      }
+    ]
+  },
+  {
+    "title": "统计数字位数",
+    "difficulty": "简单",
+    "tags": [
+      "循环",
+      "整数",
+      "数位"
+    ],
+    "content": "# 统计数字位数\n\n## 题目描述\n输入一个非负整数，统计它的十进制位数。特别地，0 的位数为 1。\n\n## 输入格式\n输入整数 `n`。\n\n## 输出格式\n输出位数。\n\n## 数据范围\n`0 ≤ n ≤ 10^18`。",
+    "test_cases": [
+      {
+        "input": "0",
+        "output": "1",
+        "description": "零"
+      },
+      {
+        "input": "7",
+        "output": "1",
+        "description": "一位数"
+      },
+      {
+        "input": "123456",
+        "output": "6",
+        "description": "多位数"
+      }
+    ]
+  },
+  {
+    "title": "整数各位数字之和",
+    "difficulty": "简单",
+    "tags": [
+      "循环",
+      "数位",
+      "取模"
+    ],
+    "content": "# 整数各位数字之和\n\n## 题目描述\n输入一个非负整数，求其十进制各位数字之和。\n\n## 输入格式\n输入整数 `n`。\n\n## 输出格式\n输出一个整数。\n\n## 数据范围\n`0 ≤ n ≤ 10^18`。",
+    "test_cases": [
+      {
+        "input": "12345",
+        "output": "15",
+        "description": "基础"
+      },
+      {
+        "input": "0",
+        "output": "0",
+        "description": "零"
+      },
+      {
+        "input": "9999",
+        "output": "36",
+        "description": "全九"
+      }
+    ]
+  },
+  {
+    "title": "反转整数数字",
+    "difficulty": "简单",
+    "tags": [
+      "循环",
+      "数位",
+      "字符串"
+    ],
+    "content": "# 反转整数数字\n\n## 题目描述\n输入一个非负整数，去掉前导零地输出其数字反转结果。例如 1200 反转后为 21。\n\n## 输入格式\n输入整数 `n`。\n\n## 输出格式\n输出反转后的整数。\n\n## 数据范围\n`0 ≤ n ≤ 10^18`。",
+    "test_cases": [
+      {
+        "input": "1200",
+        "output": "21",
+        "description": "尾部零"
+      },
+      {
+        "input": "12345",
+        "output": "54321",
+        "description": "基础"
+      },
+      {
+        "input": "0",
+        "output": "0",
+        "description": "零"
+      }
+    ]
+  },
+  {
+    "title": "回文整数判断",
+    "difficulty": "简单",
+    "tags": [
+      "循环",
+      "字符串",
+      "回文"
+    ],
+    "content": "# 回文整数判断\n\n## 题目描述\n判断一个非负整数的十进制表示是否为回文。\n\n## 输入格式\n输入整数 `n`。\n\n## 输出格式\n是回文输出 `YES`，否则输出 `NO`。\n\n## 数据范围\n`0 ≤ n ≤ 10^18`。",
+    "test_cases": [
+      {
+        "input": "1221",
+        "output": "YES",
+        "description": "回文"
+      },
+      {
+        "input": "1230",
+        "output": "NO",
+        "description": "非回文"
+      },
+      {
+        "input": "7",
+        "output": "YES",
+        "description": "单个数字"
+      }
+    ]
+  },
+  {
+    "title": "求两个数的最大公约数",
+    "difficulty": "简单",
+    "tags": [
+      "数学",
+      "欧几里得算法",
+      "循环"
+    ],
+    "content": "# 求两个数的最大公约数\n\n## 题目描述\n求两个正整数的最大公约数。\n\n## 输入格式\n一行输入两个正整数 `a b`。\n\n## 输出格式\n输出 `gcd(a,b)`。\n\n## 数据范围\n`1 ≤ a,b ≤ 10^18`。",
+    "test_cases": [
+      {
+        "input": "12 18",
+        "output": "6",
+        "description": "基础"
+      },
+      {
+        "input": "17 13",
+        "output": "1",
+        "description": "互质"
+      },
+      {
+        "input": "100 10",
+        "output": "10",
+        "description": "整除"
+      }
+    ]
+  },
+  {
+    "title": "求两个数的最小公倍数",
+    "difficulty": "简单",
+    "tags": [
+      "数学",
+      "最大公约数",
+      "整数"
+    ],
+    "content": "# 求两个数的最小公倍数\n\n## 题目描述\n求两个正整数的最小公倍数。\n\n## 输入格式\n一行输入两个正整数 `a b`。\n\n## 输出格式\n输出 `lcm(a,b)`。\n\n## 数据范围\n`1 ≤ a,b ≤ 10^9`。",
+    "test_cases": [
+      {
+        "input": "12 18",
+        "output": "36",
+        "description": "基础"
+      },
+      {
+        "input": "7 5",
+        "output": "35",
+        "description": "互质"
+      },
+      {
+        "input": "8 4",
+        "output": "8",
+        "description": "整除"
+      }
+    ]
+  },
+  {
+    "title": "素数判断",
+    "difficulty": "简单",
+    "tags": [
+      "数学",
+      "质数",
+      "循环"
+    ],
+    "content": "# 素数判断\n\n## 题目描述\n判断给定正整数是否为素数。\n\n## 输入格式\n输入整数 `n`。\n\n## 输出格式\n若为素数输出 `YES`，否则输出 `NO`。\n\n## 数据范围\n`1 ≤ n ≤ 10^9`。",
+    "test_cases": [
+      {
+        "input": "2",
+        "output": "YES",
+        "description": "最小素数"
+      },
+      {
+        "input": "97",
+        "output": "YES",
+        "description": "素数"
+      },
+      {
+        "input": "100",
+        "output": "NO",
+        "description": "合数"
+      }
+    ]
+  },
+  {
+    "title": "区间内素数个数",
+    "difficulty": "中等",
+    "tags": [
+      "数学",
+      "质数",
+      "筛法"
+    ],
+    "content": "# 区间内素数个数\n\n## 题目描述\n统计闭区间 `[L,R]` 中素数的个数。\n\n## 输入格式\n一行输入两个整数 `L R`。\n\n## 输出格式\n输出素数数量。\n\n## 数据范围\n`1 ≤ L ≤ R ≤ 10^6`。",
+    "test_cases": [
+      {
+        "input": "1 10",
+        "output": "4",
+        "description": "2,3,5,7"
+      },
+      {
+        "input": "10 20",
+        "output": "4",
+        "description": "11,13,17,19"
+      }
+    ]
+  },
+  {
+    "title": "斐波那契数列第 N 项",
+    "difficulty": "简单",
+    "tags": [
+      "循环",
+      "斐波那契",
+      "动态规划"
+    ],
+    "content": "# 斐波那契数列第 N 项\n\n## 题目描述\n定义 `F0=0, F1=1, Fn=F(n-1)+F(n-2)`，求第 `N` 项。\n\n## 输入格式\n输入整数 `N`。\n\n## 输出格式\n输出 `F_N`。\n\n## 数据范围\n`0 ≤ N ≤ 90`。",
+    "test_cases": [
+      {
+        "input": "0",
+        "output": "0",
+        "description": "边界"
+      },
+      {
+        "input": "10",
+        "output": "55",
+        "description": "基础"
+      },
+      {
+        "input": "20",
+        "output": "6765",
+        "description": "较大"
+      }
+    ]
+  },
+  {
+    "title": "统计 1 到 N 中 3 的倍数",
+    "difficulty": "简单",
+    "tags": [
+      "循环",
+      "数学",
+      "计数"
+    ],
+    "content": "# 统计 1 到 N 中 3 的倍数\n\n## 题目描述\n统计 `1..N` 中能被 3 整除的整数个数。\n\n## 输入格式\n输入正整数 `N`。\n\n## 输出格式\n输出个数。\n\n## 数据范围\n`1 ≤ N ≤ 10^18`。",
+    "test_cases": [
+      {
+        "input": "10",
+        "output": "3",
+        "description": "3,6,9"
+      },
+      {
+        "input": "3",
+        "output": "1",
+        "description": "边界"
+      },
+      {
+        "input": "100",
+        "output": "33",
+        "description": "较大"
+      }
+    ]
+  },
+  {
+    "title": "数字三角形输出",
+    "difficulty": "简单",
+    "tags": [
+      "循环",
+      "嵌套循环",
+      "输出格式"
+    ],
+    "content": "# 数字三角形输出\n\n## 题目描述\n输入 `N`，输出 N 行数字三角形。第 i 行输出 i 个数字 i，以单个空格分隔。\n\n## 输入格式\n输入正整数 `N`。\n\n## 输出格式\n输出 N 行。\n\n## 数据范围\n`1 ≤ N ≤ 20`。",
+    "test_cases": [
+      {
+        "input": "3",
+        "output": "1\n2 2\n3 3 3",
+        "description": "三行"
+      },
+      {
+        "input": "1",
+        "output": "1",
+        "description": "单行"
+      }
+    ]
+  },
+  {
+    "title": "求区间整数平均值",
+    "difficulty": "简单",
+    "tags": [
+      "循环",
+      "浮点数",
+      "平均值"
+    ],
+    "content": "# 求区间整数平均值\n\n## 题目描述\n给定 `L` 与 `R`，求闭区间内所有整数的平均值。\n\n## 输入格式\n一行输入两个整数 `L R`。\n\n## 输出格式\n输出平均值，保留两位小数。\n\n## 数据范围\n`-10^9 ≤ L ≤ R ≤ 10^9`。",
+    "test_cases": [
+      {
+        "input": "1 5",
+        "output": "3.00",
+        "description": "基础"
+      },
+      {
+        "input": "-3 3",
+        "output": "0.00",
+        "description": "对称区间"
+      },
+      {
+        "input": "2 3",
+        "output": "2.50",
+        "description": "小数"
+      }
+    ]
+  },
+  {
+    "title": "找零钱最少硬币数",
+    "difficulty": "简单",
+    "tags": [
+      "贪心",
+      "数学",
+      "模拟"
+    ],
+    "content": "# 找零钱最少硬币数\n\n## 题目描述\n只使用面值 100、50、20、10、5、1 的硬币，对给定正整数金额找零，求最少硬币数。\n\n## 输入格式\n输入整数金额 `x`。\n\n## 输出格式\n输出最少硬币数。\n\n## 数据范围\n`0 ≤ x ≤ 10^9`。",
+    "test_cases": [
+      {
+        "input": "0",
+        "output": "0",
+        "description": "零金额"
+      },
+      {
+        "input": "186",
+        "output": "6",
+        "description": "100+50+20+10+5+1"
+      },
+      {
+        "input": "99",
+        "output": "7",
+        "description": "50+20+20+5+1+1+1"
+      }
+    ]
+  },
+  {
+    "title": "判断三角形合法性",
+    "difficulty": "简单",
+    "tags": [
+      "条件判断",
+      "几何",
+      "数学"
+    ],
+    "content": "# 判断三角形合法性\n\n## 题目描述\n给定三条正整数边长，判断能否组成三角形。\n\n## 输入格式\n输入 `a b c`。\n\n## 输出格式\n可以输出 `YES`，否则输出 `NO`。\n\n## 数据范围\n`1 ≤ a,b,c ≤ 10^9`。",
+    "test_cases": [
+      {
+        "input": "3 4 5",
+        "output": "YES",
+        "description": "直角三角形"
+      },
+      {
+        "input": "1 2 3",
+        "output": "NO",
+        "description": "退化"
+      },
+      {
+        "input": "5 5 9",
+        "output": "YES",
+        "description": "等腰"
+      }
+    ]
+  },
+  {
+    "title": "三角形类型判定",
+    "difficulty": "简单",
+    "tags": [
+      "条件判断",
+      "几何",
+      "排序"
+    ],
+    "content": "# 三角形类型判定\n\n## 题目描述\n给定可组成三角形的三条边，按边分类：三边相等输出 `EQUILATERAL`；两边相等输出 `ISOSCELES`；否则输出 `SCALENE`。\n\n## 输入格式\n输入 `a b c`。\n\n## 输出格式\n输出分类字符串。\n\n## 数据范围\n`1 ≤ a,b,c ≤ 10^9`，且保证能组成三角形。",
+    "test_cases": [
+      {
+        "input": "3 3 3",
+        "output": "EQUILATERAL",
+        "description": "等边"
+      },
+      {
+        "input": "3 3 4",
+        "output": "ISOSCELES",
+        "description": "等腰"
+      },
+      {
+        "input": "3 4 5",
+        "output": "SCALENE",
+        "description": "不等边"
+      }
+    ]
+  },
+  {
+    "title": "分段函数计算",
+    "difficulty": "简单",
+    "tags": [
+      "条件判断",
+      "数学",
+      "分支"
+    ],
+    "content": "# 分段函数计算\n\n## 题目描述\n计算分段函数：当 `x<0` 时 `f(x)=x^2`；当 `x=0` 时 `f(x)=0`；当 `x>0` 时 `f(x)=2x+1`。\n\n## 输入格式\n输入整数 `x`。\n\n## 输出格式\n输出整数 `f(x)`。\n\n## 数据范围\n`-10^9 ≤ x ≤ 10^9`。",
+    "test_cases": [
+      {
+        "input": "-3",
+        "output": "9",
+        "description": "负数"
+      },
+      {
+        "input": "0",
+        "output": "0",
+        "description": "零"
+      },
+      {
+        "input": "5",
+        "output": "11",
+        "description": "正数"
+      }
+    ]
+  },
+  {
+    "title": "时间换算为秒",
+    "difficulty": "简单",
+    "tags": [
+      "基础语法",
+      "时间",
+      "算术"
+    ],
+    "content": "# 时间换算为秒\n\n## 题目描述\n输入小时、分钟、秒，计算从当天 00:00:00 起经过的总秒数。\n\n## 输入格式\n一行输入 `h m s`。\n\n## 输出格式\n输出总秒数。\n\n## 数据范围\n`0≤h≤23, 0≤m,s≤59`。",
+    "test_cases": [
+      {
+        "input": "1 2 3",
+        "output": "3723",
+        "description": "基础"
+      },
+      {
+        "input": "0 0 0",
+        "output": "0",
+        "description": "午夜"
+      },
+      {
+        "input": "23 59 59",
+        "output": "86399",
+        "description": "一天末尾"
+      }
+    ]
+  },
+  {
+    "title": "数组元素求和",
+    "difficulty": "简单",
+    "tags": [
+      "数组",
+      "循环",
+      "基础语法"
+    ],
+    "content": "# 数组元素求和\n\n## 题目描述\n给定 N 个整数，求它们的总和。\n\n## 输入格式\n第一行输入 `N`，第二行输入 N 个整数。\n\n## 输出格式\n输出总和。\n\n## 数据范围\n`1≤N≤2×10^5`，元素绝对值不超过 `10^9`。",
+    "test_cases": [
+      {
+        "input": "5\n1 2 3 4 5",
+        "output": "15",
+        "description": "基础"
+      },
+      {
+        "input": "4\n-1 2 -3 4",
+        "output": "2",
+        "description": "含负数"
+      }
+    ]
+  },
+  {
+    "title": "数组最大值与位置",
+    "difficulty": "简单",
+    "tags": [
+      "数组",
+      "遍历",
+      "最大值"
+    ],
+    "content": "# 数组最大值与位置\n\n## 题目描述\n给定 N 个整数，输出最大值以及它第一次出现的 1-based 位置。\n\n## 输入格式\n第一行 N，第二行 N 个整数。\n\n## 输出格式\n输出 `max pos`。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "5\n1 7 3 7 2",
+        "output": "7 2",
+        "description": "重复最大值"
+      },
+      {
+        "input": "3\n-5 -2 -9",
+        "output": "-2 2",
+        "description": "全负数"
+      }
+    ]
+  },
+  {
+    "title": "数组最小值与位置",
+    "difficulty": "简单",
+    "tags": [
+      "数组",
+      "遍历",
+      "最小值"
+    ],
+    "content": "# 数组最小值与位置\n\n## 题目描述\n给定 N 个整数，输出最小值以及它第一次出现的 1-based 位置。\n\n## 输入格式\n第一行 N，第二行 N 个整数。\n\n## 输出格式\n输出 `min pos`。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "5\n3 1 4 1 5",
+        "output": "1 2",
+        "description": "重复最小值"
+      },
+      {
+        "input": "2\n8 9",
+        "output": "8 1",
+        "description": "首位"
+      }
+    ]
+  },
+  {
+    "title": "统计正负零",
+    "difficulty": "简单",
+    "tags": [
+      "数组",
+      "计数",
+      "遍历"
+    ],
+    "content": "# 统计正负零\n\n## 题目描述\n统计数组中正数、负数和零的个数。\n\n## 输入格式\n第一行 N，第二行 N 个整数。\n\n## 输出格式\n输出三个整数 `positive negative zero`。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "6\n-1 0 3 4 0 -2",
+        "output": "2 2 2",
+        "description": "均有"
+      },
+      {
+        "input": "3\n1 2 3",
+        "output": "3 0 0",
+        "description": "全正"
+      }
+    ]
+  },
+  {
+    "title": "数组逆序输出",
+    "difficulty": "简单",
+    "tags": [
+      "数组",
+      "遍历",
+      "反转"
+    ],
+    "content": "# 数组逆序输出\n\n## 题目描述\n将输入数组按逆序输出。\n\n## 输入格式\n第一行 N，第二行 N 个整数。\n\n## 输出格式\n输出逆序后的 N 个整数，空格分隔。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "5\n1 2 3 4 5",
+        "output": "5 4 3 2 1",
+        "description": "基础"
+      },
+      {
+        "input": "1\n9",
+        "output": "9",
+        "description": "单元素"
+      }
+    ]
+  },
+  {
+    "title": "删除数组中的指定值",
+    "difficulty": "简单",
+    "tags": [
+      "数组",
+      "过滤",
+      "双指针"
+    ],
+    "content": "# 删除数组中的指定值\n\n## 题目描述\n给定数组和整数 x，删除所有等于 x 的元素并保持其余元素原顺序。\n\n## 输入格式\n第一行 `N x`，第二行 N 个整数。\n\n## 输出格式\n第一行输出剩余元素个数；第二行输出剩余元素，若为空则输出空行。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "5 2\n1 2 3 2 4",
+        "output": "3\n1 3 4",
+        "description": "基础"
+      },
+      {
+        "input": "3 7\n7 7 7",
+        "output": "0\n",
+        "description": "全部删除"
+      }
+    ]
+  },
+  {
+    "title": "数组去重保序",
+    "difficulty": "简单",
+    "tags": [
+      "数组",
+      "哈希集合",
+      "去重"
+    ],
+    "content": "# 数组去重保序\n\n## 题目描述\n删除数组中的重复元素，只保留每个值第一次出现的位置。\n\n## 输入格式\n第一行 N，第二行 N 个整数。\n\n## 输出格式\n输出去重后的元素，空格分隔。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "7\n1 2 1 3 2 4 4",
+        "output": "1 2 3 4",
+        "description": "基础"
+      },
+      {
+        "input": "4\n5 5 5 5",
+        "output": "5",
+        "description": "全相同"
+      }
+    ]
+  },
+  {
+    "title": "第二大不同元素",
+    "difficulty": "简单",
+    "tags": [
+      "数组",
+      "最大值",
+      "遍历"
+    ],
+    "content": "# 第二大不同元素\n\n## 题目描述\n找出数组中的第二大不同元素。若不存在，输出 `NONE`。\n\n## 输入格式\n第一行 N，第二行 N 个整数。\n\n## 输出格式\n输出第二大不同值或 `NONE`。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "5\n3 5 1 5 4",
+        "output": "4",
+        "description": "基础"
+      },
+      {
+        "input": "3\n7 7 7",
+        "output": "NONE",
+        "description": "不存在"
+      }
+    ]
+  },
+  {
+    "title": "数组是否严格递增",
+    "difficulty": "简单",
+    "tags": [
+      "数组",
+      "遍历",
+      "有序性"
+    ],
+    "content": "# 数组是否严格递增\n\n## 题目描述\n判断数组是否严格递增。\n\n## 输入格式\n第一行 N，第二行 N 个整数。\n\n## 输出格式\n若严格递增输出 `YES`，否则输出 `NO`。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "5\n1 2 3 7 9",
+        "output": "YES",
+        "description": "递增"
+      },
+      {
+        "input": "4\n1 2 2 3",
+        "output": "NO",
+        "description": "有相等"
+      }
+    ]
+  },
+  {
+    "title": "相邻元素最大差",
+    "difficulty": "简单",
+    "tags": [
+      "数组",
+      "遍历",
+      "绝对值"
+    ],
+    "content": "# 相邻元素最大差\n\n## 题目描述\n给定数组，求所有相邻元素绝对差的最大值。N=1 时答案为 0。\n\n## 输入格式\n第一行 N，第二行 N 个整数。\n\n## 输出格式\n输出最大相邻绝对差。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "5\n1 5 2 8 7",
+        "output": "6",
+        "description": "|2-8|"
+      },
+      {
+        "input": "1\n10",
+        "output": "0",
+        "description": "单元素"
+      }
+    ]
+  },
+  {
+    "title": "前缀和查询",
+    "difficulty": "中等",
+    "tags": [
+      "数组",
+      "前缀和",
+      "区间查询"
+    ],
+    "content": "# 前缀和查询\n\n## 题目描述\n给定长度 N 的数组和 Q 次查询，每次询问闭区间 `[l,r]` 的元素和。\n\n## 输入格式\n第一行 `N Q`；第二行 N 个整数；接下来 Q 行每行 `l r`，下标从 1 开始。\n\n## 输出格式\n每个查询输出一行区间和。\n\n## 数据范围\n`1≤N,Q≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "5 3\n1 2 3 4 5\n1 3\n2 5\n4 4",
+        "output": "6\n14\n4",
+        "description": "基础"
+      }
+    ]
+  },
+  {
+    "title": "区间增量后的数组",
+    "difficulty": "中等",
+    "tags": [
+      "数组",
+      "差分",
+      "区间修改"
+    ],
+    "content": "# 区间增量后的数组\n\n## 题目描述\n初始数组全为 0。执行 Q 次操作，每次给区间 `[l,r]` 的所有元素加上整数 v，最后输出数组。\n\n## 输入格式\n第一行 `N Q`；之后 Q 行 `l r v`。\n\n## 输出格式\n输出最终 N 个整数。\n\n## 数据范围\n`1≤N,Q≤2×10^5`，`|v|≤10^9`。",
+    "test_cases": [
+      {
+        "input": "5 3\n1 3 2\n2 5 1\n4 4 -3",
+        "output": "2 3 3 -2 1",
+        "description": "基础"
+      }
+    ]
+  },
+  {
+    "title": "移动零到末尾",
+    "difficulty": "简单",
+    "tags": [
+      "数组",
+      "双指针",
+      "稳定移动"
+    ],
+    "content": "# 移动零到末尾\n\n## 题目描述\n将数组中的所有 0 移到末尾，同时保持非零元素的相对顺序。\n\n## 输入格式\n第一行 N，第二行 N 个整数。\n\n## 输出格式\n输出处理后的数组。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "6\n0 1 0 3 12 0",
+        "output": "1 3 12 0 0 0",
+        "description": "基础"
+      },
+      {
+        "input": "3\n1 2 3",
+        "output": "1 2 3",
+        "description": "无零"
+      }
+    ]
+  },
+  {
+    "title": "合并两个有序数组",
+    "difficulty": "简单",
+    "tags": [
+      "数组",
+      "双指针",
+      "归并"
+    ],
+    "content": "# 合并两个有序数组\n\n## 题目描述\n给定两个非递减数组，将它们合并为一个非递减数组。\n\n## 输入格式\n第一行 `N M`；第二行 N 个整数；第三行 M 个整数。\n\n## 输出格式\n输出合并后的数组。\n\n## 数据范围\n`0≤N,M≤2×10^5` 且 `N+M≥1`。",
+    "test_cases": [
+      {
+        "input": "3 4\n1 3 5\n2 3 4 8",
+        "output": "1 2 3 3 4 5 8",
+        "description": "基础"
+      },
+      {
+        "input": "0 3\n\n1 2 2",
+        "output": "1 2 2",
+        "description": "一侧为空"
+      }
+    ]
+  },
+  {
+    "title": "数组循环右移 K 位",
+    "difficulty": "简单",
+    "tags": [
+      "数组",
+      "模拟",
+      "取模"
+    ],
+    "content": "# 数组循环右移 K 位\n\n## 题目描述\n将数组循环右移 K 位。例如 `[1,2,3,4,5]` 右移 2 位后为 `[4,5,1,2,3]`。\n\n## 输入格式\n第一行 `N K`；第二行 N 个整数。\n\n## 输出格式\n输出右移后的数组。\n\n## 数据范围\n`1≤N≤2×10^5, 0≤K≤10^18`。",
+    "test_cases": [
+      {
+        "input": "5 2\n1 2 3 4 5",
+        "output": "4 5 1 2 3",
+        "description": "基础"
+      },
+      {
+        "input": "3 4\n7 8 9",
+        "output": "9 7 8",
+        "description": "K大于N"
+      }
+    ]
+  },
+  {
+    "title": "奇偶下标元素和",
+    "difficulty": "简单",
+    "tags": [
+      "数组",
+      "下标",
+      "遍历"
+    ],
+    "content": "# 奇偶下标元素和\n\n## 题目描述\n下标从 1 开始，分别计算奇数下标元素之和与偶数下标元素之和。\n\n## 输入格式\n第一行 N，第二行 N 个整数。\n\n## 输出格式\n输出 `odd_sum even_sum`。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "5\n1 2 3 4 5",
+        "output": "9 6",
+        "description": "基础"
+      },
+      {
+        "input": "2\n10 -10",
+        "output": "10 -10",
+        "description": "两项"
+      }
+    ]
+  },
+  {
+    "title": "数组中出现次数最多的数",
+    "difficulty": "中等",
+    "tags": [
+      "数组",
+      "哈希表",
+      "计数"
+    ],
+    "content": "# 数组中出现次数最多的数\n\n## 题目描述\n找出出现次数最多的整数；若有多个并列，输出数值最小的那个。\n\n## 输入格式\n第一行 N，第二行 N 个整数。\n\n## 输出格式\n输出 `value count`。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "7\n1 2 2 3 3 3 2",
+        "output": "2 3",
+        "description": "并列取小"
+      },
+      {
+        "input": "4\n5 5 6 7",
+        "output": "5 2",
+        "description": "唯一"
+      }
+    ]
+  },
+  {
+    "title": "两数之和是否存在",
+    "difficulty": "简单",
+    "tags": [
+      "数组",
+      "哈希表",
+      "双指针"
+    ],
+    "content": "# 两数之和是否存在\n\n## 题目描述\n给定数组和目标值 T，判断是否存在两个不同位置的元素之和等于 T。\n\n## 输入格式\n第一行 `N T`；第二行 N 个整数。\n\n## 输出格式\n存在输出 `YES`，否则输出 `NO`。\n\n## 数据范围\n`2≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "4 9\n2 7 11 15",
+        "output": "YES",
+        "description": "2+7"
+      },
+      {
+        "input": "3 10\n1 2 3",
+        "output": "NO",
+        "description": "不存在"
+      }
+    ]
+  },
+  {
+    "title": "两数之和下标",
+    "difficulty": "中等",
+    "tags": [
+      "数组",
+      "哈希表",
+      "索引"
+    ],
+    "content": "# 两数之和下标\n\n## 题目描述\n给定数组和目标值 T，保证恰好存在一组答案。输出两个元素的 1-based 下标，要求较小下标在前。\n\n## 输入格式\n第一行 `N T`；第二行 N 个整数。\n\n## 输出格式\n输出两个下标。\n\n## 数据范围\n`2≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "4 9\n2 7 11 15",
+        "output": "1 2",
+        "description": "基础"
+      },
+      {
+        "input": "5 6\n3 2 4 8 1",
+        "output": "2 3",
+        "description": "2+4"
+      }
+    ]
+  },
+  {
+    "title": "最长连续相同元素段",
+    "difficulty": "简单",
+    "tags": [
+      "数组",
+      "扫描",
+      "计数"
+    ],
+    "content": "# 最长连续相同元素段\n\n## 题目描述\n求数组中最长的连续相同元素段长度。\n\n## 输入格式\n第一行 N，第二行 N 个整数。\n\n## 输出格式\n输出最长长度。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "8\n1 1 2 2 2 3 3 2",
+        "output": "3",
+        "description": "连续三个2"
+      },
+      {
+        "input": "4\n5 5 5 5",
+        "output": "4",
+        "description": "全相同"
+      }
+    ]
+  },
+  {
+    "title": "连续子数组最大和",
+    "difficulty": "中等",
+    "tags": [
+      "数组",
+      "动态规划",
+      "Kadane"
+    ],
+    "content": "# 连续子数组最大和\n\n## 题目描述\n求非空连续子数组的最大元素和。\n\n## 输入格式\n第一行 N，第二行 N 个整数。\n\n## 输出格式\n输出最大连续子数组和。\n\n## 数据范围\n`1≤N≤2×10^5`，元素绝对值不超过 `10^9`。",
+    "test_cases": [
+      {
+        "input": "9\n-2 1 -3 4 -1 2 1 -5 4",
+        "output": "6",
+        "description": "4,-1,2,1"
+      },
+      {
+        "input": "4\n-5 -2 -7 -3",
+        "output": "-2",
+        "description": "全负数"
+      }
+    ]
+  },
+  {
+    "title": "固定长度窗口最大和",
+    "difficulty": "中等",
+    "tags": [
+      "数组",
+      "滑动窗口",
+      "前缀和"
+    ],
+    "content": "# 固定长度窗口最大和\n\n## 题目描述\n给定长度 N 的数组和整数 K，求长度恰好为 K 的连续子数组最大和。\n\n## 输入格式\n第一行 `N K`；第二行 N 个整数。\n\n## 输出格式\n输出最大和。\n\n## 数据范围\n`1≤K≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "6 3\n1 5 2 3 7 1",
+        "output": "12",
+        "description": "2+3+7"
+      },
+      {
+        "input": "4 4\n-1 2 3 -2",
+        "output": "2",
+        "description": "全数组"
+      }
+    ]
+  },
+  {
+    "title": "统计逆序对",
+    "difficulty": "困难",
+    "tags": [
+      "数组",
+      "归并排序",
+      "分治"
+    ],
+    "content": "# 统计逆序对\n\n## 题目描述\n若 `i<j` 且 `a[i]>a[j]`，则 `(i,j)` 是一个逆序对。求逆序对总数。\n\n## 输入格式\n第一行 N，第二行 N 个整数。\n\n## 输出格式\n输出逆序对数量。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "5\n2 4 1 3 5",
+        "output": "3",
+        "description": "(2,1)(4,1)(4,3)"
+      },
+      {
+        "input": "3\n3 2 1",
+        "output": "3",
+        "description": "完全逆序"
+      }
+    ]
+  },
+  {
+    "title": "数组中的多数元素",
+    "difficulty": "中等",
+    "tags": [
+      "数组",
+      "Boyer-Moore",
+      "计数"
+    ],
+    "content": "# 数组中的多数元素\n\n## 题目描述\n给定数组，保证存在一个元素出现次数严格超过 `N/2`，输出它。\n\n## 输入格式\n第一行 N，第二行 N 个整数。\n\n## 输出格式\n输出多数元素。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "7\n2 2 1 1 1 2 2",
+        "output": "2",
+        "description": "基础"
+      },
+      {
+        "input": "1\n9",
+        "output": "9",
+        "description": "单元素"
+      }
+    ]
+  },
+  {
+    "title": "最短无序连续子数组",
+    "difficulty": "中等",
+    "tags": [
+      "数组",
+      "排序",
+      "双向扫描"
+    ],
+    "content": "# 最短无序连续子数组\n\n## 题目描述\n找出最短连续子数组，使得只要对该子数组排序，整个数组就会非递减。已经有序则输出 0。\n\n## 输入格式\n第一行 N，第二行 N 个整数。\n\n## 输出格式\n输出最短长度。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "7\n2 6 4 8 10 9 15",
+        "output": "5",
+        "description": "6,4,8,10,9"
+      },
+      {
+        "input": "5\n1 2 3 4 5",
+        "output": "0",
+        "description": "已排序"
+      }
+    ]
+  },
+  {
+    "title": "字符串长度",
+    "difficulty": "简单",
+    "tags": [
+      "字符串",
+      "基础语法",
+      "输入输出"
+    ],
+    "content": "# 字符串长度\n\n## 题目描述\n输入一行字符串，输出其字符数量。测试数据仅包含 ASCII 可见字符且不含首尾空格。\n\n## 输入格式\n输入一行字符串。\n\n## 输出格式\n输出长度。\n\n## 数据范围\n长度 `0..10^6`。",
+    "test_cases": [
+      {
+        "input": "hello",
+        "output": "5",
+        "description": "基础"
+      },
+      {
+        "input": "A B C",
+        "output": "5",
+        "description": "包含空格"
+      }
+    ]
+  },
+  {
+    "title": "字符串反转",
+    "difficulty": "简单",
+    "tags": [
+      "字符串",
+      "遍历",
+      "反转"
+    ],
+    "content": "# 字符串反转\n\n## 题目描述\n输入一行字符串，输出其反转结果。\n\n## 输入格式\n输入一行 ASCII 字符串。\n\n## 输出格式\n输出反转后的字符串。\n\n## 数据范围\n长度不超过 `10^6`。",
+    "test_cases": [
+      {
+        "input": "abcde",
+        "output": "edcba",
+        "description": "基础"
+      },
+      {
+        "input": "a b",
+        "output": "b a",
+        "description": "含空格"
+      }
+    ]
+  },
+  {
+    "title": "回文字符串判断",
+    "difficulty": "简单",
+    "tags": [
+      "字符串",
+      "双指针",
+      "回文"
+    ],
+    "content": "# 回文字符串判断\n\n## 题目描述\n判断字符串是否为回文，区分大小写。\n\n## 输入格式\n输入一个不含空格的字符串。\n\n## 输出格式\n是输出 `YES`，否则输出 `NO`。\n\n## 数据范围\n长度 `1..10^6`。",
+    "test_cases": [
+      {
+        "input": "level",
+        "output": "YES",
+        "description": "回文"
+      },
+      {
+        "input": "Level",
+        "output": "NO",
+        "description": "大小写不同"
+      }
+    ]
+  },
+  {
+    "title": "忽略大小写的回文判断",
+    "difficulty": "简单",
+    "tags": [
+      "字符串",
+      "双指针",
+      "大小写"
+    ],
+    "content": "# 忽略大小写的回文判断\n\n## 题目描述\n判断字符串是否为回文，比较时忽略英文字母大小写。\n\n## 输入格式\n输入一个只含英文字母的字符串。\n\n## 输出格式\n是输出 `YES`，否则输出 `NO`。\n\n## 数据范围\n长度 `1..10^6`。",
+    "test_cases": [
+      {
+        "input": "Level",
+        "output": "YES",
+        "description": "忽略大小写"
+      },
+      {
+        "input": "OpenAI",
+        "output": "NO",
+        "description": "非回文"
+      }
+    ]
+  },
+  {
+    "title": "统计元音字母",
+    "difficulty": "简单",
+    "tags": [
+      "字符串",
+      "计数",
+      "字符"
+    ],
+    "content": "# 统计元音字母\n\n## 题目描述\n统计字符串中英文字母 `a,e,i,o,u` 的出现次数，忽略大小写。\n\n## 输入格式\n输入一行字符串。\n\n## 输出格式\n输出元音总数。\n\n## 数据范围\n长度不超过 `10^6`。",
+    "test_cases": [
+      {
+        "input": "Hello World",
+        "output": "3",
+        "description": "e,o,o"
+      },
+      {
+        "input": "rhythm",
+        "output": "0",
+        "description": "无元音"
+      }
+    ]
+  },
+  {
+    "title": "统计字符种类数",
+    "difficulty": "简单",
+    "tags": [
+      "字符串",
+      "集合",
+      "计数"
+    ],
+    "content": "# 统计字符种类数\n\n## 题目描述\n统计字符串中不同 ASCII 字符的种类数。\n\n## 输入格式\n输入一行字符串。\n\n## 输出格式\n输出不同字符数量。\n\n## 数据范围\n长度不超过 `10^6`。",
+    "test_cases": [
+      {
+        "input": "abca",
+        "output": "3",
+        "description": "a,b,c"
+      },
+      {
+        "input": "aaaa",
+        "output": "1",
+        "description": "一种"
+      }
+    ]
+  },
+  {
+    "title": "字符出现次数",
+    "difficulty": "简单",
+    "tags": [
+      "字符串",
+      "计数",
+      "字符"
+    ],
+    "content": "# 字符出现次数\n\n## 题目描述\n给定字符串 S 和单个字符 c，统计 c 在 S 中出现的次数。\n\n## 输入格式\n第一行字符串 S；第二行字符 c。\n\n## 输出格式\n输出次数。\n\n## 数据范围\nS 长度不超过 `10^6`。",
+    "test_cases": [
+      {
+        "input": "banana\na",
+        "output": "3",
+        "description": "基础"
+      },
+      {
+        "input": "Hello\nl",
+        "output": "2",
+        "description": "字符l"
+      }
+    ]
+  },
+  {
+    "title": "删除字符串中的空格",
+    "difficulty": "简单",
+    "tags": [
+      "字符串",
+      "过滤",
+      "字符"
+    ],
+    "content": "# 删除字符串中的空格\n\n## 题目描述\n删除输入字符串中的所有普通空格字符 `' '`。\n\n## 输入格式\n输入一行字符串。\n\n## 输出格式\n输出删除空格后的字符串。\n\n## 数据范围\n长度不超过 `10^6`。",
+    "test_cases": [
+      {
+        "input": "a b  c",
+        "output": "abc",
+        "description": "多个空格"
+      },
+      {
+        "input": "hello",
+        "output": "hello",
+        "description": "无空格"
+      }
+    ]
+  },
+  {
+    "title": "单词数量统计",
+    "difficulty": "简单",
+    "tags": [
+      "字符串",
+      "分词",
+      "扫描"
+    ],
+    "content": "# 单词数量统计\n\n## 题目描述\n统计一行英文文本中的单词数量。单词由连续非空格字符组成，可能有多个连续空格。\n\n## 输入格式\n输入一行字符串。\n\n## 输出格式\n输出单词数量。\n\n## 数据范围\n长度不超过 `10^6`。",
+    "test_cases": [
+      {
+        "input": "hello world",
+        "output": "2",
+        "description": "基础"
+      },
+      {
+        "input": "  one   two three  ",
+        "output": "3",
+        "description": "多空格"
+      }
+    ]
+  },
+  {
+    "title": "最长单词",
+    "difficulty": "简单",
+    "tags": [
+      "字符串",
+      "分词",
+      "扫描"
+    ],
+    "content": "# 最长单词\n\n## 题目描述\n输入一行仅由英文单词和空格组成的文本，输出最长单词；若并列，输出最先出现的。\n\n## 输入格式\n输入一行文本。\n\n## 输出格式\n输出最长单词。\n\n## 数据范围\n文本长度不超过 `10^6`。",
+    "test_cases": [
+      {
+        "input": "I love programming",
+        "output": "programming",
+        "description": "基础"
+      },
+      {
+        "input": "aa b cc",
+        "output": "aa",
+        "description": "并列取先"
+      }
+    ]
+  },
+  {
+    "title": "大小写转换",
+    "difficulty": "简单",
+    "tags": [
+      "字符串",
+      "字符处理",
+      "ASCII"
+    ],
+    "content": "# 大小写转换\n\n## 题目描述\n将字符串中的小写英文字母转为大写，大写转为小写，其他字符保持不变。\n\n## 输入格式\n输入一行字符串。\n\n## 输出格式\n输出转换结果。\n\n## 数据范围\n长度不超过 `10^6`。",
+    "test_cases": [
+      {
+        "input": "Hello123",
+        "output": "hELLO123",
+        "description": "基础"
+      },
+      {
+        "input": "aBc!",
+        "output": "AbC!",
+        "description": "含符号"
+      }
+    ]
+  },
+  {
+    "title": "首字母大写",
+    "difficulty": "简单",
+    "tags": [
+      "字符串",
+      "分词",
+      "字符处理"
+    ],
+    "content": "# 首字母大写\n\n## 题目描述\n将英文句子中每个单词的第一个字母转换为大写，其余字符保持不变。单词由空格分隔。\n\n## 输入格式\n输入一行字符串。\n\n## 输出格式\n输出处理后的字符串。\n\n## 数据范围\n长度不超过 `10^6`。",
+    "test_cases": [
+      {
+        "input": "hello world",
+        "output": "Hello World",
+        "description": "基础"
+      },
+      {
+        "input": "java python c",
+        "output": "Java Python C",
+        "description": "多单词"
+      }
+    ]
+  },
+  {
+    "title": "字符串压缩计数",
+    "difficulty": "中等",
+    "tags": [
+      "字符串",
+      "扫描",
+      "编码"
+    ],
+    "content": "# 字符串压缩计数\n\n## 题目描述\n对字符串做连续字符计数压缩，例如 `aaabbc` 变为 `a3b2c1`。\n\n## 输入格式\n输入一个不含空格的字符串 S。\n\n## 输出格式\n输出压缩结果。\n\n## 数据范围\n`1≤|S|≤10^6`。",
+    "test_cases": [
+      {
+        "input": "aaabbc",
+        "output": "a3b2c1",
+        "description": "基础"
+      },
+      {
+        "input": "abcd",
+        "output": "a1b1c1d1",
+        "description": "无连续重复"
+      }
+    ]
+  },
+  {
+    "title": "解压缩计数字符串",
+    "difficulty": "中等",
+    "tags": [
+      "字符串",
+      "解析",
+      "模拟"
+    ],
+    "content": "# 解压缩计数字符串\n\n## 题目描述\n输入按 `字符+正整数次数` 组成的压缩串，将其解压。例如 `a3b2c1` 变为 `aaabbc`。次数可能是多位数。\n\n## 输入格式\n输入一个合法压缩串。\n\n## 输出格式\n输出解压后的字符串。\n\n## 数据范围\n解压后长度不超过 `10^6`。",
+    "test_cases": [
+      {
+        "input": "a3b2c1",
+        "output": "aaabbc",
+        "description": "基础"
+      },
+      {
+        "input": "x10",
+        "output": "xxxxxxxxxx",
+        "description": "多位次数"
+      }
+    ]
+  },
+  {
+    "title": "判断两个字符串是否为字母异位词",
+    "difficulty": "简单",
+    "tags": [
+      "字符串",
+      "哈希表",
+      "排序"
+    ],
+    "content": "# 判断两个字符串是否为字母异位词\n\n## 题目描述\n判断两个只含小写字母的字符串是否由完全相同数量的字母组成。\n\n## 输入格式\n输入两行字符串 S 和 T。\n\n## 输出格式\n是输出 `YES`，否则输出 `NO`。\n\n## 数据范围\n长度均不超过 `10^6`。",
+    "test_cases": [
+      {
+        "input": "listen\nsilent",
+        "output": "YES",
+        "description": "异位词"
+      },
+      {
+        "input": "apple\nappeal",
+        "output": "NO",
+        "description": "不同"
+      }
+    ]
+  },
+  {
+    "title": "第一个只出现一次的字符",
+    "difficulty": "中等",
+    "tags": [
+      "字符串",
+      "哈希表",
+      "计数"
+    ],
+    "content": "# 第一个只出现一次的字符\n\n## 题目描述\n找出字符串中第一个只出现一次的字符。不存在则输出 `NONE`。\n\n## 输入格式\n输入一个不含空格的字符串。\n\n## 输出格式\n输出字符或 `NONE`。\n\n## 数据范围\n长度不超过 `10^6`。",
+    "test_cases": [
+      {
+        "input": "swiss",
+        "output": "w",
+        "description": "w最先唯一"
+      },
+      {
+        "input": "aabb",
+        "output": "NONE",
+        "description": "不存在"
+      }
+    ]
+  },
+  {
+    "title": "最长公共前缀",
+    "difficulty": "中等",
+    "tags": [
+      "字符串",
+      "数组",
+      "扫描"
+    ],
+    "content": "# 最长公共前缀\n\n## 题目描述\n给定 N 个字符串，求它们的最长公共前缀。若不存在，输出空行。\n\n## 输入格式\n第一行 N，之后 N 行每行一个字符串。\n\n## 输出格式\n输出最长公共前缀。\n\n## 数据范围\n`1≤N≤10^5`，总字符数不超过 `10^6`。",
+    "test_cases": [
+      {
+        "input": "3\nflower\nflow\nflight",
+        "output": "fl",
+        "description": "基础"
+      },
+      {
+        "input": "2\ndog\ncat",
+        "output": "",
+        "description": "无公共前缀"
+      }
+    ]
+  },
+  {
+    "title": "子串出现次数（允许重叠）",
+    "difficulty": "中等",
+    "tags": [
+      "字符串",
+      "匹配",
+      "KMP"
+    ],
+    "content": "# 子串出现次数（允许重叠）\n\n## 题目描述\n统计模式串 P 在文本串 S 中出现的次数，允许重叠。\n\n## 输入格式\n第一行 S，第二行 P。\n\n## 输出格式\n输出出现次数。\n\n## 数据范围\n`1≤|P|≤|S|≤10^6`。",
+    "test_cases": [
+      {
+        "input": "aaaaa\naa",
+        "output": "4",
+        "description": "重叠"
+      },
+      {
+        "input": "abcabcabc\nabc",
+        "output": "3",
+        "description": "多次"
+      }
+    ]
+  },
+  {
+    "title": "最长无重复字符子串",
+    "difficulty": "中等",
+    "tags": [
+      "字符串",
+      "滑动窗口",
+      "哈希表"
+    ],
+    "content": "# 最长无重复字符子串\n\n## 题目描述\n求字符串中不含重复字符的最长连续子串长度。\n\n## 输入格式\n输入一个 ASCII 字符串 S。\n\n## 输出格式\n输出最大长度。\n\n## 数据范围\n`1≤|S|≤10^6`。",
+    "test_cases": [
+      {
+        "input": "abcabcbb",
+        "output": "3",
+        "description": "abc"
+      },
+      {
+        "input": "bbbbb",
+        "output": "1",
+        "description": "单字符"
+      }
+    ]
+  },
+  {
+    "title": "括号字符串合法性",
+    "difficulty": "简单",
+    "tags": [
+      "字符串",
+      "栈",
+      "括号匹配"
+    ],
+    "content": "# 括号字符串合法性\n\n## 题目描述\n输入仅由 `()[]{}` 构成的字符串，判断括号是否正确匹配。\n\n## 输入格式\n输入字符串 S。\n\n## 输出格式\n合法输出 `YES`，否则输出 `NO`。\n\n## 数据范围\n`1≤|S|≤10^6`。",
+    "test_cases": [
+      {
+        "input": "([]{})",
+        "output": "YES",
+        "description": "合法"
+      },
+      {
+        "input": "([)]",
+        "output": "NO",
+        "description": "交叉"
+      }
+    ]
+  },
+  {
+    "title": "移除相邻重复字符",
+    "difficulty": "中等",
+    "tags": [
+      "字符串",
+      "栈",
+      "模拟"
+    ],
+    "content": "# 移除相邻重复字符\n\n## 题目描述\n不断删除相邻且相同的一对字符，直到不能删除，输出最终字符串。若为空输出 `EMPTY`。\n\n## 输入格式\n输入一个不含空格的字符串。\n\n## 输出格式\n输出最终结果。\n\n## 数据范围\n`1≤|S|≤10^6`。",
+    "test_cases": [
+      {
+        "input": "abbaca",
+        "output": "ca",
+        "description": "经典"
+      },
+      {
+        "input": "azxxzy",
+        "output": "ay",
+        "description": "连锁删除"
+      }
+    ]
+  },
+  {
+    "title": "字符串循环左移",
+    "difficulty": "简单",
+    "tags": [
+      "字符串",
+      "模拟",
+      "取模"
+    ],
+    "content": "# 字符串循环左移\n\n## 题目描述\n将字符串循环左移 K 位。\n\n## 输入格式\n第一行字符串 S；第二行整数 K。\n\n## 输出格式\n输出结果。\n\n## 数据范围\n`1≤|S|≤10^6, 0≤K≤10^18`。",
+    "test_cases": [
+      {
+        "input": "abcdef\n2",
+        "output": "cdefab",
+        "description": "基础"
+      },
+      {
+        "input": "abc\n4",
+        "output": "bca",
+        "description": "K大于长度"
+      }
+    ]
+  },
+  {
+    "title": "反转句子中的单词顺序",
+    "difficulty": "中等",
+    "tags": [
+      "字符串",
+      "分词",
+      "反转"
+    ],
+    "content": "# 反转句子中的单词顺序\n\n## 题目描述\n给定由单个空格分隔的英文单词序列，反转单词顺序。\n\n## 输入格式\n输入一行句子。\n\n## 输出格式\n输出反转后的句子。\n\n## 数据范围\n总长度不超过 `10^6`。",
+    "test_cases": [
+      {
+        "input": "I love coding",
+        "output": "coding love I",
+        "description": "基础"
+      },
+      {
+        "input": "hello",
+        "output": "hello",
+        "description": "单词"
+      }
+    ]
+  },
+  {
+    "title": "字符串最小表示",
+    "difficulty": "困难",
+    "tags": [
+      "字符串",
+      "循环字符串",
+      "双指针"
+    ],
+    "content": "# 字符串最小表示\n\n## 题目描述\n给定字符串 S，把它看作环。对所有循环移位结果，输出字典序最小的那个。\n\n## 输入格式\n输入一个只含小写字母的字符串 S。\n\n## 输出格式\n输出字典序最小循环表示。\n\n## 数据范围\n`1≤|S|≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "baca",
+        "output": "abac",
+        "description": "基础"
+      },
+      {
+        "input": "aaaa",
+        "output": "aaaa",
+        "description": "全相同"
+      }
+    ]
+  },
+  {
+    "title": "最长回文子串长度",
+    "difficulty": "中等",
+    "tags": [
+      "字符串",
+      "回文",
+      "中心扩展"
+    ],
+    "content": "# 最长回文子串长度\n\n## 题目描述\n求字符串中最长回文子串的长度。\n\n## 输入格式\n输入一个不含空格的字符串 S。\n\n## 输出格式\n输出最大长度。\n\n## 数据范围\n`1≤|S|≤5000`。",
+    "test_cases": [
+      {
+        "input": "babad",
+        "output": "3",
+        "description": "bab或aba"
+      },
+      {
+        "input": "cbbd",
+        "output": "2",
+        "description": "bb"
+      }
+    ]
+  },
+  {
+    "title": "快速幂",
+    "difficulty": "中等",
+    "tags": [
+      "数学",
+      "快速幂",
+      "模运算"
+    ],
+    "content": "# 快速幂\n\n## 题目描述\n计算 `a^b mod m`。\n\n## 输入格式\n输入三个非负整数 `a b m`。\n\n## 输出格式\n输出结果。\n\n## 数据范围\n`0≤a≤10^18, 0≤b≤10^18, 1≤m≤10^18`。",
+    "test_cases": [
+      {
+        "input": "2 10 1000",
+        "output": "24",
+        "description": "1024 mod 1000"
+      },
+      {
+        "input": "5 0 7",
+        "output": "1",
+        "description": "零次幂"
+      }
+    ]
+  },
+  {
+    "title": "质因数分解",
+    "difficulty": "中等",
+    "tags": [
+      "数学",
+      "质因数",
+      "枚举"
+    ],
+    "content": "# 质因数分解\n\n## 题目描述\n将正整数 N 分解为质因数乘积，并按从小到大输出所有质因数，重复出现。\n\n## 输入格式\n输入整数 N。\n\n## 输出格式\n输出质因数序列，空格分隔；若 N=1 输出 `1`。\n\n## 数据范围\n`1≤N≤10^12`。",
+    "test_cases": [
+      {
+        "input": "60",
+        "output": "2 2 3 5",
+        "description": "基础"
+      },
+      {
+        "input": "13",
+        "output": "13",
+        "description": "质数"
+      },
+      {
+        "input": "1",
+        "output": "1",
+        "description": "边界"
+      }
+    ]
+  },
+  {
+    "title": "约数个数",
+    "difficulty": "中等",
+    "tags": [
+      "数学",
+      "质因数分解",
+      "约数"
+    ],
+    "content": "# 约数个数\n\n## 题目描述\n求正整数 N 的正约数个数。\n\n## 输入格式\n输入 N。\n\n## 输出格式\n输出约数数量。\n\n## 数据范围\n`1≤N≤10^12`。",
+    "test_cases": [
+      {
+        "input": "12",
+        "output": "6",
+        "description": "1,2,3,4,6,12"
+      },
+      {
+        "input": "13",
+        "output": "2",
+        "description": "质数"
+      }
+    ]
+  },
+  {
+    "title": "约数之和",
+    "difficulty": "中等",
+    "tags": [
+      "数学",
+      "约数",
+      "枚举"
+    ],
+    "content": "# 约数之和\n\n## 题目描述\n求正整数 N 的所有正约数之和。\n\n## 输入格式\n输入 N。\n\n## 输出格式\n输出约数和。\n\n## 数据范围\n`1≤N≤10^9`。",
+    "test_cases": [
+      {
+        "input": "12",
+        "output": "28",
+        "description": "1+2+3+4+6+12"
+      },
+      {
+        "input": "1",
+        "output": "1",
+        "description": "边界"
+      }
+    ]
+  },
+  {
+    "title": "欧拉函数",
+    "difficulty": "中等",
+    "tags": [
+      "数学",
+      "数论",
+      "欧拉函数"
+    ],
+    "content": "# 欧拉函数\n\n## 题目描述\n求 `1..N` 中与 N 互质的整数个数 `φ(N)`。\n\n## 输入格式\n输入正整数 N。\n\n## 输出格式\n输出 `φ(N)`。\n\n## 数据范围\n`1≤N≤10^12`。",
+    "test_cases": [
+      {
+        "input": "9",
+        "output": "6",
+        "description": "1,2,4,5,7,8"
+      },
+      {
+        "input": "1",
+        "output": "1",
+        "description": "定义"
+      }
+    ]
+  },
+  {
+    "title": "组合数 C(n,k)",
+    "difficulty": "中等",
+    "tags": [
+      "数学",
+      "组合数学",
+      "动态规划"
+    ],
+    "content": "# 组合数 C(n,k)\n\n## 题目描述\n计算组合数 `C(n,k)`。\n\n## 输入格式\n输入 `n k`。\n\n## 输出格式\n输出精确值。\n\n## 数据范围\n`0≤k≤n≤60`。",
+    "test_cases": [
+      {
+        "input": "5 2",
+        "output": "10",
+        "description": "基础"
+      },
+      {
+        "input": "10 0",
+        "output": "1",
+        "description": "边界"
+      }
+    ]
+  },
+  {
+    "title": "组合数取模",
+    "difficulty": "困难",
+    "tags": [
+      "数学",
+      "组合数学",
+      "模逆元"
+    ],
+    "content": "# 组合数取模\n\n## 题目描述\n计算 `C(n,k) mod 1000000007`。\n\n## 输入格式\n输入 `n k`。\n\n## 输出格式\n输出结果。\n\n## 数据范围\n`0≤k≤n≤10^6`。",
+    "test_cases": [
+      {
+        "input": "5 2",
+        "output": "10",
+        "description": "基础"
+      },
+      {
+        "input": "1000000 0",
+        "output": "1",
+        "description": "边界"
+      }
+    ]
+  },
+  {
+    "title": "杨辉三角第 N 行",
+    "difficulty": "简单",
+    "tags": [
+      "数学",
+      "组合",
+      "数组"
+    ],
+    "content": "# 杨辉三角第 N 行\n\n## 题目描述\n输出杨辉三角第 N 行（从第 0 行开始）。\n\n## 输入格式\n输入整数 N。\n\n## 输出格式\n输出 `C(N,0)` 到 `C(N,N)`，空格分隔。\n\n## 数据范围\n`0≤N≤30`。",
+    "test_cases": [
+      {
+        "input": "4",
+        "output": "1 4 6 4 1",
+        "description": "第4行"
+      },
+      {
+        "input": "0",
+        "output": "1",
+        "description": "第0行"
+      }
+    ]
+  },
+  {
+    "title": "进制转换：十进制转二进制",
+    "difficulty": "简单",
+    "tags": [
+      "数学",
+      "进制转换",
+      "字符串"
+    ],
+    "content": "# 进制转换：十进制转二进制\n\n## 题目描述\n将非负十进制整数转换为二进制表示。\n\n## 输入格式\n输入非负整数 N。\n\n## 输出格式\n输出二进制字符串。\n\n## 数据范围\n`0≤N≤10^18`。",
+    "test_cases": [
+      {
+        "input": "10",
+        "output": "1010",
+        "description": "基础"
+      },
+      {
+        "input": "0",
+        "output": "0",
+        "description": "零"
+      }
+    ]
+  },
+  {
+    "title": "进制转换：二进制转十进制",
+    "difficulty": "简单",
+    "tags": [
+      "数学",
+      "进制转换",
+      "字符串"
+    ],
+    "content": "# 进制转换：二进制转十进制\n\n## 题目描述\n将二进制字符串转换为十进制整数。\n\n## 输入格式\n输入一个二进制字符串 S。\n\n## 输出格式\n输出十进制值。\n\n## 数据范围\n`1≤|S|≤60`。",
+    "test_cases": [
+      {
+        "input": "1010",
+        "output": "10",
+        "description": "基础"
+      },
+      {
+        "input": "0",
+        "output": "0",
+        "description": "零"
+      }
+    ]
+  },
+  {
+    "title": "任意进制转十进制",
+    "difficulty": "中等",
+    "tags": [
+      "数学",
+      "进制转换",
+      "字符串"
+    ],
+    "content": "# 任意进制转十进制\n\n## 题目描述\n给定 2~16 进制的非负整数，转换为十进制。数字字符使用 `0-9A-F`。\n\n## 输入格式\n第一行输入进制 B，第二行输入字符串 S。\n\n## 输出格式\n输出十进制值。\n\n## 数据范围\n`2≤B≤16`，转换结果不超过 `10^18`。",
+    "test_cases": [
+      {
+        "input": "16\nFF",
+        "output": "255",
+        "description": "十六进制"
+      },
+      {
+        "input": "2\n1111",
+        "output": "15",
+        "description": "二进制"
+      }
+    ]
+  },
+  {
+    "title": "十进制转任意进制",
+    "difficulty": "中等",
+    "tags": [
+      "数学",
+      "进制转换",
+      "字符串"
+    ],
+    "content": "# 十进制转任意进制\n\n## 题目描述\n将非负十进制整数转为 B 进制，B 为 2~16，数字字符使用大写 `A-F`。\n\n## 输入格式\n输入 `N B`。\n\n## 输出格式\n输出 B 进制字符串。\n\n## 数据范围\n`0≤N≤10^18, 2≤B≤16`。",
+    "test_cases": [
+      {
+        "input": "255 16",
+        "output": "FF",
+        "description": "十六进制"
+      },
+      {
+        "input": "15 2",
+        "output": "1111",
+        "description": "二进制"
+      }
+    ]
+  },
+  {
+    "title": "最大公约数序列",
+    "difficulty": "中等",
+    "tags": [
+      "数学",
+      "GCD",
+      "数组"
+    ],
+    "content": "# 最大公约数序列\n\n## 题目描述\n给定 N 个正整数，求它们整体的最大公约数。\n\n## 输入格式\n第一行 N，第二行 N 个正整数。\n\n## 输出格式\n输出最大公约数。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "4\n12 18 24 30",
+        "output": "6",
+        "description": "基础"
+      },
+      {
+        "input": "3\n7 11 13",
+        "output": "1",
+        "description": "互质"
+      }
+    ]
+  },
+  {
+    "title": "最小公倍数序列",
+    "difficulty": "中等",
+    "tags": [
+      "数学",
+      "LCM",
+      "数组"
+    ],
+    "content": "# 最小公倍数序列\n\n## 题目描述\n给定 N 个正整数，求它们整体的最小公倍数。保证答案不超过 `10^18`。\n\n## 输入格式\n第一行 N，第二行 N 个正整数。\n\n## 输出格式\n输出最小公倍数。\n\n## 数据范围\n`1≤N≤10^5`。",
+    "test_cases": [
+      {
+        "input": "3\n2 3 4",
+        "output": "12",
+        "description": "基础"
+      },
+      {
+        "input": "2\n6 8",
+        "output": "24",
+        "description": "两数"
+      }
+    ]
+  },
+  {
+    "title": "完全数判断",
+    "difficulty": "简单",
+    "tags": [
+      "数学",
+      "约数",
+      "枚举"
+    ],
+    "content": "# 完全数判断\n\n## 题目描述\n一个正整数若等于其所有真因子（不含自身）之和，则称为完全数。判断 N 是否为完全数。\n\n## 输入格式\n输入正整数 N。\n\n## 输出格式\n是输出 `YES`，否则输出 `NO`。\n\n## 数据范围\n`1≤N≤10^9`。",
+    "test_cases": [
+      {
+        "input": "6",
+        "output": "YES",
+        "description": "1+2+3"
+      },
+      {
+        "input": "28",
+        "output": "YES",
+        "description": "经典完全数"
+      },
+      {
+        "input": "12",
+        "output": "NO",
+        "description": "不是"
+      }
+    ]
+  },
+  {
+    "title": "阿姆斯特朗数判断",
+    "difficulty": "简单",
+    "tags": [
+      "数学",
+      "数位",
+      "幂"
+    ],
+    "content": "# 阿姆斯特朗数判断\n\n## 题目描述\n设 N 的十进制位数为 k。若 N 等于其每一位数字的 k 次方之和，则称为阿姆斯特朗数。判断 N。\n\n## 输入格式\n输入非负整数 N。\n\n## 输出格式\n是输出 `YES`，否则输出 `NO`。\n\n## 数据范围\n`0≤N≤10^9`。",
+    "test_cases": [
+      {
+        "input": "153",
+        "output": "YES",
+        "description": "1^3+5^3+3^3"
+      },
+      {
+        "input": "9474",
+        "output": "YES",
+        "description": "四位"
+      },
+      {
+        "input": "123",
+        "output": "NO",
+        "description": "否"
+      }
+    ]
+  },
+  {
+    "title": "连续整数求和表示数",
+    "difficulty": "中等",
+    "tags": [
+      "数学",
+      "枚举",
+      "前缀思想"
+    ],
+    "content": "# 连续整数求和表示数\n\n## 题目描述\n统计正整数 N 能表示为一个或多个连续正整数之和的方案数。\n\n## 输入格式\n输入正整数 N。\n\n## 输出格式\n输出方案数。\n\n## 数据范围\n`1≤N≤10^12`。",
+    "test_cases": [
+      {
+        "input": "15",
+        "output": "4",
+        "description": "15,7+8,4+5+6,1+2+3+4+5"
+      },
+      {
+        "input": "9",
+        "output": "3",
+        "description": "9,4+5,2+3+4"
+      }
+    ]
+  },
+  {
+    "title": "鸡兔同笼",
+    "difficulty": "简单",
+    "tags": [
+      "数学",
+      "方程",
+      "枚举"
+    ],
+    "content": "# 鸡兔同笼\n\n## 题目描述\n笼中有鸡和兔共 H 个头、F 只脚，求鸡和兔各多少只。若无非负整数解输出 `NO`。\n\n## 输入格式\n输入 `H F`。\n\n## 输出格式\n有解输出 `chicken rabbit`，否则输出 `NO`。\n\n## 数据范围\n`0≤H≤10^9, 0≤F≤4×10^9`。",
+    "test_cases": [
+      {
+        "input": "35 94",
+        "output": "23 12",
+        "description": "经典"
+      },
+      {
+        "input": "1 3",
+        "output": "NO",
+        "description": "无解"
+      }
+    ]
+  },
+  {
+    "title": "解一元二次方程的判别式",
+    "difficulty": "简单",
+    "tags": [
+      "数学",
+      "方程",
+      "判别式"
+    ],
+    "content": "# 解一元二次方程的判别式\n\n## 题目描述\n给定整数 a,b,c 且 a≠0，计算判别式 `D=b^2-4ac`，判断实根数量。\n\n## 输入格式\n输入 `a b c`。\n\n## 输出格式\n若 D>0 输出 `2`，D=0 输出 `1`，D<0 输出 `0`。\n\n## 数据范围\n`|a|,|b|,|c|≤10^9`。",
+    "test_cases": [
+      {
+        "input": "1 -3 2",
+        "output": "2",
+        "description": "两个实根"
+      },
+      {
+        "input": "1 2 1",
+        "output": "1",
+        "description": "重根"
+      },
+      {
+        "input": "1 0 1",
+        "output": "0",
+        "description": "无实根"
+      }
+    ]
+  },
+  {
+    "title": "矩阵乘法",
+    "difficulty": "中等",
+    "tags": [
+      "数学",
+      "矩阵",
+      "三重循环"
+    ],
+    "content": "# 矩阵乘法\n\n## 题目描述\n计算矩阵 A(N×M) 与 B(M×K) 的乘积 C。\n\n## 输入格式\n第一行 `N M K`；接下来 N 行是 A；再接下来 M 行是 B。\n\n## 输出格式\n输出 N 行，每行 K 个整数。\n\n## 数据范围\n`1≤N,M,K≤100`，元素绝对值不超过 1000。",
+    "test_cases": [
+      {
+        "input": "2 2 2\n1 2\n3 4\n5 6\n7 8",
+        "output": "19 22\n43 50",
+        "description": "2x2"
+      }
+    ]
+  },
+  {
+    "title": "升序排序",
+    "difficulty": "简单",
+    "tags": [
+      "排序",
+      "数组",
+      "基础算法"
+    ],
+    "content": "# 升序排序\n\n## 题目描述\n将 N 个整数按非递减顺序输出。\n\n## 输入格式\n第一行 N，第二行 N 个整数。\n\n## 输出格式\n输出排序后的数组。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "5\n5 2 3 1 4",
+        "output": "1 2 3 4 5",
+        "description": "基础"
+      },
+      {
+        "input": "4\n2 2 -1 3",
+        "output": "-1 2 2 3",
+        "description": "重复与负数"
+      }
+    ]
+  },
+  {
+    "title": "降序排序",
+    "difficulty": "简单",
+    "tags": [
+      "排序",
+      "数组",
+      "基础算法"
+    ],
+    "content": "# 降序排序\n\n## 题目描述\n将 N 个整数按非递增顺序输出。\n\n## 输入格式\n第一行 N，第二行 N 个整数。\n\n## 输出格式\n输出排序后的数组。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "5\n5 2 3 1 4",
+        "output": "5 4 3 2 1",
+        "description": "基础"
+      },
+      {
+        "input": "3\n-1 -3 -2",
+        "output": "-1 -2 -3",
+        "description": "负数"
+      }
+    ]
+  },
+  {
+    "title": "按绝对值排序",
+    "difficulty": "简单",
+    "tags": [
+      "排序",
+      "自定义比较",
+      "数组"
+    ],
+    "content": "# 按绝对值排序\n\n## 题目描述\n按绝对值从小到大排序；绝对值相同时按原值从小到大。\n\n## 输入格式\n第一行 N，第二行 N 个整数。\n\n## 输出格式\n输出排序结果。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "6\n-3 1 -1 2 -2 0",
+        "output": "0 -1 1 -2 2 -3",
+        "description": "基础"
+      }
+    ]
+  },
+  {
+    "title": "学生成绩排序",
+    "difficulty": "简单",
+    "tags": [
+      "排序",
+      "结构体",
+      "多关键字"
+    ],
+    "content": "# 学生成绩排序\n\n## 题目描述\n给定学生姓名和成绩，按成绩降序；成绩相同按姓名字典序升序。\n\n## 输入格式\n第一行 N；接下来 N 行 `name score`。\n\n## 输出格式\n按排序后顺序每行输出 `name score`。\n\n## 数据范围\n`1≤N≤10^5`，姓名仅含英文字母。",
+    "test_cases": [
+      {
+        "input": "4\nTom 90\nAmy 95\nBob 90\nAnn 95",
+        "output": "Amy 95\nAnn 95\nBob 90\nTom 90",
+        "description": "多关键字"
+      }
+    ]
+  },
+  {
+    "title": "第 K 小元素",
+    "difficulty": "中等",
+    "tags": [
+      "排序",
+      "选择算法",
+      "数组"
+    ],
+    "content": "# 第 K 小元素\n\n## 题目描述\n给定 N 个整数，求第 K 小的元素（重复元素按出现次数计）。\n\n## 输入格式\n第一行 `N K`；第二行 N 个整数。\n\n## 输出格式\n输出第 K 小值。\n\n## 数据范围\n`1≤K≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "5 3\n4 1 2 2 9",
+        "output": "2",
+        "description": "重复"
+      },
+      {
+        "input": "3 1\n7 8 9",
+        "output": "7",
+        "description": "最小"
+      }
+    ]
+  },
+  {
+    "title": "第 K 大不同元素",
+    "difficulty": "中等",
+    "tags": [
+      "排序",
+      "集合",
+      "选择"
+    ],
+    "content": "# 第 K 大不同元素\n\n## 题目描述\n给定数组，去重后求第 K 大元素。若不同元素不足 K 个，输出 `NONE`。\n\n## 输入格式\n第一行 `N K`；第二行 N 个整数。\n\n## 输出格式\n输出答案或 `NONE`。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "6 2\n5 1 5 3 3 2",
+        "output": "3",
+        "description": "不同值5,3,2,1"
+      },
+      {
+        "input": "3 3\n1 1 2",
+        "output": "NONE",
+        "description": "不足"
+      }
+    ]
+  },
+  {
+    "title": "二分查找是否存在",
+    "difficulty": "简单",
+    "tags": [
+      "二分查找",
+      "有序数组",
+      "搜索"
+    ],
+    "content": "# 二分查找是否存在\n\n## 题目描述\n给定非递减数组和 Q 个查询，判断每个目标值是否存在。\n\n## 输入格式\n第一行 `N Q`；第二行 N 个整数；之后 Q 行每行一个 x。\n\n## 输出格式\n每个查询输出 `YES` 或 `NO`。\n\n## 数据范围\n`1≤N,Q≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "5 3\n1 3 5 7 9\n3\n4\n9",
+        "output": "YES\nNO\nYES",
+        "description": "基础"
+      }
+    ]
+  },
+  {
+    "title": "二分查找第一个位置",
+    "difficulty": "中等",
+    "tags": [
+      "二分查找",
+      "有序数组",
+      "lower_bound"
+    ],
+    "content": "# 二分查找第一个位置\n\n## 题目描述\n给定非递减数组与目标 x，输出 x 第一次出现的 1-based 下标；不存在输出 -1。\n\n## 输入格式\n第一行 `N x`；第二行 N 个整数。\n\n## 输出格式\n输出位置或 -1。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "6 2\n1 2 2 2 3 4",
+        "output": "2",
+        "description": "重复"
+      },
+      {
+        "input": "3 5\n1 2 3",
+        "output": "-1",
+        "description": "不存在"
+      }
+    ]
+  },
+  {
+    "title": "二分查找最后一个位置",
+    "difficulty": "中等",
+    "tags": [
+      "二分查找",
+      "有序数组",
+      "upper_bound"
+    ],
+    "content": "# 二分查找最后一个位置\n\n## 题目描述\n给定非递减数组与目标 x，输出 x 最后一次出现的 1-based 下标；不存在输出 -1。\n\n## 输入格式\n第一行 `N x`；第二行 N 个整数。\n\n## 输出格式\n输出位置或 -1。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "6 2\n1 2 2 2 3 4",
+        "output": "4",
+        "description": "重复"
+      },
+      {
+        "input": "3 5\n1 2 3",
+        "output": "-1",
+        "description": "不存在"
+      }
+    ]
+  },
+  {
+    "title": "统计目标值出现次数",
+    "difficulty": "中等",
+    "tags": [
+      "二分查找",
+      "有序数组",
+      "计数"
+    ],
+    "content": "# 统计目标值出现次数\n\n## 题目描述\n给定非递减数组与目标 x，统计 x 的出现次数。\n\n## 输入格式\n第一行 `N x`；第二行 N 个整数。\n\n## 输出格式\n输出次数。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "7 2\n1 2 2 2 3 4 5",
+        "output": "3",
+        "description": "基础"
+      },
+      {
+        "input": "3 9\n1 2 3",
+        "output": "0",
+        "description": "不存在"
+      }
+    ]
+  },
+  {
+    "title": "搜索插入位置",
+    "difficulty": "简单",
+    "tags": [
+      "二分查找",
+      "有序数组",
+      "lower_bound"
+    ],
+    "content": "# 搜索插入位置\n\n## 题目描述\n给定严格递增数组和目标值 x，若 x 存在则输出其 0-based 下标；否则输出应插入的位置。\n\n## 输入格式\n第一行 `N x`；第二行 N 个整数。\n\n## 输出格式\n输出 0-based 位置。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "4 5\n1 3 5 6",
+        "output": "2",
+        "description": "存在"
+      },
+      {
+        "input": "4 2\n1 3 5 6",
+        "output": "1",
+        "description": "插入"
+      }
+    ]
+  },
+  {
+    "title": "旋转数组中的最小值",
+    "difficulty": "中等",
+    "tags": [
+      "二分查找",
+      "旋转数组",
+      "数组"
+    ],
+    "content": "# 旋转数组中的最小值\n\n## 题目描述\n一个严格递增数组经过若干次循环旋转后得到当前数组，求最小元素。\n\n## 输入格式\n第一行 N，第二行 N 个互不相同的整数。\n\n## 输出格式\n输出最小值。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "5\n4 5 1 2 3",
+        "output": "1",
+        "description": "旋转"
+      },
+      {
+        "input": "4\n1 2 3 4",
+        "output": "1",
+        "description": "未旋转"
+      }
+    ]
+  },
+  {
+    "title": "旋转数组查找目标",
+    "difficulty": "困难",
+    "tags": [
+      "二分查找",
+      "旋转数组",
+      "搜索"
+    ],
+    "content": "# 旋转数组查找目标\n\n## 题目描述\n严格递增数组被循环旋转后，给定目标值 x，求其 0-based 下标，不存在输出 -1。\n\n## 输入格式\n第一行 `N x`；第二行 N 个互不相同的整数。\n\n## 输出格式\n输出下标或 -1。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "7 0\n4 5 6 7 0 1 2",
+        "output": "4",
+        "description": "基础"
+      },
+      {
+        "input": "7 3\n4 5 6 7 0 1 2",
+        "output": "-1",
+        "description": "不存在"
+      }
+    ]
+  },
+  {
+    "title": "排序后相邻最小差",
+    "difficulty": "简单",
+    "tags": [
+      "排序",
+      "数组",
+      "差值"
+    ],
+    "content": "# 排序后相邻最小差\n\n## 题目描述\n给定 N 个整数，排序后求相邻元素差值的最小值。\n\n## 输入格式\n第一行 N，第二行 N 个整数。\n\n## 输出格式\n输出最小差。\n\n## 数据范围\n`2≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "5\n8 1 5 3 10",
+        "output": "2",
+        "description": "排序后1,3,5,8,10"
+      },
+      {
+        "input": "3\n4 4 9",
+        "output": "0",
+        "description": "有重复"
+      }
+    ]
+  },
+  {
+    "title": "区间合并",
+    "difficulty": "中等",
+    "tags": [
+      "排序",
+      "区间",
+      "贪心"
+    ],
+    "content": "# 区间合并\n\n## 题目描述\n给定 N 个闭区间 `[l,r]`，合并所有重叠或相接的区间，按左端点升序输出。\n\n## 输入格式\n第一行 N；接下来 N 行 `l r`。\n\n## 输出格式\n第一行输出合并后区间数量，之后每行一个区间。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "4\n1 3\n2 6\n8 10\n10 12",
+        "output": "2\n1 6\n8 12",
+        "description": "重叠和相接"
+      }
+    ]
+  },
+  {
+    "title": "会议室最多安排",
+    "difficulty": "中等",
+    "tags": [
+      "排序",
+      "贪心",
+      "区间调度"
+    ],
+    "content": "# 会议室最多安排\n\n## 题目描述\n给定 N 个会议的开始和结束时间 `[s,e)`，同一会议室最多能安排多少个互不重叠会议。\n\n## 输入格式\n第一行 N；之后 N 行 `s e`。\n\n## 输出格式\n输出最大会议数。\n\n## 数据范围\n`1≤N≤2×10^5, s<e`。",
+    "test_cases": [
+      {
+        "input": "4\n1 3\n2 5\n4 7\n6 8",
+        "output": "2",
+        "description": "例如1-3与4-7"
+      },
+      {
+        "input": "3\n1 2\n2 3\n3 4",
+        "output": "3",
+        "description": "首尾相接"
+      }
+    ]
+  },
+  {
+    "title": "最少会议室数量",
+    "difficulty": "困难",
+    "tags": [
+      "排序",
+      "优先队列",
+      "扫描线"
+    ],
+    "content": "# 最少会议室数量\n\n## 题目描述\n给定 N 个会议区间 `[s,e)`，求全部安排所需的最少会议室数量。\n\n## 输入格式\n第一行 N；之后 N 行 `s e`。\n\n## 输出格式\n输出最少会议室数。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "3\n0 30\n5 10\n15 20",
+        "output": "2",
+        "description": "经典"
+      },
+      {
+        "input": "3\n1 2\n2 3\n3 4",
+        "output": "1",
+        "description": "首尾相接"
+      }
+    ]
+  },
+  {
+    "title": "按频率排序",
+    "difficulty": "中等",
+    "tags": [
+      "排序",
+      "哈希表",
+      "计数"
+    ],
+    "content": "# 按频率排序\n\n## 题目描述\n按元素出现频率降序排序；频率相同按数值升序。重复元素全部保留。\n\n## 输入格式\n第一行 N；第二行 N 个整数。\n\n## 输出格式\n输出排序后的数组。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "8\n4 4 1 2 2 2 3 3",
+        "output": "2 2 2 3 3 4 4 1",
+        "description": "基础"
+      }
+    ]
+  },
+  {
+    "title": "荷兰国旗问题",
+    "difficulty": "简单",
+    "tags": [
+      "排序",
+      "双指针",
+      "三路划分"
+    ],
+    "content": "# 荷兰国旗问题\n\n## 题目描述\n数组只含 0、1、2，要求原地思想将其按 0、1、2 排序并输出。\n\n## 输入格式\n第一行 N；第二行 N 个整数。\n\n## 输出格式\n输出排序结果。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "6\n2 0 2 1 1 0",
+        "output": "0 0 1 1 2 2",
+        "description": "基础"
+      }
+    ]
+  },
+  {
+    "title": "寻找峰值",
+    "difficulty": "中等",
+    "tags": [
+      "二分查找",
+      "数组",
+      "局部最优"
+    ],
+    "content": "# 寻找峰值\n\n## 题目描述\n若元素严格大于其相邻元素则为峰值。边界外视为负无穷。保证相邻元素不相等，输出任意一个峰值的 0-based 下标。\n\n## 输入格式\n第一行 N；第二行 N 个整数。\n\n## 输出格式\n输出任意合法峰值下标。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "4\n1 2 3 1",
+        "output": "2",
+        "description": "唯一峰值"
+      },
+      {
+        "input": "2\n1 2",
+        "output": "1",
+        "description": "边界峰值"
+      }
+    ]
+  },
+  {
+    "title": "模拟栈",
+    "difficulty": "简单",
+    "tags": [
+      "栈",
+      "数据结构",
+      "模拟"
+    ],
+    "content": "# 模拟栈\n\n## 题目描述\n实现一个整数栈，支持 `PUSH x`、`POP`、`TOP`、`SIZE`。对空栈 POP/TOP 输出 `EMPTY`。\n\n## 输入格式\n第一行 Q；之后 Q 行一个操作。\n\n## 输出格式\n对 POP 输出被弹出的值；TOP 输出栈顶；SIZE 输出大小；PUSH 不输出。\n\n## 数据范围\n`1≤Q≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "7\nPUSH 3\nPUSH 5\nTOP\nSIZE\nPOP\nPOP\nPOP",
+        "output": "5\n2\n5\n3\nEMPTY",
+        "description": "基础"
+      }
+    ]
+  },
+  {
+    "title": "模拟队列",
+    "difficulty": "简单",
+    "tags": [
+      "队列",
+      "数据结构",
+      "模拟"
+    ],
+    "content": "# 模拟队列\n\n## 题目描述\n实现整数队列，支持 `PUSH x`、`POP`、`FRONT`、`SIZE`。空队列 POP/FRONT 输出 `EMPTY`。\n\n## 输入格式\n第一行 Q；之后 Q 行操作。\n\n## 输出格式\n按操作规则输出。\n\n## 数据范围\n`1≤Q≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "7\nPUSH 3\nPUSH 5\nFRONT\nSIZE\nPOP\nPOP\nPOP",
+        "output": "3\n2\n3\n5\nEMPTY",
+        "description": "基础"
+      }
+    ]
+  },
+  {
+    "title": "最小栈",
+    "difficulty": "中等",
+    "tags": [
+      "栈",
+      "数据结构",
+      "最小值"
+    ],
+    "content": "# 最小栈\n\n## 题目描述\n实现栈，支持 `PUSH x`、`POP`、`MIN`，MIN 返回当前最小值。保证执行 MIN 时栈非空，空栈 POP 输出 `EMPTY`。\n\n## 输入格式\n第一行 Q；之后 Q 行操作。\n\n## 输出格式\n对 POP 输出弹出值，对 MIN 输出最小值。\n\n## 数据范围\n`1≤Q≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "7\nPUSH 3\nPUSH 5\nMIN\nPUSH 2\nMIN\nPOP\nMIN",
+        "output": "3\n2\n2\n3",
+        "description": "基础"
+      }
+    ]
+  },
+  {
+    "title": "后缀表达式求值",
+    "difficulty": "中等",
+    "tags": [
+      "栈",
+      "表达式",
+      "模拟"
+    ],
+    "content": "# 后缀表达式求值\n\n## 题目描述\n计算合法的逆波兰表达式。运算符为 `+ - * /`，除法向零截断。\n\n## 输入格式\n第一行 N，第二行 N 个 token，空格分隔。\n\n## 输出格式\n输出计算结果。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "5\n2 1 + 3 *",
+        "output": "9",
+        "description": "(2+1)*3"
+      },
+      {
+        "input": "5\n4 13 5 / +",
+        "output": "6",
+        "description": "13/5=2"
+      }
+    ]
+  },
+  {
+    "title": "中缀括号表达式求值",
+    "difficulty": "困难",
+    "tags": [
+      "栈",
+      "表达式",
+      "解析"
+    ],
+    "content": "# 中缀括号表达式求值\n\n## 题目描述\n计算只包含非负整数、`+ - * /` 和圆括号的合法表达式，忽略空格，整数除法向零截断。\n\n## 输入格式\n输入一行表达式。\n\n## 输出格式\n输出整数结果。\n\n## 数据范围\n表达式长度不超过 `2×10^5`。",
+    "test_cases": [
+      {
+        "input": "2*(3+4)",
+        "output": "14",
+        "description": "括号"
+      },
+      {
+        "input": "10 + 6 / 4",
+        "output": "11",
+        "description": "整数除法"
+      }
+    ]
+  },
+  {
+    "title": "单调栈：下一个更大元素",
+    "difficulty": "中等",
+    "tags": [
+      "单调栈",
+      "数组",
+      "数据结构"
+    ],
+    "content": "# 单调栈：下一个更大元素\n\n## 题目描述\n对数组中每个位置，找到右侧第一个严格大于它的元素值；不存在输出 -1。\n\n## 输入格式\n第一行 N；第二行 N 个整数。\n\n## 输出格式\n输出 N 个答案。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "4\n2 1 2 4",
+        "output": "4 2 4 -1",
+        "description": "基础"
+      },
+      {
+        "input": "3\n3 2 1",
+        "output": "-1 -1 -1",
+        "description": "递减"
+      }
+    ]
+  },
+  {
+    "title": "单调栈：每日温度",
+    "difficulty": "中等",
+    "tags": [
+      "单调栈",
+      "数组",
+      "距离"
+    ],
+    "content": "# 单调栈：每日温度\n\n## 题目描述\n给定每天温度，对每一天输出还需等待多少天才会出现更高温度；之后没有更高温度则为 0。\n\n## 输入格式\n第一行 N；第二行 N 个整数。\n\n## 输出格式\n输出 N 个整数。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "8\n73 74 75 71 69 72 76 73",
+        "output": "1 1 4 2 1 1 0 0",
+        "description": "经典"
+      }
+    ]
+  },
+  {
+    "title": "滑动窗口最大值",
+    "difficulty": "困难",
+    "tags": [
+      "单调队列",
+      "滑动窗口",
+      "数组"
+    ],
+    "content": "# 滑动窗口最大值\n\n## 题目描述\n给定数组和窗口大小 K，输出每个长度为 K 的窗口中的最大值。\n\n## 输入格式\n第一行 `N K`；第二行 N 个整数。\n\n## 输出格式\n输出 `N-K+1` 个最大值。\n\n## 数据范围\n`1≤K≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "8 3\n1 3 -1 -3 5 3 6 7",
+        "output": "3 3 5 5 6 7",
+        "description": "经典"
+      }
+    ]
+  },
+  {
+    "title": "滑动窗口最小值",
+    "difficulty": "困难",
+    "tags": [
+      "单调队列",
+      "滑动窗口",
+      "数组"
+    ],
+    "content": "# 滑动窗口最小值\n\n## 题目描述\n给定数组和窗口大小 K，输出每个长度为 K 的窗口中的最小值。\n\n## 输入格式\n第一行 `N K`；第二行 N 个整数。\n\n## 输出格式\n输出 `N-K+1` 个最小值。\n\n## 数据范围\n`1≤K≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "8 3\n1 3 -1 -3 5 3 6 7",
+        "output": "-1 -3 -3 -3 3 3",
+        "description": "经典"
+      }
+    ]
+  },
+  {
+    "title": "LRU 缓存模拟",
+    "difficulty": "困难",
+    "tags": [
+      "哈希表",
+      "双向链表",
+      "缓存"
+    ],
+    "content": "# LRU 缓存模拟\n\n## 题目描述\n模拟容量为 C 的 LRU 缓存。操作 `PUT k v` 写入，`GET k` 查询。GET 不存在输出 -1；访问或更新会使键成为最近使用。超容量淘汰最久未使用键。\n\n## 输入格式\n第一行 `C Q`；之后 Q 行操作。\n\n## 输出格式\n每个 GET 输出一行结果。\n\n## 数据范围\n`1≤C≤10^5, 1≤Q≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "2 6\nPUT 1 1\nPUT 2 2\nGET 1\nPUT 3 3\nGET 2\nGET 3",
+        "output": "1\n-1\n3",
+        "description": "基础"
+      }
+    ]
+  },
+  {
+    "title": "并查集连通性",
+    "difficulty": "中等",
+    "tags": [
+      "并查集",
+      "数据结构",
+      "连通性"
+    ],
+    "content": "# 并查集连通性\n\n## 题目描述\n维护 N 个元素的动态集合。`UNION a b` 合并，`ASK a b` 查询是否同一集合。\n\n## 输入格式\n第一行 `N Q`；之后 Q 行操作。\n\n## 输出格式\n对每个 ASK 输出 `YES` 或 `NO`。\n\n## 数据范围\n`1≤N,Q≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "5 5\nUNION 1 2\nASK 1 2\nASK 1 3\nUNION 2 3\nASK 1 3",
+        "output": "YES\nNO\nYES",
+        "description": "基础"
+      }
+    ]
+  },
+  {
+    "title": "并查集集合数量",
+    "difficulty": "中等",
+    "tags": [
+      "并查集",
+      "计数",
+      "数据结构"
+    ],
+    "content": "# 并查集集合数量\n\n## 题目描述\n初始有 N 个独立集合，执行 Q 次合并后输出剩余集合数量。\n\n## 输入格式\n第一行 `N Q`；之后 Q 行 `a b`。\n\n## 输出格式\n输出最终集合数量。\n\n## 数据范围\n`1≤N,Q≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "5 3\n1 2\n2 3\n4 5",
+        "output": "2",
+        "description": "两个连通块"
+      },
+      {
+        "input": "3 2\n1 1\n2 2",
+        "output": "3",
+        "description": "无有效合并"
+      }
+    ]
+  },
+  {
+    "title": "哈希表键值存取",
+    "difficulty": "简单",
+    "tags": [
+      "哈希表",
+      "字典",
+      "模拟"
+    ],
+    "content": "# 哈希表键值存取\n\n## 题目描述\n实现键值表，支持 `SET key value`、`GET key`、`DEL key`。GET 不存在输出 `NULL`；DEL 无输出。\n\n## 输入格式\n第一行 Q；之后 Q 行操作，key 为无空格字符串，value 为整数。\n\n## 输出格式\n每个 GET 输出一行。\n\n## 数据范围\n`1≤Q≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "6\nSET a 1\nGET a\nSET a 2\nGET a\nDEL a\nGET a",
+        "output": "1\n2\nNULL",
+        "description": "基础"
+      }
+    ]
+  },
+  {
+    "title": "词频统计",
+    "difficulty": "简单",
+    "tags": [
+      "哈希表",
+      "字符串",
+      "计数"
+    ],
+    "content": "# 词频统计\n\n## 题目描述\n给定 N 个只含小写字母的单词，统计每个不同单词的出现次数，并按单词字典序输出。\n\n## 输入格式\n第一行 N；之后 N 行单词。\n\n## 输出格式\n每行输出 `word count`。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "5\napple\nbanana\napple\ncat\nbanana",
+        "output": "apple 2\nbanana 2\ncat 1",
+        "description": "基础"
+      }
+    ]
+  },
+  {
+    "title": "Top K 高频元素",
+    "difficulty": "中等",
+    "tags": [
+      "哈希表",
+      "堆",
+      "排序"
+    ],
+    "content": "# Top K 高频元素\n\n## 题目描述\n给定整数数组，输出出现频率最高的 K 个不同元素。频率相同按数值升序；最终按“频率降序、数值升序”输出。\n\n## 输入格式\n第一行 `N K`；第二行 N 个整数。\n\n## 输出格式\n输出 K 个整数。\n\n## 数据范围\n`1≤K≤不同元素数≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "6 2\n1 1 1 2 2 3",
+        "output": "1 2",
+        "description": "基础"
+      },
+      {
+        "input": "8 2\n4 4 1 1 2 2 3 3",
+        "output": "1 2",
+        "description": "并列取数值小"
+      }
+    ]
+  },
+  {
+    "title": "数据流中第 K 大元素",
+    "difficulty": "困难",
+    "tags": [
+      "堆",
+      "优先队列",
+      "数据流"
+    ],
+    "content": "# 数据流中第 K 大元素\n\n## 题目描述\n维护数据流的第 K 大元素。先给初始数组，之后每次 ADD x 后输出当前第 K 大元素。保证每次查询时元素总数至少 K。\n\n## 输入格式\n第一行 `N K Q`；第二行 N 个整数；之后 Q 行 `ADD x`。\n\n## 输出格式\n每次 ADD 后输出一行答案。\n\n## 数据范围\n`1≤K≤N+Q≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "4 3 3\n4 5 8 2\nADD 3\nADD 5\nADD 10",
+        "output": "4\n5\n5",
+        "description": "基础"
+      }
+    ]
+  },
+  {
+    "title": "合并 K 个有序序列",
+    "difficulty": "困难",
+    "tags": [
+      "堆",
+      "多路归并",
+      "数组"
+    ],
+    "content": "# 合并 K 个有序序列\n\n## 题目描述\n给定 K 个非递减整数序列，将它们合并成一个非递减序列。\n\n## 输入格式\n第一行 K；接下来 K 行，每行先输入长度 L，再输入 L 个整数。\n\n## 输出格式\n输出合并后的所有整数。\n\n## 数据范围\n总元素数不超过 `2×10^5`。",
+    "test_cases": [
+      {
+        "input": "3\n3 1 4 7\n2 2 6\n4 0 3 5 8",
+        "output": "0 1 2 3 4 5 6 7 8",
+        "description": "三路归并"
+      }
+    ]
+  },
+  {
+    "title": "优先队列任务调度",
+    "difficulty": "中等",
+    "tags": [
+      "堆",
+      "优先队列",
+      "模拟"
+    ],
+    "content": "# 优先队列任务调度\n\n## 题目描述\n有 N 个任务，每个任务有优先级 p 和编号 id。按 p 越大优先级越高；p 相同编号越小优先。输出执行顺序。\n\n## 输入格式\n第一行 N；之后 N 行 `id p`。\n\n## 输出格式\n一行输出任务编号顺序。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "4\n10 2\n3 5\n7 5\n1 1",
+        "output": "3 7 10 1",
+        "description": "基础"
+      }
+    ]
+  },
+  {
+    "title": "循环队列报数淘汰",
+    "difficulty": "中等",
+    "tags": [
+      "队列",
+      "约瑟夫环",
+      "模拟"
+    ],
+    "content": "# 循环队列报数淘汰\n\n## 题目描述\nN 个人编号 1..N 围成一圈，从 1 开始报数，每数到 K 的人淘汰，从下一人重新从 1 报数。输出淘汰顺序。\n\n## 输入格式\n输入 `N K`。\n\n## 输出格式\n输出 N 个编号，空格分隔。\n\n## 数据范围\n`1≤N≤10^5, 1≤K≤10^9`。",
+    "test_cases": [
+      {
+        "input": "5 2",
+        "output": "2 4 1 5 3",
+        "description": "经典"
+      },
+      {
+        "input": "3 1",
+        "output": "1 2 3",
+        "description": "K=1"
+      }
+    ]
+  },
+  {
+    "title": "最小堆操作",
+    "difficulty": "中等",
+    "tags": [
+      "堆",
+      "优先队列",
+      "模拟"
+    ],
+    "content": "# 最小堆操作\n\n## 题目描述\n支持 `PUSH x`、`TOP`、`POP`。TOP 输出最小值，POP 删除并输出最小值；空堆 TOP/POP 输出 `EMPTY`。\n\n## 输入格式\n第一行 Q；之后 Q 行操作。\n\n## 输出格式\n按规则输出。\n\n## 数据范围\n`1≤Q≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "6\nPUSH 5\nPUSH 2\nTOP\nPOP\nPOP\nPOP",
+        "output": "2\n2\n5\nEMPTY",
+        "description": "基础"
+      }
+    ]
+  },
+  {
+    "title": "递归求和",
+    "difficulty": "简单",
+    "tags": [
+      "递归",
+      "基础算法",
+      "数学"
+    ],
+    "content": "# 递归求和\n\n## 题目描述\n使用递归思想计算 `1+2+...+N`。判题只检查结果，不限制实现方式。\n\n## 输入格式\n输入 N。\n\n## 输出格式\n输出总和。\n\n## 数据范围\n`1≤N≤10^5`。",
+    "test_cases": [
+      {
+        "input": "5",
+        "output": "15",
+        "description": "基础"
+      },
+      {
+        "input": "1",
+        "output": "1",
+        "description": "边界"
+      }
+    ]
+  },
+  {
+    "title": "递归反转字符串",
+    "difficulty": "简单",
+    "tags": [
+      "递归",
+      "字符串",
+      "基础算法"
+    ],
+    "content": "# 递归反转字符串\n\n## 题目描述\n输出输入字符串的逆序结果。可使用递归实现。\n\n## 输入格式\n输入一个不含空格的字符串。\n\n## 输出格式\n输出逆序字符串。\n\n## 数据范围\n`1≤|S|≤10^4`。",
+    "test_cases": [
+      {
+        "input": "hello",
+        "output": "olleh",
+        "description": "基础"
+      },
+      {
+        "input": "a",
+        "output": "a",
+        "description": "单字符"
+      }
+    ]
+  },
+  {
+    "title": "汉诺塔移动次数",
+    "difficulty": "简单",
+    "tags": [
+      "递归",
+      "数学",
+      "汉诺塔"
+    ],
+    "content": "# 汉诺塔移动次数\n\n## 题目描述\n给定 N 个盘子，求汉诺塔问题的最少移动次数。\n\n## 输入格式\n输入 N。\n\n## 输出格式\n输出最少次数。\n\n## 数据范围\n`1≤N≤60`。",
+    "test_cases": [
+      {
+        "input": "1",
+        "output": "1",
+        "description": "一个盘"
+      },
+      {
+        "input": "3",
+        "output": "7",
+        "description": "经典"
+      }
+    ]
+  },
+  {
+    "title": "汉诺塔移动方案",
+    "difficulty": "中等",
+    "tags": [
+      "递归",
+      "汉诺塔",
+      "模拟"
+    ],
+    "content": "# 汉诺塔移动方案\n\n## 题目描述\n给定 N 个盘子，从柱 A 移到 C，B 为辅助柱。输出最少移动方案，每行格式 `A->C`。\n\n## 输入格式\n输入 N。\n\n## 输出格式\n输出 `2^N-1` 行移动。\n\n## 数据范围\n`1≤N≤15`。",
+    "test_cases": [
+      {
+        "input": "2",
+        "output": "A->B\nA->C\nB->C",
+        "description": "两个盘"
+      }
+    ]
+  },
+  {
+    "title": "生成所有二进制串",
+    "difficulty": "简单",
+    "tags": [
+      "回溯",
+      "递归",
+      "枚举"
+    ],
+    "content": "# 生成所有二进制串\n\n## 题目描述\n按字典序输出长度 N 的所有二进制串。\n\n## 输入格式\n输入 N。\n\n## 输出格式\n每行输出一个二进制串。\n\n## 数据范围\n`1≤N≤20`。",
+    "test_cases": [
+      {
+        "input": "2",
+        "output": "00\n01\n10\n11",
+        "description": "N=2"
+      },
+      {
+        "input": "1",
+        "output": "0\n1",
+        "description": "N=1"
+      }
+    ]
+  },
+  {
+    "title": "全排列",
+    "difficulty": "中等",
+    "tags": [
+      "回溯",
+      "排列",
+      "递归"
+    ],
+    "content": "# 全排列\n\n## 题目描述\n按字典序输出 1..N 的所有排列。\n\n## 输入格式\n输入 N。\n\n## 输出格式\n每行输出一个排列，数字间空格分隔。\n\n## 数据范围\n`1≤N≤8`。",
+    "test_cases": [
+      {
+        "input": "3",
+        "output": "1 2 3\n1 3 2\n2 1 3\n2 3 1\n3 1 2\n3 2 1",
+        "description": "N=3"
+      }
+    ]
+  },
+  {
+    "title": "组合枚举",
+    "difficulty": "中等",
+    "tags": [
+      "回溯",
+      "组合",
+      "递归"
+    ],
+    "content": "# 组合枚举\n\n## 题目描述\n从 1..N 中选 K 个数，按字典序输出所有组合。\n\n## 输入格式\n输入 `N K`。\n\n## 输出格式\n每行一个组合。\n\n## 数据范围\n`1≤K≤N≤20`。",
+    "test_cases": [
+      {
+        "input": "4 2",
+        "output": "1 2\n1 3\n1 4\n2 3\n2 4\n3 4",
+        "description": "基础"
+      }
+    ]
+  },
+  {
+    "title": "子集枚举",
+    "difficulty": "中等",
+    "tags": [
+      "回溯",
+      "子集",
+      "位运算"
+    ],
+    "content": "# 子集枚举\n\n## 题目描述\n按二进制掩码从 0 到 `2^N-1` 的顺序输出集合 `{1..N}` 的所有子集。空集输出 `EMPTY`。\n\n## 输入格式\n输入 N。\n\n## 输出格式\n每行一个子集，元素递增并用空格分隔。\n\n## 数据范围\n`1≤N≤20`。",
+    "test_cases": [
+      {
+        "input": "2",
+        "output": "EMPTY\n1\n2\n1 2",
+        "description": "按掩码00,01,10,11"
+      }
+    ]
+  },
+  {
+    "title": "N 皇后方案数",
+    "difficulty": "困难",
+    "tags": [
+      "回溯",
+      "搜索",
+      "N皇后"
+    ],
+    "content": "# N 皇后方案数\n\n## 题目描述\n在 N×N 棋盘放置 N 个皇后，使任意两个皇后不在同一行、列或对角线上，求方案数。\n\n## 输入格式\n输入 N。\n\n## 输出格式\n输出方案数。\n\n## 数据范围\n`1≤N≤14`。",
+    "test_cases": [
+      {
+        "input": "4",
+        "output": "2",
+        "description": "经典"
+      },
+      {
+        "input": "1",
+        "output": "1",
+        "description": "边界"
+      }
+    ]
+  },
+  {
+    "title": "数独有效性判断",
+    "difficulty": "中等",
+    "tags": [
+      "回溯",
+      "哈希",
+      "矩阵"
+    ],
+    "content": "# 数独有效性判断\n\n## 题目描述\n给定一个 9×9 数独局面，数字 `1-9` 表示已填，`.` 表示空。判断当前已填数字是否违反行、列、3×3 宫规则。\n\n## 输入格式\n输入 9 行，每行 9 个字符。\n\n## 输出格式\n合法输出 `YES`，否则输出 `NO`。\n\n## 数据范围\n固定 9×9。",
+    "test_cases": [
+      {
+        "input": "53..7....\n6..195...\n.98....6.\n8...6...3\n4..8.3..1\n7...2...6\n.6....28.\n...419..5\n....8..79",
+        "output": "YES",
+        "description": "合法局面"
+      },
+      {
+        "input": "53..7....\n6..195...\n.98....6.\n8...6...3\n4..8.3..1\n7...2...6\n.6....28.\n...419..5\n5...8..79",
+        "output": "NO",
+        "description": "第1列重复5"
+      }
+    ]
+  },
+  {
+    "title": "迷宫路径数量",
+    "difficulty": "中等",
+    "tags": [
+      "回溯",
+      "DFS",
+      "网格"
+    ],
+    "content": "# 迷宫路径数量\n\n## 题目描述\nN×M 网格中，`0` 可走、`1` 障碍。从左上角到右下角，每步只能向右或向下，求不同路径数量。\n\n## 输入格式\n第一行 `N M`；之后 N 行每行 M 个 0/1。\n\n## 输出格式\n输出路径数。\n\n## 数据范围\n`1≤N,M≤20`，答案不超过 `10^18`。",
+    "test_cases": [
+      {
+        "input": "3 3\n0 0 0\n0 1 0\n0 0 0",
+        "output": "2",
+        "description": "中央障碍"
+      },
+      {
+        "input": "2 2\n0 1\n0 0",
+        "output": "1",
+        "description": "唯一路径"
+      }
+    ]
+  },
+  {
+    "title": "单词搜索",
+    "difficulty": "困难",
+    "tags": [
+      "回溯",
+      "DFS",
+      "网格"
+    ],
+    "content": "# 单词搜索\n\n## 题目描述\n给定字符网格和单词 W，判断能否通过上下左右相邻单元格依次拼出 W，同一单元格不能重复使用。\n\n## 输入格式\n第一行 `N M`；之后 N 行字符串；最后一行 W。\n\n## 输出格式\n存在输出 `YES`，否则输出 `NO`。\n\n## 数据范围\n`1≤N,M≤20, 1≤|W|≤100`。",
+    "test_cases": [
+      {
+        "input": "3 4\nABCE\nSFCS\nADEE\nABCCED",
+        "output": "YES",
+        "description": "经典"
+      },
+      {
+        "input": "3 4\nABCE\nSFCS\nADEE\nABCB",
+        "output": "NO",
+        "description": "重复使用限制"
+      }
+    ]
+  },
+  {
+    "title": "括号生成",
+    "difficulty": "中等",
+    "tags": [
+      "回溯",
+      "字符串",
+      "括号"
+    ],
+    "content": "# 括号生成\n\n## 题目描述\n给定 N 对括号，按字典序输出所有合法括号序列。字符 `'('` 的字典序小于 `')'`。\n\n## 输入格式\n输入 N。\n\n## 输出格式\n每行一个合法序列。\n\n## 数据范围\n`1≤N≤10`。",
+    "test_cases": [
+      {
+        "input": "3",
+        "output": "((()))\n(()())\n(())()\n()(())\n()()()",
+        "description": "N=3"
+      }
+    ]
+  },
+  {
+    "title": "电话号码字母组合",
+    "difficulty": "中等",
+    "tags": [
+      "回溯",
+      "字符串",
+      "组合"
+    ],
+    "content": "# 电话号码字母组合\n\n## 题目描述\n数字 2~9 对应手机键盘字母：2=abc,3=def,4=ghi,5=jkl,6=mno,7=pqrs,8=tuv,9=wxyz。给定数字串，按字典序输出所有字母组合。\n\n## 输入格式\n输入一个只含 2~9 的字符串。\n\n## 输出格式\n每行一个组合。\n\n## 数据范围\n`1≤长度≤8`。",
+    "test_cases": [
+      {
+        "input": "23",
+        "output": "ad\nae\naf\nbd\nbe\nbf\ncd\nce\ncf",
+        "description": "基础"
+      }
+    ]
+  },
+  {
+    "title": "表达式加运算符",
+    "difficulty": "困难",
+    "tags": [
+      "回溯",
+      "表达式",
+      "搜索"
+    ],
+    "content": "# 表达式加运算符\n\n## 题目描述\n给定只含数字的字符串 S 和目标值 T，在数字之间插入 `+` 或 `-`（也可以不插入以形成多位数），统计结果等于 T 的表达式数量。不允许形成有前导零的多位数。\n\n## 输入格式\n第一行 S，第二行 T。\n\n## 输出格式\n输出方案数。\n\n## 数据范围\n`1≤|S|≤12`。",
+    "test_cases": [
+      {
+        "input": "123\n6",
+        "output": "1",
+        "description": "1+2+3"
+      },
+      {
+        "input": "105\n5",
+        "output": "1",
+        "description": "10-5"
+      }
+    ]
+  },
+  {
+    "title": "爬楼梯",
+    "difficulty": "简单",
+    "tags": [
+      "动态规划",
+      "斐波那契",
+      "基础算法"
+    ],
+    "content": "# 爬楼梯\n\n## 题目描述\n一次可以爬 1 或 2 级台阶，求爬到第 N 级有多少种不同方法。\n\n## 输入格式\n输入 N。\n\n## 输出格式\n输出方法数。\n\n## 数据范围\n`1≤N≤90`。",
+    "test_cases": [
+      {
+        "input": "2",
+        "output": "2",
+        "description": "1+1,2"
+      },
+      {
+        "input": "5",
+        "output": "8",
+        "description": "基础"
+      }
+    ]
+  },
+  {
+    "title": "最小花费爬楼梯",
+    "difficulty": "中等",
+    "tags": [
+      "动态规划",
+      "数组",
+      "最优化"
+    ],
+    "content": "# 最小花费爬楼梯\n\n## 题目描述\n给定 cost[i] 表示踩到第 i 级台阶的花费。可以从 0 或 1 开始，每次爬 1 或 2 级，求到达楼顶（越过最后一级）的最小花费。\n\n## 输入格式\n第一行 N；第二行 N 个非负整数 cost。\n\n## 输出格式\n输出最小花费。\n\n## 数据范围\n`2≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "3\n10 15 20",
+        "output": "15",
+        "description": "经典"
+      },
+      {
+        "input": "10\n1 100 1 1 1 100 1 1 100 1",
+        "output": "6",
+        "description": "经典"
+      }
+    ]
+  },
+  {
+    "title": "打家劫舍",
+    "difficulty": "中等",
+    "tags": [
+      "动态规划",
+      "数组",
+      "最优化"
+    ],
+    "content": "# 打家劫舍\n\n## 题目描述\n一排房屋中第 i 间有金额 a[i]，相邻两间不能同时选择，求最大金额。\n\n## 输入格式\n第一行 N；第二行 N 个非负整数。\n\n## 输出格式\n输出最大金额。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "4\n1 2 3 1",
+        "output": "4",
+        "description": "1+3"
+      },
+      {
+        "input": "5\n2 7 9 3 1",
+        "output": "12",
+        "description": "2+9+1"
+      }
+    ]
+  },
+  {
+    "title": "零钱兑换最少硬币",
+    "difficulty": "中等",
+    "tags": [
+      "动态规划",
+      "完全背包",
+      "最短路径思想"
+    ],
+    "content": "# 零钱兑换最少硬币\n\n## 题目描述\n给定 N 种正整数面值和金额 A，每种硬币无限使用，求凑成 A 的最少硬币数，无法凑成输出 -1。\n\n## 输入格式\n第一行 `N A`；第二行 N 个面值。\n\n## 输出格式\n输出最少硬币数。\n\n## 数据范围\n`1≤N≤100, 0≤A≤10^5`。",
+    "test_cases": [
+      {
+        "input": "3 11\n1 2 5",
+        "output": "3",
+        "description": "5+5+1"
+      },
+      {
+        "input": "2 3\n2 4",
+        "output": "-1",
+        "description": "无法"
+      }
+    ]
+  },
+  {
+    "title": "零钱兑换方案数",
+    "difficulty": "中等",
+    "tags": [
+      "动态规划",
+      "完全背包",
+      "计数"
+    ],
+    "content": "# 零钱兑换方案数\n\n## 题目描述\n给定 N 种硬币面值，每种无限使用，求凑成金额 A 的组合方案数。不同顺序视为同一方案。\n\n## 输入格式\n第一行 `N A`；第二行 N 个不同正整数面值。\n\n## 输出格式\n输出方案数。\n\n## 数据范围\n`1≤N≤100, 0≤A≤10^4`，答案不超过 `10^18`。",
+    "test_cases": [
+      {
+        "input": "3 5\n1 2 5",
+        "output": "4",
+        "description": "5;2+2+1;2+1+1+1;全1"
+      },
+      {
+        "input": "2 3\n2 4",
+        "output": "0",
+        "description": "无法"
+      }
+    ]
+  },
+  {
+    "title": "0-1 背包最大价值",
+    "difficulty": "中等",
+    "tags": [
+      "动态规划",
+      "0-1背包",
+      "数组"
+    ],
+    "content": "# 0-1 背包最大价值\n\n## 题目描述\n有 N 件物品，每件最多选一次，第 i 件重量 w[i]、价值 v[i]，背包容量 C，求最大总价值。\n\n## 输入格式\n第一行 `N C`；之后 N 行 `w v`。\n\n## 输出格式\n输出最大价值。\n\n## 数据范围\n`1≤N≤200, 0≤C≤10^5`。",
+    "test_cases": [
+      {
+        "input": "3 4\n2 3\n1 2\n3 4",
+        "output": "6",
+        "description": "选重量1和3"
+      },
+      {
+        "input": "2 1\n2 10\n3 20",
+        "output": "0",
+        "description": "都放不下"
+      }
+    ]
+  },
+  {
+    "title": "最长递增子序列长度",
+    "difficulty": "中等",
+    "tags": [
+      "动态规划",
+      "二分查找",
+      "LIS"
+    ],
+    "content": "# 最长递增子序列长度\n\n## 题目描述\n求数组的最长严格递增子序列长度，子序列不要求连续。\n\n## 输入格式\n第一行 N；第二行 N 个整数。\n\n## 输出格式\n输出长度。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "8\n10 9 2 5 3 7 101 18",
+        "output": "4",
+        "description": "2,3,7,101"
+      },
+      {
+        "input": "4\n4 3 2 1",
+        "output": "1",
+        "description": "递减"
+      }
+    ]
+  },
+  {
+    "title": "最长公共子序列长度",
+    "difficulty": "中等",
+    "tags": [
+      "动态规划",
+      "字符串",
+      "LCS"
+    ],
+    "content": "# 最长公共子序列长度\n\n## 题目描述\n给定两个字符串，求最长公共子序列长度。\n\n## 输入格式\n输入两行字符串 A、B。\n\n## 输出格式\n输出长度。\n\n## 数据范围\n`1≤|A|,|B|≤2000`。",
+    "test_cases": [
+      {
+        "input": "abcde\nace",
+        "output": "3",
+        "description": "ace"
+      },
+      {
+        "input": "abc\ndef",
+        "output": "0",
+        "description": "无公共字符"
+      }
+    ]
+  },
+  {
+    "title": "编辑距离",
+    "difficulty": "困难",
+    "tags": [
+      "动态规划",
+      "字符串",
+      "最短编辑"
+    ],
+    "content": "# 编辑距离\n\n## 题目描述\n将字符串 A 转换为 B，每次可插入、删除或替换一个字符，求最少操作数。\n\n## 输入格式\n输入两行字符串 A、B。\n\n## 输出格式\n输出最小编辑距离。\n\n## 数据范围\n`0≤|A|,|B|≤2000`。",
+    "test_cases": [
+      {
+        "input": "horse\nros",
+        "output": "3",
+        "description": "经典"
+      },
+      {
+        "input": "intention\nexecution",
+        "output": "5",
+        "description": "经典"
+      }
+    ]
+  },
+  {
+    "title": "最长回文子序列",
+    "difficulty": "中等",
+    "tags": [
+      "动态规划",
+      "字符串",
+      "回文"
+    ],
+    "content": "# 最长回文子序列\n\n## 题目描述\n求字符串的最长回文子序列长度。\n\n## 输入格式\n输入字符串 S。\n\n## 输出格式\n输出长度。\n\n## 数据范围\n`1≤|S|≤2000`。",
+    "test_cases": [
+      {
+        "input": "bbbab",
+        "output": "4",
+        "description": "bbbb"
+      },
+      {
+        "input": "cbbd",
+        "output": "2",
+        "description": "bb"
+      }
+    ]
+  },
+  {
+    "title": "数字三角形最大路径和",
+    "difficulty": "中等",
+    "tags": [
+      "动态规划",
+      "路径",
+      "数组"
+    ],
+    "content": "# 数字三角形最大路径和\n\n## 题目描述\n给定 N 层数字三角形，从顶点出发每次走到下一行相邻两个位置之一，求最大路径和。\n\n## 输入格式\n第一行 N；之后第 i 行有 i 个整数。\n\n## 输出格式\n输出最大路径和。\n\n## 数据范围\n`1≤N≤1000`。",
+    "test_cases": [
+      {
+        "input": "4\n2\n3 4\n6 5 7\n4 1 8 3",
+        "output": "21",
+        "description": "2+4+7+8"
+      }
+    ]
+  },
+  {
+    "title": "网格最小路径和",
+    "difficulty": "中等",
+    "tags": [
+      "动态规划",
+      "网格",
+      "路径"
+    ],
+    "content": "# 网格最小路径和\n\n## 题目描述\nN×M 非负网格，从左上角到右下角，每次只能向右或向下，求路径上数字之和的最小值。\n\n## 输入格式\n第一行 `N M`；之后 N 行 M 个整数。\n\n## 输出格式\n输出最小路径和。\n\n## 数据范围\n`1≤N,M≤1000`。",
+    "test_cases": [
+      {
+        "input": "3 3\n1 3 1\n1 5 1\n4 2 1",
+        "output": "7",
+        "description": "1-3-1-1-1"
+      }
+    ]
+  },
+  {
+    "title": "最大正方形",
+    "difficulty": "困难",
+    "tags": [
+      "动态规划",
+      "矩阵",
+      "二维DP"
+    ],
+    "content": "# 最大正方形\n\n## 题目描述\n给定只含 0/1 的矩阵，求只由 1 组成的最大正方形面积。\n\n## 输入格式\n第一行 `N M`；之后 N 行每行 M 个 0/1。\n\n## 输出格式\n输出最大面积。\n\n## 数据范围\n`1≤N,M≤1000`。",
+    "test_cases": [
+      {
+        "input": "4 5\n1 0 1 0 0\n1 0 1 1 1\n1 1 1 1 1\n1 0 0 1 0",
+        "output": "4",
+        "description": "2x2"
+      }
+    ]
+  },
+  {
+    "title": "区间调度最大权重",
+    "difficulty": "困难",
+    "tags": [
+      "动态规划",
+      "排序",
+      "二分查找"
+    ],
+    "content": "# 区间调度最大权重\n\n## 题目描述\n给定 N 个任务，每个任务有开始 s、结束 e、收益 w，选择互不重叠任务使收益最大。区间按 `[s,e)`。\n\n## 输入格式\n第一行 N；之后 N 行 `s e w`。\n\n## 输出格式\n输出最大收益。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "4\n1 3 5\n2 5 6\n4 6 5\n6 7 4",
+        "output": "14",
+        "description": "1-3,4-6,6-7"
+      }
+    ]
+  },
+  {
+    "title": "跳跃游戏",
+    "difficulty": "中等",
+    "tags": [
+      "贪心",
+      "数组",
+      "可达性"
+    ],
+    "content": "# 跳跃游戏\n\n## 题目描述\n数组 nums[i] 表示从位置 i 最多可向右跳多少步，判断能否从下标 0 到达最后位置。\n\n## 输入格式\n第一行 N；第二行 N 个非负整数。\n\n## 输出格式\n能到达输出 `YES`，否则输出 `NO`。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "5\n2 3 1 1 4",
+        "output": "YES",
+        "description": "可达"
+      },
+      {
+        "input": "5\n3 2 1 0 4",
+        "output": "NO",
+        "description": "被0阻断"
+      }
+    ]
+  },
+  {
+    "title": "跳跃游戏最少次数",
+    "difficulty": "困难",
+    "tags": [
+      "贪心",
+      "数组",
+      "最短跳跃"
+    ],
+    "content": "# 跳跃游戏最少次数\n\n## 题目描述\n保证可以到达末尾，求从下标 0 到最后位置的最少跳跃次数。\n\n## 输入格式\n第一行 N；第二行 N 个非负整数。\n\n## 输出格式\n输出最少次数。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "5\n2 3 1 1 4",
+        "output": "2",
+        "description": "0->1->4"
+      },
+      {
+        "input": "1\n0",
+        "output": "0",
+        "description": "起点即终点"
+      }
+    ]
+  },
+  {
+    "title": "分糖果",
+    "difficulty": "困难",
+    "tags": [
+      "贪心",
+      "双向扫描",
+      "数组"
+    ],
+    "content": "# 分糖果\n\n## 题目描述\nN 个孩子排成一列，每人有评分。每人至少 1 颗糖；若某孩子评分高于相邻孩子，则糖果数也必须更多。求最少糖果总数。\n\n## 输入格式\n第一行 N；第二行 N 个评分。\n\n## 输出格式\n输出最少糖果数。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "3\n1 0 2",
+        "output": "5",
+        "description": "2,1,2"
+      },
+      {
+        "input": "3\n1 2 2",
+        "output": "4",
+        "description": "1,2,1"
+      }
+    ]
+  },
+  {
+    "title": "加油站环形一周",
+    "difficulty": "中等",
+    "tags": [
+      "贪心",
+      "数组",
+      "模拟"
+    ],
+    "content": "# 加油站环形一周\n\n## 题目描述\nN 个加油站环形排列，gas[i] 为可加油量，cost[i] 为驶向下一站所需油量。油箱初始为 0，若存在唯一可完成一圈的起点，输出其 0-based 下标，否则 -1。\n\n## 输入格式\n第一行 N；第二行 gas；第三行 cost。\n\n## 输出格式\n输出起点下标或 -1。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "5\n1 2 3 4 5\n3 4 5 1 2",
+        "output": "3",
+        "description": "经典"
+      },
+      {
+        "input": "3\n2 3 4\n3 4 3",
+        "output": "-1",
+        "description": "不可完成"
+      }
+    ]
+  },
+  {
+    "title": "最大子数组乘积",
+    "difficulty": "困难",
+    "tags": [
+      "动态规划",
+      "数组",
+      "最大最小状态"
+    ],
+    "content": "# 最大子数组乘积\n\n## 题目描述\n求非空连续子数组的最大乘积。\n\n## 输入格式\n第一行 N；第二行 N 个整数。\n\n## 输出格式\n输出最大乘积。\n\n## 数据范围\n`1≤N≤2×10^5`，保证答案在 64 位有符号整数范围内。",
+    "test_cases": [
+      {
+        "input": "4\n2 3 -2 4",
+        "output": "6",
+        "description": "2*3"
+      },
+      {
+        "input": "3\n-2 0 -1",
+        "output": "0",
+        "description": "零"
+      }
+    ]
+  },
+  {
+    "title": "股票一次交易最大利润",
+    "difficulty": "简单",
+    "tags": [
+      "贪心",
+      "数组",
+      "股票"
+    ],
+    "content": "# 股票一次交易最大利润\n\n## 题目描述\n给定每天股票价格，只允许买入一次并在未来卖出一次，求最大利润；若无法获利输出 0。\n\n## 输入格式\n第一行 N；第二行 N 个价格。\n\n## 输出格式\n输出最大利润。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "6\n7 1 5 3 6 4",
+        "output": "5",
+        "description": "1买6卖"
+      },
+      {
+        "input": "5\n7 6 4 3 1",
+        "output": "0",
+        "description": "下降"
+      }
+    ]
+  },
+  {
+    "title": "二叉树前序遍历",
+    "difficulty": "简单",
+    "tags": [
+      "二叉树",
+      "遍历",
+      "DFS"
+    ],
+    "content": "# 二叉树前序遍历\n\n## 题目描述\n给定一棵二叉树的层序数组表示，`null` 表示空节点，输出前序遍历。输入保证表示合法。\n\n## 输入格式\n第一行 N；第二行 N 个 token。\n\n## 输出格式\n输出节点值，空格分隔。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "7\n1 2 3 null 4 5 6",
+        "output": "1 2 4 3 5 6",
+        "description": "基础"
+      }
+    ]
+  },
+  {
+    "title": "二叉树中序遍历",
+    "difficulty": "简单",
+    "tags": [
+      "二叉树",
+      "遍历",
+      "DFS"
+    ],
+    "content": "# 二叉树中序遍历\n\n## 题目描述\n给定二叉树层序表示，输出中序遍历。\n\n## 输入格式\n第一行 N；第二行 N 个 token，`null` 为空。\n\n## 输出格式\n输出节点值。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "7\n1 2 3 null 4 5 6",
+        "output": "2 4 1 5 3 6",
+        "description": "基础"
+      }
+    ]
+  },
+  {
+    "title": "二叉树后序遍历",
+    "difficulty": "简单",
+    "tags": [
+      "二叉树",
+      "遍历",
+      "DFS"
+    ],
+    "content": "# 二叉树后序遍历\n\n## 题目描述\n给定二叉树层序表示，输出后序遍历。\n\n## 输入格式\n第一行 N；第二行 N 个 token，`null` 为空。\n\n## 输出格式\n输出节点值。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "7\n1 2 3 null 4 5 6",
+        "output": "4 2 5 6 3 1",
+        "description": "基础"
+      }
+    ]
+  },
+  {
+    "title": "二叉树层序遍历",
+    "difficulty": "简单",
+    "tags": [
+      "二叉树",
+      "BFS",
+      "队列"
+    ],
+    "content": "# 二叉树层序遍历\n\n## 题目描述\n给定二叉树层序表示，输出按层从左到右的所有非空节点。\n\n## 输入格式\n第一行 N；第二行 N 个 token，`null` 为空。\n\n## 输出格式\n输出节点值。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "7\n1 2 3 null 4 5 6",
+        "output": "1 2 3 4 5 6",
+        "description": "基础"
+      }
+    ]
+  },
+  {
+    "title": "二叉树最大深度",
+    "difficulty": "简单",
+    "tags": [
+      "二叉树",
+      "DFS",
+      "递归"
+    ],
+    "content": "# 二叉树最大深度\n\n## 题目描述\n求二叉树最大深度。只有根节点时深度为 1，空树深度为 0。\n\n## 输入格式\n第一行 N；若 N>0，第二行 N 个层序 token。\n\n## 输出格式\n输出最大深度。\n\n## 数据范围\n`0≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "7\n3 9 20 null null 15 7",
+        "output": "3",
+        "description": "经典"
+      },
+      {
+        "input": "0",
+        "output": "0",
+        "description": "空树"
+      }
+    ]
+  },
+  {
+    "title": "二叉树是否对称",
+    "difficulty": "中等",
+    "tags": [
+      "二叉树",
+      "递归",
+      "镜像"
+    ],
+    "content": "# 二叉树是否对称\n\n## 题目描述\n判断二叉树是否关于根节点轴对称。\n\n## 输入格式\n第一行 N；第二行 N 个层序 token。\n\n## 输出格式\n对称输出 `YES`，否则 `NO`。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "7\n1 2 2 3 4 4 3",
+        "output": "YES",
+        "description": "对称"
+      },
+      {
+        "input": "7\n1 2 2 null 3 null 3",
+        "output": "NO",
+        "description": "非对称"
+      }
+    ]
+  },
+  {
+    "title": "二叉搜索树验证",
+    "difficulty": "中等",
+    "tags": [
+      "二叉搜索树",
+      "DFS",
+      "中序遍历"
+    ],
+    "content": "# 二叉搜索树验证\n\n## 题目描述\n判断给定二叉树是否为严格二叉搜索树：每个节点左子树值都小于它，右子树值都大于它。\n\n## 输入格式\n第一行 N；第二行层序 token。\n\n## 输出格式\n是输出 `YES`，否则 `NO`。\n\n## 数据范围\n`1≤N≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "7\n2 1 3 null null null null",
+        "output": "YES",
+        "description": "合法"
+      },
+      {
+        "input": "7\n5 1 4 null null 3 6",
+        "output": "NO",
+        "description": "3在5的右子树但小于5"
+      }
+    ]
+  },
+  {
+    "title": "二叉搜索树第 K 小",
+    "difficulty": "中等",
+    "tags": [
+      "二叉搜索树",
+      "中序遍历",
+      "选择"
+    ],
+    "content": "# 二叉搜索树第 K 小\n\n## 题目描述\n给定一棵二叉搜索树和 K，输出第 K 小节点值。\n\n## 输入格式\n第一行 `N K`；第二行层序 token。\n\n## 输出格式\n输出节点值。\n\n## 数据范围\n`1≤K≤节点数≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "7 3\n5 3 6 2 4 null null",
+        "output": "4",
+        "description": "中序2,3,4,5,6"
+      }
+    ]
+  },
+  {
+    "title": "无向图 BFS 最短路",
+    "difficulty": "中等",
+    "tags": [
+      "图论",
+      "BFS",
+      "最短路"
+    ],
+    "content": "# 无向图 BFS 最短路\n\n## 题目描述\n给定无权无向图，求节点 S 到 T 的最短边数，不可达输出 -1。\n\n## 输入格式\n第一行 `N M S T`；之后 M 行边 `u v`。\n\n## 输出格式\n输出最短距离。\n\n## 数据范围\n`1≤N,M≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "5 5 1 5\n1 2\n2 3\n3 5\n1 4\n4 5",
+        "output": "2",
+        "description": "1-4-5"
+      },
+      {
+        "input": "3 1 1 3\n1 2",
+        "output": "-1",
+        "description": "不可达"
+      }
+    ]
+  },
+  {
+    "title": "无向图连通分量",
+    "difficulty": "中等",
+    "tags": [
+      "图论",
+      "DFS",
+      "BFS"
+    ],
+    "content": "# 无向图连通分量\n\n## 题目描述\n统计无向图的连通分量数量。\n\n## 输入格式\n第一行 `N M`；之后 M 行边。\n\n## 输出格式\n输出连通分量数。\n\n## 数据范围\n`1≤N≤2×10^5, 0≤M≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "5 2\n1 2\n4 5",
+        "output": "3",
+        "description": "{1,2},{3},{4,5}"
+      },
+      {
+        "input": "3 3\n1 2\n2 3\n1 3",
+        "output": "1",
+        "description": "全连通"
+      }
+    ]
+  },
+  {
+    "title": "无向图是否有环",
+    "difficulty": "中等",
+    "tags": [
+      "图论",
+      "DFS",
+      "并查集"
+    ],
+    "content": "# 无向图是否有环\n\n## 题目描述\n判断无向图中是否存在环。\n\n## 输入格式\n第一行 `N M`；之后 M 行边。\n\n## 输出格式\n有环输出 `YES`，否则 `NO`。\n\n## 数据范围\n`1≤N≤2×10^5, 0≤M≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "3 3\n1 2\n2 3\n3 1",
+        "output": "YES",
+        "description": "三角环"
+      },
+      {
+        "input": "4 3\n1 2\n2 3\n3 4",
+        "output": "NO",
+        "description": "树"
+      }
+    ]
+  },
+  {
+    "title": "有向图是否有环",
+    "difficulty": "中等",
+    "tags": [
+      "图论",
+      "拓扑排序",
+      "DFS"
+    ],
+    "content": "# 有向图是否有环\n\n## 题目描述\n判断有向图中是否存在有向环。\n\n## 输入格式\n第一行 `N M`；之后 M 行有向边 `u v`。\n\n## 输出格式\n有环输出 `YES`，否则 `NO`。\n\n## 数据范围\n`1≤N,M≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "3 3\n1 2\n2 3\n3 1",
+        "output": "YES",
+        "description": "有环"
+      },
+      {
+        "input": "3 2\n1 2\n2 3",
+        "output": "NO",
+        "description": "DAG"
+      }
+    ]
+  },
+  {
+    "title": "拓扑排序",
+    "difficulty": "中等",
+    "tags": [
+      "图论",
+      "拓扑排序",
+      "队列"
+    ],
+    "content": "# 拓扑排序\n\n## 题目描述\n给定有向无环图，输出一个拓扑序。若有多个，要求每次选择当前入度为 0 的最小编号节点。\n\n## 输入格式\n第一行 `N M`；之后 M 行有向边。\n\n## 输出格式\n输出 N 个节点编号。\n\n## 数据范围\n`1≤N,M≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "4 3\n1 2\n1 3\n3 4",
+        "output": "1 2 3 4",
+        "description": "按最小编号"
+      }
+    ]
+  },
+  {
+    "title": "Dijkstra 最短路",
+    "difficulty": "困难",
+    "tags": [
+      "图论",
+      "Dijkstra",
+      "优先队列"
+    ],
+    "content": "# Dijkstra 最短路\n\n## 题目描述\n给定非负权有向图，求源点 S 到所有节点的最短距离。不可达输出 -1。\n\n## 输入格式\n第一行 `N M S`；之后 M 行 `u v w`。\n\n## 输出格式\n输出 N 个距离，按节点 1..N。\n\n## 数据范围\n`1≤N,M≤2×10^5, 0≤w≤10^9`。",
+    "test_cases": [
+      {
+        "input": "4 4 1\n1 2 2\n1 3 5\n2 3 1\n3 4 3",
+        "output": "0 2 3 6",
+        "description": "基础"
+      }
+    ]
+  },
+  {
+    "title": "Floyd 多源最短路",
+    "difficulty": "困难",
+    "tags": [
+      "图论",
+      "Floyd",
+      "动态规划"
+    ],
+    "content": "# Floyd 多源最短路\n\n## 题目描述\n给定带非负权的有向图和 Q 次查询，求每对节点最短距离，不可达输出 -1。\n\n## 输入格式\n第一行 `N M Q`；之后 M 行 `u v w`；再之后 Q 行 `s t`。\n\n## 输出格式\n每个查询输出一行。\n\n## 数据范围\n`1≤N≤300, M≤2×10^4, Q≤10^5`。",
+    "test_cases": [
+      {
+        "input": "3 3 3\n1 2 4\n2 3 5\n1 3 20\n1 3\n3 1\n1 1",
+        "output": "9\n-1\n0",
+        "description": "基础"
+      }
+    ]
+  },
+  {
+    "title": "最小生成树 Kruskal",
+    "difficulty": "困难",
+    "tags": [
+      "图论",
+      "最小生成树",
+      "并查集"
+    ],
+    "content": "# 最小生成树 Kruskal\n\n## 题目描述\n给定连通无向带权图，求最小生成树总权值。\n\n## 输入格式\n第一行 `N M`；之后 M 行 `u v w`。\n\n## 输出格式\n输出最小生成树权值。\n\n## 数据范围\n`1≤N,M≤2×10^5`，权值可为负。",
+    "test_cases": [
+      {
+        "input": "4 5\n1 2 1\n1 3 4\n2 3 2\n2 4 5\n3 4 3",
+        "output": "6",
+        "description": "1+2+3"
+      }
+    ]
+  },
+  {
+    "title": "网格岛屿数量",
+    "difficulty": "中等",
+    "tags": [
+      "图论",
+      "DFS",
+      "BFS"
+    ],
+    "content": "# 网格岛屿数量\n\n## 题目描述\n给定 0/1 网格，1 表示陆地，按上下左右相邻连通，统计岛屿数量。\n\n## 输入格式\n第一行 `N M`；之后 N 行每行 M 个字符 0/1。\n\n## 输出格式\n输出岛屿数。\n\n## 数据范围\n`1≤N,M≤1000`。",
+    "test_cases": [
+      {
+        "input": "4 5\n11000\n11000\n00100\n00011",
+        "output": "3",
+        "description": "三座岛"
+      }
+    ]
+  },
+  {
+    "title": "网格最短路径",
+    "difficulty": "中等",
+    "tags": [
+      "图论",
+      "BFS",
+      "网格"
+    ],
+    "content": "# 网格最短路径\n\n## 题目描述\n0/1 网格中 0 可走、1 障碍，从左上角走到右下角，每步上下左右，求最少步数，不可达输出 -1。\n\n## 输入格式\n第一行 `N M`；之后 N 行每行 M 个 0/1。\n\n## 输出格式\n输出最少步数。\n\n## 数据范围\n`1≤N,M≤1000`。",
+    "test_cases": [
+      {
+        "input": "3 3\n000\n110\n000",
+        "output": "4",
+        "description": "右右下下"
+      },
+      {
+        "input": "2 2\n01\n10",
+        "output": "-1",
+        "description": "不可达"
+      }
+    ]
+  },
+  {
+    "title": "多源 BFS 最近零距离",
+    "difficulty": "困难",
+    "tags": [
+      "图论",
+      "BFS",
+      "矩阵"
+    ],
+    "content": "# 多源 BFS 最近零距离\n\n## 题目描述\n给定 0/1 矩阵，对每个位置输出它到最近 0 的曼哈顿最短距离，只能上下左右移动。保证至少有一个 0。\n\n## 输入格式\n第一行 `N M`；之后 N 行 M 个 0/1。\n\n## 输出格式\n输出 N 行距离矩阵。\n\n## 数据范围\n`1≤N,M≤1000`。",
+    "test_cases": [
+      {
+        "input": "3 3\n0 0 0\n0 1 0\n1 1 1",
+        "output": "0 0 0\n0 1 0\n1 2 1",
+        "description": "经典"
+      }
+    ]
+  },
+  {
+    "title": "课程先修是否可完成",
+    "difficulty": "中等",
+    "tags": [
+      "图论",
+      "拓扑排序",
+      "有向图"
+    ],
+    "content": "# 课程先修是否可完成\n\n## 题目描述\n有 N 门课程编号 0..N-1，给出 M 个先修关系 `a b` 表示学习 a 前必须先学 b。判断是否能完成所有课程。\n\n## 输入格式\n第一行 `N M`；之后 M 行 `a b`。\n\n## 输出格式\n可以完成输出 `YES`，否则 `NO`。\n\n## 数据范围\n`1≤N,M≤2×10^5`。",
+    "test_cases": [
+      {
+        "input": "2 1\n1 0",
+        "output": "YES",
+        "description": "可完成"
+      },
+      {
+        "input": "2 2\n1 0\n0 1",
+        "output": "NO",
+        "description": "循环依赖"
+      }
+    ]
+  },
+  {
+    "title": "日志中的最活跃用户",
+    "difficulty": "中等",
+    "tags": [
+      "哈希表",
+      "排序",
+      "字符串"
+    ],
+    "content": "# 日志中的最活跃用户\n\n## 题目描述\n给定 N 条登录日志，每条包含用户名。统计出现次数最多的用户；若并列，输出字典序最小者及次数。\n\n## 输入格式\n第一行 N；之后 N 行每行一个用户名。\n\n## 输出格式\n输出 `username count`。\n\n## 数据范围\n`1≤N≤2×10^5`，用户名只含字母数字下划线。",
+    "test_cases": [
+      {
+        "input": "6\nalice\nbob\nalice\ncarol\nbob\nalice",
+        "output": "alice 3",
+        "description": "基础"
+      },
+      {
+        "input": "4\nz\na\nz\na",
+        "output": "a 2",
+        "description": "并列取字典序小"
+      }
+    ]
+  },
+  {
+    "title": "服务器请求峰值并发",
+    "difficulty": "中等",
+    "tags": [
+      "扫描线",
+      "排序",
+      "区间"
+    ],
+    "content": "# 服务器请求峰值并发\n\n## 题目描述\n给定 N 个请求的开始时刻 s 和结束时刻 e，区间按 `[s,e)` 占用服务器，求任意时刻最大并发请求数。\n\n## 输入格式\n第一行 N；之后 N 行 `s e`。\n\n## 输出格式\n输出最大并发数。\n\n## 数据范围\n`1≤N≤2×10^5, 0≤s<e≤10^18`。",
+    "test_cases": [
+      {
+        "input": "4\n1 5\n2 6\n4 7\n7 8",
+        "output": "3",
+        "description": "时刻4附近三并发"
+      },
+      {
+        "input": "3\n1 2\n2 3\n3 4",
+        "output": "1",
+        "description": "无重叠"
+      }
+    ]
+  },
+  {
+    "title": "版本号比较",
+    "difficulty": "中等",
+    "tags": [
+      "字符串",
+      "解析",
+      "比较"
+    ],
+    "content": "# 版本号比较\n\n## 题目描述\n比较两个版本号。版本号由若干十进制整数段用 `.` 分隔，前导零忽略，缺失段视为 0。若 v1>v2 输出 1，v1<v2 输出 -1，相等输出 0。\n\n## 输入格式\n输入两行版本号 v1、v2。\n\n## 输出格式\n输出 -1、0 或 1。\n\n## 数据范围\n总长度不超过 `10^5`。",
+    "test_cases": [
+      {
+        "input": "1.01\n1.001",
+        "output": "0",
+        "description": "前导零"
+      },
+      {
+        "input": "1.0.1\n1",
+        "output": "1",
+        "description": "缺失段视0"
+      },
+      {
+        "input": "1.2\n1.10",
+        "output": "-1",
+        "description": "数值比较"
+      }
+    ]
+  },
+  {
+    "title": "简单路径规范化",
+    "difficulty": "中等",
+    "tags": [
+      "字符串",
+      "栈",
+      "路径"
+    ],
+    "content": "# 简单路径规范化\n\n## 题目描述\n给定 Unix 风格绝对路径，规范化规则：多个 `/` 合并；`.` 忽略；`..` 返回上一级但不能越过根目录。输出规范路径。\n\n## 输入格式\n输入一行绝对路径。\n\n## 输出格式\n输出规范路径。\n\n## 数据范围\n长度不超过 `2×10^5`。",
+    "test_cases": [
+      {
+        "input": "/home//foo/",
+        "output": "/home/foo",
+        "description": "重复斜杠"
+      },
+      {
+        "input": "/a/./b/../../c/",
+        "output": "/c",
+        "description": "点路径"
+      },
+      {
+        "input": "/../",
+        "output": "/",
+        "description": "不能越根"
+      }
+    ]
+  },
+  {
+    "title": "依赖任务的最短完成时间",
+    "difficulty": "困难",
+    "tags": [
+      "图论",
+      "拓扑排序",
+      "动态规划"
+    ],
+    "content": "# 依赖任务的最短完成时间\n\n## 题目描述\n有 N 个任务，每个任务耗时 t[i]。给定 M 条依赖 `u v`，表示 v 必须在 u 完成后才能开始。可并行执行任意无依赖任务。保证无环，求完成全部任务的最短总时间。\n\n## 输入格式\n第一行 `N M`；第二行 N 个任务耗时；之后 M 行 `u v`。\n\n## 输出格式\n输出最短完成时间。\n\n## 数据范围\n`1≤N,M≤2×10^5, 1≤t[i]≤10^9`。",
+    "test_cases": [
+      {
+        "input": "5 5\n2 3 4 2 1\n1 3\n2 3\n3 4\n3 5\n4 5",
+        "output": "10",
+        "description": "关键路径2->3->4->5为3+4+2+1"
+      },
+      {
+        "input": "3 0\n5 2 7",
+        "output": "7",
+        "description": "全部并行"
+      }
+    ]
+  },
+  {
+    "title": "补给站最小最大间距",
+    "difficulty": "中等",
+    "tags": [
+      "竞赛题",
+      "二分答案",
+      "贪心",
+      "数组"
+    ],
+    "content": "# 补给站最小最大间距\n\n## 题目描述\n一条长度为 `L` 的直线赛道上已经有若干补给站。你还可以新建至多 `K` 个补给站。请最小化任意两个相邻补给站之间的最大距离。起点 `0` 和终点 `L` 也视为补给站。\n\n## 输入格式\n第一行输入 `L N K`。第二行输入 `N` 个严格递增的已有补给站位置。\n\n## 输出格式\n输出最小可能的最大相邻距离。\n\n## 数据范围\n`1 ≤ L ≤ 10^9`，`0 ≤ N ≤ 2×10^5`，`0 ≤ K ≤ 10^9`。",
+    "test_cases": [
+      {
+        "input": "10 2 1\n3 7",
+        "output": "3",
+        "description": "在最长区间中增加一个补给站"
+      },
+      {
+        "input": "20 0 3\n",
+        "output": "5",
+        "description": "只有起点和终点"
+      },
+      {
+        "input": "1 0 0\n",
+        "output": "1",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "100 1 0\n50",
+        "output": "50",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "12 2 10\n4 8",
+        "output": "1",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  },
+  {
+    "title": "连续签到修复计划",
+    "difficulty": "中等",
+    "tags": [
+      "竞赛题",
+      "滑动窗口",
+      "双指针"
+    ],
+    "content": "# 连续签到修复计划\n\n## 题目描述\n给定长度为 `N` 的 01 序列，`1` 表示当天签到，`0` 表示缺签。你最多可以补签 `K` 天。求补签后最长连续签到天数。\n\n## 输入格式\n第一行输入 `N K`，第二行输入 `N` 个 `0/1`。\n\n## 输出格式\n输出最长连续签到天数。\n\n## 数据范围\n`1 ≤ N ≤ 2×10^5`，`0 ≤ K ≤ N`。",
+    "test_cases": [
+      {
+        "input": "8 2\n1 0 1 1 0 0 1 1",
+        "output": "6",
+        "description": "窗口中最多允许两个 0（已由参考算法校正）"
+      },
+      {
+        "input": "5 5\n0 0 0 0 0",
+        "output": "5",
+        "description": "全部补签"
+      },
+      {
+        "input": "1 0\n1",
+        "output": "1",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "6 0\n1 1 0 1 1 1",
+        "output": "3",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "7 2\n0 0 1 0 1 0 0",
+        "output": "4",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  },
+  {
+    "title": "服务器峰值并发",
+    "difficulty": "中等",
+    "tags": [
+      "竞赛题",
+      "差分",
+      "扫描线",
+      "区间"
+    ],
+    "content": "# 服务器峰值并发\n\n## 题目描述\n有 `N` 个任务，第 `i` 个任务在时刻 `s_i` 开始，在时刻 `e_i` 结束，占用一台服务器，时间区间按 `[s_i,e_i)` 计算。求至少需要多少台服务器才能保证所有任务都立即运行。\n\n## 输入格式\n第一行输入 `N`，随后 `N` 行每行输入 `s_i e_i`。\n\n## 输出格式\n输出最少服务器数量。\n\n## 数据范围\n`1 ≤ N ≤ 2×10^5`，`0 ≤ s_i < e_i ≤ 10^9`。",
+    "test_cases": [
+      {
+        "input": "4\n1 4\n2 5\n4 7\n3 6",
+        "output": "3",
+        "description": "端点相同不重复占用"
+      },
+      {
+        "input": "3\n1 2\n2 3\n3 4",
+        "output": "1",
+        "description": "任务首尾衔接"
+      },
+      {
+        "input": "1\n0 1",
+        "output": "1",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "4\n1 10\n1 10\n1 10\n1 10",
+        "output": "4",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "4\n1 2\n2 5\n2 3\n3 4",
+        "output": "2",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  },
+  {
+    "title": "循环赛道补给",
+    "difficulty": "中等",
+    "tags": [
+      "竞赛题",
+      "贪心",
+      "前缀和",
+      "数组"
+    ],
+    "content": "# 循环赛道补给\n\n## 题目描述\n环形赛道上有 `N` 个补给点。到达第 `i` 个点可获得 `gas_i` 单位燃料，从 `i` 到下一个点消耗 `cost_i`。初始燃料为 0。若存在一个起点能完整绕行一周，输出编号最小的可行起点，否则输出 `-1`。编号从 1 开始。\n\n## 输入格式\n第一行输入 `N`，第二行输入 `N` 个 `gas_i`，第三行输入 `N` 个 `cost_i`。\n\n## 输出格式\n输出可行起点编号，若不存在输出 `-1`。\n\n## 数据范围\n`1 ≤ N ≤ 2×10^5`，`0 ≤ gas_i,cost_i ≤ 10^9`。",
+    "test_cases": [
+      {
+        "input": "5\n1 2 3 4 5\n3 4 5 1 2",
+        "output": "4",
+        "description": "经典可行环"
+      },
+      {
+        "input": "3\n1 1 1\n2 2 2",
+        "output": "-1",
+        "description": "总燃料不足"
+      },
+      {
+        "input": "1\n5\n5",
+        "output": "1",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "4\n2 2 2 2\n2 2 2 2",
+        "output": "1",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "4\n4 0 0 0\n1 1 1 1",
+        "output": "1",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  },
+  {
+    "title": "最长不降观景路线",
+    "difficulty": "中等",
+    "tags": [
+      "竞赛题",
+      "动态规划",
+      "二分查找",
+      "LIS"
+    ],
+    "content": "# 最长不降观景路线\n\n## 题目描述\n一条观景路线依次经过 `N` 个地点，第 `i` 个地点海拔为 `h_i`。你可以跳过任意地点，但保留的地点顺序不能改变。求最长的海拔不下降子序列长度。\n\n## 输入格式\n第一行输入 `N`，第二行输入 `N` 个整数 `h_i`。\n\n## 输出格式\n输出最长不下降子序列长度。\n\n## 数据范围\n`1 ≤ N ≤ 2×10^5`，`-10^9 ≤ h_i ≤ 10^9`。",
+    "test_cases": [
+      {
+        "input": "8\n3 1 2 2 5 4 6 6",
+        "output": "6",
+        "description": "允许相等"
+      },
+      {
+        "input": "5\n5 4 3 2 1",
+        "output": "1",
+        "description": "严格下降"
+      },
+      {
+        "input": "1\n-5",
+        "output": "1",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "5\n2 2 2 2 2",
+        "output": "5",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "6\n1 3 2 4 3 5",
+        "output": "4",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  },
+  {
+    "title": "仓库选址总距离",
+    "difficulty": "中等",
+    "tags": [
+      "竞赛题",
+      "贪心",
+      "中位数",
+      "排序"
+    ],
+    "content": "# 仓库选址总距离\n\n## 题目描述\n数轴上有 `N` 个配送点，位置分别为 `x_i`。要建立一个仓库，仓库位置必须是整数。所有配送点到仓库距离之和应尽可能小。输出最小距离和。\n\n## 输入格式\n第一行输入 `N`，第二行输入 `N` 个整数 `x_i`。\n\n## 输出格式\n输出最小距离和。\n\n## 数据范围\n`1 ≤ N ≤ 2×10^5`，`|x_i| ≤ 10^9`。",
+    "test_cases": [
+      {
+        "input": "5\n1 2 10 11 12",
+        "output": "20",
+        "description": "中位数最优"
+      },
+      {
+        "input": "4\n0 0 100 100",
+        "output": "200",
+        "description": "偶数个点"
+      },
+      {
+        "input": "1\n999",
+        "output": "0",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "3\n-10 0 10",
+        "output": "20",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "6\n1 2 3 100 101 102",
+        "output": "297",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  },
+  {
+    "title": "最大平均产量",
+    "difficulty": "困难",
+    "tags": [
+      "竞赛题",
+      "二分答案",
+      "浮点",
+      "前缀和"
+    ],
+    "content": "# 最大平均产量\n\n## 题目描述\n给定 `N` 天的产量 `a_i`，请选择长度至少为 `K` 的连续区间，使区间平均产量最大。输出最大平均值，允许绝对误差或相对误差不超过 `1e-5`。\n\n## 输入格式\n第一行输入 `N K`，第二行输入 `N` 个实数 `a_i`。\n\n## 输出格式\n输出最大平均值。\n\n## 数据范围\n`1 ≤ K ≤ N ≤ 10^5`，`|a_i| ≤ 10^4`。",
+    "test_cases": [
+      {
+        "input": "6 4\n1 12 -5 -6 50 3",
+        "output": "12.750000",
+        "description": "选择长度 4 的最佳区间"
+      },
+      {
+        "input": "3 1\n-2 -1 -3",
+        "output": "-1.000000",
+        "description": "允许负数"
+      },
+      {
+        "input": "1 1\n7",
+        "output": "7.000000",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "5 2\n1 2 3 4 5",
+        "output": "4.500000",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "4 4\n-5 -4 -3 -2",
+        "output": "-3.500000",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  },
+  {
+    "title": "最短覆盖子数组",
+    "difficulty": "中等",
+    "tags": [
+      "竞赛题",
+      "滑动窗口",
+      "哈希表"
+    ],
+    "content": "# 最短覆盖子数组\n\n## 题目描述\n给定长度为 `N` 的整数数组和 `M` 个必须出现的目标值。求最短连续子数组，使得这 `M` 个目标值每个至少出现一次。若不存在输出 `-1`。目标值互不相同。\n\n## 输入格式\n第一行输入 `N M`，第二行输入数组，第三行输入 `M` 个目标值。\n\n## 输出格式\n输出最短长度，不存在则输出 `-1`。\n\n## 数据范围\n`1 ≤ N,M ≤ 2×10^5`。",
+    "test_cases": [
+      {
+        "input": "8 3\n1 2 3 2 4 1 3 5\n1 3 4",
+        "output": "3",
+        "description": "区间 4 1 3"
+      },
+      {
+        "input": "4 2\n1 1 1 1\n1 2",
+        "output": "-1",
+        "description": "缺少目标值"
+      },
+      {
+        "input": "5 1\n1 2 3 4 5\n3",
+        "output": "1",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "6 2\n1 2 1 2 1 2\n1 2",
+        "output": "2",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "3 3\n1 2 3\n1 2 3",
+        "output": "3",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  },
+  {
+    "title": "区间任务最大收益",
+    "difficulty": "中等",
+    "tags": [
+      "竞赛题",
+      "动态规划",
+      "二分查找",
+      "区间调度"
+    ],
+    "content": "# 区间任务最大收益\n\n## 题目描述\n有 `N` 个任务，每个任务有开始时间 `s_i`、结束时间 `e_i` 和收益 `w_i`。任意两个被选择任务不能时间重叠，区间按 `[s_i,e_i)` 计算。求最大总收益。\n\n## 输入格式\n第一行输入 `N`，随后 `N` 行输入 `s_i e_i w_i`。\n\n## 输出格式\n输出最大总收益。\n\n## 数据范围\n`1 ≤ N ≤ 2×10^5`，`0 ≤ s_i < e_i ≤ 10^9`，`0 ≤ w_i ≤ 10^9`。",
+    "test_cases": [
+      {
+        "input": "4\n1 3 5\n2 5 6\n4 6 5\n6 7 4",
+        "output": "14",
+        "description": "选择 1-3、4-6、6-7"
+      },
+      {
+        "input": "3\n1 10 20\n2 3 5\n3 4 6",
+        "output": "20",
+        "description": "长任务更优"
+      },
+      {
+        "input": "1\n0 1 7",
+        "output": "7",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "4\n0 2 5\n2 4 6\n4 6 7\n0 6 17",
+        "output": "18",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "3\n1 5 10\n2 3 100\n3 4 100",
+        "output": "200",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  },
+  {
+    "title": "能量石合并",
+    "difficulty": "困难",
+    "tags": [
+      "竞赛题",
+      "区间DP",
+      "动态规划"
+    ],
+    "content": "# 能量石合并\n\n## 题目描述\n一排有 `N` 堆能量石，第 `i` 堆重量为 `a_i`。每次只能合并相邻两堆，代价等于两堆重量之和，合并后重量也为两者之和。求合并成一堆的最小总代价。\n\n## 输入格式\n第一行输入 `N`，第二行输入 `N` 个正整数 `a_i`。\n\n## 输出格式\n输出最小总代价。\n\n## 数据范围\n`1 ≤ N ≤ 500`，`1 ≤ a_i ≤ 10^6`。",
+    "test_cases": [
+      {
+        "input": "4\n1 2 3 4",
+        "output": "19",
+        "description": "区间 DP 示例"
+      },
+      {
+        "input": "3\n10 10 10",
+        "output": "50",
+        "description": "三堆相同"
+      },
+      {
+        "input": "1\n100",
+        "output": "0",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "2\n5 7",
+        "output": "12",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "5\n1 1 1 1 1",
+        "output": "12",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  },
+  {
+    "title": "课程最小学期数",
+    "difficulty": "中等",
+    "tags": [
+      "竞赛题",
+      "图论",
+      "拓扑排序",
+      "DAG"
+    ],
+    "content": "# 课程最小学期数\n\n## 题目描述\n有 `N` 门课程和 `M` 条先修关系 `u -> v`，表示修完 `u` 后才能修 `v`。每学期可同时修任意多门已满足先修条件的课程。若依赖图无环，求修完全部课程至少需要多少学期；若存在环输出 `-1`。\n\n## 输入格式\n第一行输入 `N M`，随后 `M` 行输入 `u v`。\n\n## 输出格式\n输出最小学期数，存在环则输出 `-1`。\n\n## 数据范围\n`1 ≤ N,M ≤ 2×10^5`。",
+    "test_cases": [
+      {
+        "input": "5 4\n1 3\n2 3\n3 4\n3 5",
+        "output": "3",
+        "description": "最长依赖链长度为 3"
+      },
+      {
+        "input": "3 3\n1 2\n2 3\n3 1",
+        "output": "-1",
+        "description": "存在依赖环"
+      },
+      {
+        "input": "1 0",
+        "output": "1",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "4 0",
+        "output": "1",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "4 3\n1 2\n2 3\n3 4",
+        "output": "4",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  },
+  {
+    "title": "城市最短通信延迟",
+    "difficulty": "中等",
+    "tags": [
+      "竞赛题",
+      "图论",
+      "Dijkstra",
+      "最短路"
+    ],
+    "content": "# 城市最短通信延迟\n\n## 题目描述\n有 `N` 个城市、`M` 条双向通信线路，每条线路有非负延迟。给定起点 `S` 和终点 `T`，求最小通信延迟，不可达输出 `-1`。\n\n## 输入格式\n第一行输入 `N M S T`，随后 `M` 行输入 `u v w`。\n\n## 输出格式\n输出 `S` 到 `T` 的最短距离。\n\n## 数据范围\n`1 ≤ N ≤ 2×10^5`，`1 ≤ M ≤ 4×10^5`，`0 ≤ w ≤ 10^9`。",
+    "test_cases": [
+      {
+        "input": "5 6 1 5\n1 2 2\n2 5 5\n1 3 4\n3 4 1\n4 5 1\n2 3 1",
+        "output": "5",
+        "description": "1-2-3-4-5"
+      },
+      {
+        "input": "3 1 1 3\n1 2 7",
+        "output": "-1",
+        "description": "终点不可达"
+      },
+      {
+        "input": "1 0 1 1",
+        "output": "0",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "4 4 1 4\n1 2 0\n2 3 0\n3 4 0\n1 4 5",
+        "output": "0",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "4 2 2 4\n1 2 3\n3 4 4",
+        "output": "-1",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  },
+  {
+    "title": "零一传送门迷宫",
+    "difficulty": "困难",
+    "tags": [
+      "竞赛题",
+      "0-1 BFS",
+      "图论",
+      "最短路"
+    ],
+    "content": "# 零一传送门迷宫\n\n## 题目描述\n有 `N` 个点、`M` 条有向边，每条边的代价只能是 `0` 或 `1`。求从 `S` 到 `T` 的最小总代价，不可达输出 `-1`。\n\n## 输入格式\n第一行输入 `N M S T`，随后 `M` 行输入 `u v w`，其中 `w` 为 0 或 1。\n\n## 输出格式\n输出最小总代价。\n\n## 数据范围\n`1 ≤ N,M ≤ 5×10^5`。",
+    "test_cases": [
+      {
+        "input": "4 5 1 4\n1 2 1\n1 3 0\n3 2 0\n2 4 1\n3 4 1",
+        "output": "1",
+        "description": "使用 0 权边减少代价"
+      },
+      {
+        "input": "3 1 1 3\n1 2 0",
+        "output": "-1",
+        "description": "不可达"
+      },
+      {
+        "input": "1 0 1 1",
+        "output": "0",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "4 4 1 4\n1 2 0\n2 3 0\n3 4 1\n1 4 1",
+        "output": "1",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "4 3 1 4\n1 2 1\n2 3 1\n3 4 1",
+        "output": "3",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  },
+  {
+    "title": "低成本城市联网",
+    "difficulty": "中等",
+    "tags": [
+      "竞赛题",
+      "最小生成树",
+      "Kruskal",
+      "并查集"
+    ],
+    "content": "# 低成本城市联网\n\n## 题目描述\n有 `N` 个城市和 `M` 条候选双向线路，每条线路建设费用为 `w`。请选择若干线路使所有城市连通且总费用最小。若无法全部连通输出 `-1`。\n\n## 输入格式\n第一行输入 `N M`，随后 `M` 行输入 `u v w`。\n\n## 输出格式\n输出最小总费用。\n\n## 数据范围\n`1 ≤ N ≤ 2×10^5`，`1 ≤ M ≤ 4×10^5`。",
+    "test_cases": [
+      {
+        "input": "4 5\n1 2 1\n2 3 2\n3 4 3\n1 4 10\n1 3 4",
+        "output": "6",
+        "description": "最小生成树"
+      },
+      {
+        "input": "4 2\n1 2 1\n3 4 1",
+        "output": "-1",
+        "description": "图不连通"
+      },
+      {
+        "input": "1 0",
+        "output": "0",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "3 3\n1 2 5\n2 3 1\n1 3 2",
+        "output": "3",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "5 4\n1 2 1\n2 3 1\n3 4 1\n4 5 1",
+        "output": "4",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  },
+  {
+    "title": "动态社团关系",
+    "difficulty": "中等",
+    "tags": [
+      "竞赛题",
+      "并查集",
+      "离线算法"
+    ],
+    "content": "# 动态社团关系\n\n## 题目描述\n初始有 `N` 名互不相连的成员。共有 `Q` 次操作：`1 a b` 表示合并 `a,b` 所在社团；`2 a b` 表示询问两人当前是否属于同一社团。对每个查询输出 `YES` 或 `NO`。\n\n## 输入格式\n第一行输入 `N Q`，随后 `Q` 行为操作。\n\n## 输出格式\n对每个类型 2 的操作输出一行答案。\n\n## 数据范围\n`1 ≤ N,Q ≤ 5×10^5`。",
+    "test_cases": [
+      {
+        "input": "5 6\n2 1 2\n1 1 2\n2 1 2\n1 2 3\n2 1 3\n2 4 5",
+        "output": "NO\nYES\nYES\nNO",
+        "description": "基本合并查询"
+      },
+      {
+        "input": "1 3\n2 1 1\n1 1 1\n2 1 1",
+        "output": "YES\nYES",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "4 5\n1 1 2\n1 3 4\n2 1 4\n1 2 3\n2 1 4",
+        "output": "NO\nYES",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "3 4\n2 1 3\n1 1 3\n2 1 3\n2 2 3",
+        "output": "NO\nYES\nNO",
+        "description": "隐藏判题增强-3"
+      },
+      {
+        "input": "5 6\n2 1 2\n1 1 2\n2 1 2\n1 2 3\n2 1 3\n2 4 5\n",
+        "output": "NO\nYES\nYES\nNO",
+        "description": "输入边界兼容-1"
+      }
+    ]
+  },
+  {
+    "title": "紧急广播最早到达",
+    "difficulty": "中等",
+    "tags": [
+      "竞赛题",
+      "多源BFS",
+      "图论",
+      "队列"
+    ],
+    "content": "# 紧急广播最早到达\n\n## 题目描述\n无权图中有多个广播源，它们在时刻 0 同时开始传播，每经过一条边耗时 1。求每个节点最早收到广播的时间，不可达输出 `-1`。\n\n## 输入格式\n第一行输入 `N M K`，第二行输入 `K` 个广播源，随后 `M` 行输入无向边 `u v`。\n\n## 输出格式\n输出 `N` 个整数，第 `i` 个表示节点 `i` 的最早到达时间。\n\n## 数据范围\n`1 ≤ N,M ≤ 2×10^5`，`1 ≤ K ≤ N`。",
+    "test_cases": [
+      {
+        "input": "6 5 2\n1 6\n1 2\n2 3\n3 4\n4 5\n5 6",
+        "output": "0 1 2 2 1 0",
+        "description": "两个源从两端传播"
+      },
+      {
+        "input": "1 0 1\n1",
+        "output": "0",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "4 0 2\n1 4",
+        "output": "0 -1 -1 0",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "5 4 1\n3\n1 2\n2 3\n3 4\n4 5",
+        "output": "2 1 0 1 2",
+        "description": "隐藏判题增强-3"
+      },
+      {
+        "input": "6 5 2\n1 6\n1 2\n2 3\n3 4\n4 5\n5 6\n",
+        "output": "0 1 2 2 1 0",
+        "description": "输入边界兼容-1"
+      }
+    ]
+  },
+  {
+    "title": "强连通通信组",
+    "difficulty": "困难",
+    "tags": [
+      "竞赛题",
+      "Tarjan",
+      "强连通分量",
+      "图论"
+    ],
+    "content": "# 强连通通信组\n\n## 题目描述\n给定一个有向图。若一组节点中任意两点都能互相到达，则它们属于同一个强连通分量。求图中强连通分量的数量以及最大强连通分量的节点数。\n\n## 输入格式\n第一行输入 `N M`，随后 `M` 行输入有向边 `u v`。\n\n## 输出格式\n输出两个整数：强连通分量数量和最大分量大小。\n\n## 数据范围\n`1 ≤ N,M ≤ 5×10^5`。",
+    "test_cases": [
+      {
+        "input": "5 6\n1 2\n2 1\n2 3\n3 4\n4 3\n4 5",
+        "output": "3 2",
+        "description": "分量为 {1,2},{3,4},{5}"
+      },
+      {
+        "input": "3 3\n1 2\n2 3\n3 1",
+        "output": "1 3",
+        "description": "全部互相可达"
+      },
+      {
+        "input": "1 0",
+        "output": "1 1",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "4 0",
+        "output": "4 1",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "4 5\n1 2\n2 1\n2 3\n3 4\n4 3",
+        "output": "2 2",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  },
+  {
+    "title": "关键桥梁数量",
+    "difficulty": "困难",
+    "tags": [
+      "竞赛题",
+      "Tarjan",
+      "桥",
+      "无向图"
+    ],
+    "content": "# 关键桥梁数量\n\n## 题目描述\n在一个无向连通图中，一条边若被删除后会使图不再连通，则称为桥。请统计图中桥的数量。\n\n## 输入格式\n第一行输入 `N M`，随后 `M` 行输入无向边 `u v`。允许存在重边。\n\n## 输出格式\n输出桥的数量。\n\n## 数据范围\n`1 ≤ N,M ≤ 5×10^5`。",
+    "test_cases": [
+      {
+        "input": "5 5\n1 2\n2 3\n3 1\n3 4\n4 5",
+        "output": "2",
+        "description": "3-4 和 4-5 为桥"
+      },
+      {
+        "input": "3 3\n1 2\n2 3\n1 3",
+        "output": "0",
+        "description": "三角形没有桥"
+      },
+      {
+        "input": "2 1\n1 2",
+        "output": "1",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "2 2\n1 2\n1 2",
+        "output": "0",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "4 3\n1 2\n2 3\n3 4",
+        "output": "3",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  },
+  {
+    "title": "树上最大独立集",
+    "difficulty": "困难",
+    "tags": [
+      "竞赛题",
+      "树形DP",
+      "树",
+      "动态规划"
+    ],
+    "content": "# 树上最大独立集\n\n## 题目描述\n给定一棵 `N` 个节点的树，每个节点有权值 `w_i`。请选择若干节点，使任意两个被选节点都不直接相邻，并使权值总和最大。\n\n## 输入格式\n第一行输入 `N`，第二行输入 `N` 个权值，随后 `N-1` 行输入树边 `u v`。\n\n## 输出格式\n输出最大权值和。\n\n## 数据范围\n`1 ≤ N ≤ 2×10^5`，`0 ≤ w_i ≤ 10^9`。",
+    "test_cases": [
+      {
+        "input": "5\n5 1 4 3 6\n1 2\n1 3\n3 4\n3 5",
+        "output": "14",
+        "description": "选择 1、4、5"
+      },
+      {
+        "input": "2\n10 20\n1 2",
+        "output": "20",
+        "description": "只能选一个端点"
+      },
+      {
+        "input": "1\n7",
+        "output": "7",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "3\n1 100 1\n1 2\n2 3",
+        "output": "100",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "4\n5 5 5 5\n1 2\n1 3\n1 4",
+        "output": "15",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  },
+  {
+    "title": "树的直径长度",
+    "difficulty": "中等",
+    "tags": [
+      "竞赛题",
+      "树",
+      "DFS",
+      "BFS"
+    ],
+    "content": "# 树的直径长度\n\n## 题目描述\n给定一棵带非负边权的树，求任意两节点间路径长度的最大值，即树的直径长度。\n\n## 输入格式\n第一行输入 `N`，随后 `N-1` 行输入 `u v w`。\n\n## 输出格式\n输出树的直径长度。\n\n## 数据范围\n`1 ≤ N ≤ 2×10^5`，`0 ≤ w ≤ 10^9`。",
+    "test_cases": [
+      {
+        "input": "5\n1 2 3\n2 3 4\n2 4 2\n4 5 6",
+        "output": "12",
+        "description": "路径 3-2-4-5"
+      },
+      {
+        "input": "1",
+        "output": "0",
+        "description": "单节点树"
+      },
+      {
+        "input": "2\n1 2 0",
+        "output": "0",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "4\n1 2 1\n2 3 2\n3 4 3",
+        "output": "6",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "5\n1 2 10\n1 3 10\n1 4 10\n1 5 10",
+        "output": "20",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  },
+  {
+    "title": "最低公共祖先查询",
+    "difficulty": "困难",
+    "tags": [
+      "竞赛题",
+      "LCA",
+      "倍增",
+      "树"
+    ],
+    "content": "# 最低公共祖先查询\n\n## 题目描述\n给定一棵以节点 1 为根的树，有 `Q` 次查询，每次给出两个节点 `u,v`，求它们的最低公共祖先。\n\n## 输入格式\n第一行输入 `N Q`，随后 `N-1` 行输入树边，再输入 `Q` 行查询 `u v`。\n\n## 输出格式\n每个查询输出一行最低公共祖先节点编号。\n\n## 数据范围\n`1 ≤ N,Q ≤ 2×10^5`。",
+    "test_cases": [
+      {
+        "input": "7 3\n1 2\n1 3\n2 4\n2 5\n3 6\n3 7\n4 5\n4 6\n6 7",
+        "output": "2\n1\n3",
+        "description": "三组 LCA 查询"
+      },
+      {
+        "input": "1 2\n1 1\n1 1",
+        "output": "1\n1",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "4 3\n1 2\n2 3\n3 4\n4 2\n3 4\n2 2",
+        "output": "2\n3\n2",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "5 3\n1 2\n1 3\n3 4\n3 5\n2 4\n4 5\n1 5",
+        "output": "1\n3\n1",
+        "description": "隐藏判题增强-3"
+      },
+      {
+        "input": "7 3\n1 2\n1 3\n2 4\n2 5\n3 6\n3 7\n4 5\n4 6\n6 7\n",
+        "output": "2\n1\n3",
+        "description": "输入边界兼容-1"
+      }
+    ]
+  },
+  {
+    "title": "精确装载背包",
+    "difficulty": "中等",
+    "tags": [
+      "竞赛题",
+      "动态规划",
+      "01背包"
+    ],
+    "content": "# 精确装载背包\n\n## 题目描述\n有 `N` 件物品，每件物品重量为 `w_i`、价值为 `v_i`，每件最多选一次。背包容量为 `C`，要求总重量恰好等于 `C`，求最大总价值；若无法恰好装满输出 `-1`。\n\n## 输入格式\n第一行输入 `N C`，随后 `N` 行输入 `w_i v_i`。\n\n## 输出格式\n输出最大价值，无法恰好装满输出 `-1`。\n\n## 数据范围\n`1 ≤ N ≤ 200`，`1 ≤ C ≤ 10^5`。",
+    "test_cases": [
+      {
+        "input": "4 7\n3 4\n4 5\n2 3\n5 8",
+        "output": "11",
+        "description": "3+4 恰好装满（已由参考算法校正）"
+      },
+      {
+        "input": "2 5\n2 10\n4 20",
+        "output": "-1",
+        "description": "无法恰好装满"
+      },
+      {
+        "input": "1 5\n5 10",
+        "output": "10",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "3 0\n1 2\n2 3\n3 4",
+        "output": "0",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "3 6\n1 1\n2 10\n4 20",
+        "output": "30",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  },
+  {
+    "title": "限量物资采购",
+    "difficulty": "困难",
+    "tags": [
+      "竞赛题",
+      "多重背包",
+      "动态规划",
+      "单调队列优化"
+    ],
+    "content": "# 限量物资采购\n\n## 题目描述\n有 `N` 种物资，第 `i` 种单件成本 `c_i`、收益 `v_i`，最多购买 `m_i` 件。预算不超过 `B`，求最大收益。\n\n## 输入格式\n第一行输入 `N B`，随后 `N` 行输入 `c_i v_i m_i`。\n\n## 输出格式\n输出最大收益。\n\n## 数据范围\n`1 ≤ N ≤ 200`，`1 ≤ B ≤ 10^5`，`1 ≤ m_i ≤ 10^9`。",
+    "test_cases": [
+      {
+        "input": "2 10\n3 5 2\n4 7 2",
+        "output": "17",
+        "description": "购买两个第一种和一个第二种"
+      },
+      {
+        "input": "1 5\n2 3 10",
+        "output": "6",
+        "description": "最多买两件"
+      },
+      {
+        "input": "1 1\n2 10 5",
+        "output": "0",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "2 7\n2 3 3\n3 5 2",
+        "output": "11",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "3 10\n6 20 1\n5 17 2\n2 5 10",
+        "output": "34",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  },
+  {
+    "title": "双序列最长公共子序列",
+    "difficulty": "中等",
+    "tags": [
+      "竞赛题",
+      "动态规划",
+      "LCS",
+      "字符串"
+    ],
+    "content": "# 双序列最长公共子序列\n\n## 题目描述\n给定两个字符串 `A` 和 `B`，求它们最长公共子序列的长度。子序列不要求连续，但字符相对顺序不能改变。\n\n## 输入格式\n输入两行字符串 `A`、`B`。\n\n## 输出格式\n输出最长公共子序列长度。\n\n## 数据范围\n`1 ≤ |A|,|B| ≤ 3000`，字符串仅含小写英文字母。",
+    "test_cases": [
+      {
+        "input": "abcde\nace",
+        "output": "3",
+        "description": "公共子序列 ace"
+      },
+      {
+        "input": "abc\ndef",
+        "output": "0",
+        "description": "无公共字符"
+      },
+      {
+        "input": "a\na",
+        "output": "1",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "aaaa\naa",
+        "output": "2",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "abcabc\nacbac",
+        "output": "4",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  },
+  {
+    "title": "最少回文切割",
+    "difficulty": "困难",
+    "tags": [
+      "竞赛题",
+      "字符串DP",
+      "回文",
+      "动态规划"
+    ],
+    "content": "# 最少回文切割\n\n## 题目描述\n给定一个字符串，将其切分成若干个非空连续子串，要求每个子串都是回文串。求最少切割次数。\n\n## 输入格式\n输入一行字符串 `S`。\n\n## 输出格式\n输出最少切割次数。\n\n## 数据范围\n`1 ≤ |S| ≤ 3000`。",
+    "test_cases": [
+      {
+        "input": "aab",
+        "output": "1",
+        "description": "aa|b"
+      },
+      {
+        "input": "racecar",
+        "output": "0",
+        "description": "整个字符串已经是回文"
+      },
+      {
+        "input": "a",
+        "output": "0",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "ab",
+        "output": "1",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "abbaeae",
+        "output": "1",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  },
+  {
+    "title": "旅行商最短环路",
+    "difficulty": "困难",
+    "tags": [
+      "竞赛题",
+      "状态压缩DP",
+      "位运算",
+      "TSP"
+    ],
+    "content": "# 旅行商最短环路\n\n## 题目描述\n有 `N` 个城市，给出任意两城市间的旅行费用矩阵。旅行者从城市 1 出发，恰好访问每个城市一次后回到城市 1。求最小总费用。\n\n## 输入格式\n第一行输入 `N`，随后输入 `N` 行费用矩阵 `d[i][j]`。\n\n## 输出格式\n输出最小总费用。\n\n## 数据范围\n`2 ≤ N ≤ 20`，`0 ≤ d[i][j] ≤ 10^9`，`d[i][i]=0`。",
+    "test_cases": [
+      {
+        "input": "4\n0 10 15 20\n10 0 35 25\n15 35 0 30\n20 25 30 0",
+        "output": "80",
+        "description": "经典 TSP 示例"
+      },
+      {
+        "input": "2\n0 5\n7 0",
+        "output": "12",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "3\n0 1 9\n2 0 3\n4 5 0",
+        "output": "8",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "4\n0 1 1 1\n1 0 1 1\n1 1 0 1\n1 1 1 0",
+        "output": "4",
+        "description": "隐藏判题增强-3"
+      },
+      {
+        "input": "4\n0 10 15 20\n10 0 35 25\n15 35 0 30\n20 25 30 0\n",
+        "output": "80",
+        "description": "输入边界兼容-1"
+      }
+    ]
+  },
+  {
+    "title": "无重复数字计数",
+    "difficulty": "困难",
+    "tags": [
+      "竞赛题",
+      "数位DP",
+      "状态压缩",
+      "数学"
+    ],
+    "content": "# 无重复数字计数\n\n## 题目描述\n给定两个整数 `L,R`，统计区间 `[L,R]` 中十进制表示不含重复数字的非负整数个数。数字 0 视为一个合法数。\n\n## 输入格式\n输入两个整数 `L R`。\n\n## 输出格式\n输出满足条件的整数个数。\n\n## 数据范围\n`0 ≤ L ≤ R ≤ 10^18`。",
+    "test_cases": [
+      {
+        "input": "1 20",
+        "output": "19",
+        "description": "只有 11 含重复数字"
+      },
+      {
+        "input": "98 102",
+        "output": "2",
+        "description": "98 和 102 合法"
+      },
+      {
+        "input": "0 0",
+        "output": "1",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "10 12",
+        "output": "2",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "120 130",
+        "output": "9",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  },
+  {
+    "title": "网格炮台部署",
+    "difficulty": "困难",
+    "tags": [
+      "竞赛题",
+      "状态压缩DP",
+      "网格DP"
+    ],
+    "content": "# 网格炮台部署\n\n## 题目描述\n给定 `N×M` 网格，`.` 表示可部署位置，`#` 表示障碍。每行部署的炮台之间不能相邻，且相邻两行同一列不能同时部署炮台。求最多能部署多少个炮台。\n\n## 输入格式\n第一行输入 `N M`，随后 `N` 行输入网格。\n\n## 输出格式\n输出最多部署数量。\n\n## 数据范围\n`1 ≤ N ≤ 100`，`1 ≤ M ≤ 12`。",
+    "test_cases": [
+      {
+        "input": "3 3\n...\n...\n...",
+        "output": "5",
+        "description": "棋盘式部署"
+      },
+      {
+        "input": "2 4\n.#..\n....",
+        "output": "4",
+        "description": "存在障碍"
+      },
+      {
+        "input": "1 1\n.",
+        "output": "1",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "1 5\n.....",
+        "output": "3",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "3 4\n#...\n....\n...#",
+        "output": "5",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  },
+  {
+    "title": "模式串最少周期",
+    "difficulty": "中等",
+    "tags": [
+      "竞赛题",
+      "KMP",
+      "字符串",
+      "前缀函数"
+    ],
+    "content": "# 模式串最少周期\n\n## 题目描述\n给定字符串 `S`，求它的最短周期长度 `p`，使得整个字符串可以由长度为 `p` 的字符串重复若干次得到；若不存在更短周期，则答案为 `|S|`。\n\n## 输入格式\n输入一行字符串 `S`。\n\n## 输出格式\n输出最短周期长度。\n\n## 数据范围\n`1 ≤ |S| ≤ 2×10^5`。",
+    "test_cases": [
+      {
+        "input": "abababab",
+        "output": "2",
+        "description": "周期为 ab"
+      },
+      {
+        "input": "ababa",
+        "output": "5",
+        "description": "不能整段重复构成"
+      },
+      {
+        "input": "a",
+        "output": "1",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "aaaaaa",
+        "output": "1",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "abcabcabc",
+        "output": "3",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  },
+  {
+    "title": "子串相等查询",
+    "difficulty": "中等",
+    "tags": [
+      "竞赛题",
+      "字符串哈希",
+      "前缀哈希"
+    ],
+    "content": "# 子串相等查询\n\n## 题目描述\n给定字符串 `S`，回答 `Q` 次查询。每次给出 `l1 r1 l2 r2`，判断两个子串 `S[l1..r1]` 与 `S[l2..r2]` 是否完全相同。下标从 1 开始。\n\n## 输入格式\n第一行输入字符串 `S`，第二行输入 `Q`，随后 `Q` 行输入四个下标。\n\n## 输出格式\n每个查询输出 `YES` 或 `NO`。\n\n## 数据范围\n`1 ≤ |S|,Q ≤ 2×10^5`。",
+    "test_cases": [
+      {
+        "input": "abacaba\n3\n1 3 5 7\n1 2 2 3\n3 3 5 5",
+        "output": "YES\nNO\nYES",
+        "description": "三次子串比较"
+      },
+      {
+        "input": "a\n2\n1 1 1 1\n1 1 1 1",
+        "output": "YES\nYES",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "aaaa\n3\n1 2 3 4\n1 3 2 4\n2 2 4 4",
+        "output": "YES\nYES\nYES",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "abcdef\n2\n1 3 4 6\n2 4 2 4",
+        "output": "NO\nYES",
+        "description": "隐藏判题增强-3"
+      },
+      {
+        "input": "abacaba\n3\n1 3 5 7\n1 2 2 3\n3 3 5 5\n",
+        "output": "YES\nNO\nYES",
+        "description": "输入边界兼容-1"
+      }
+    ]
+  },
+  {
+    "title": "多模式文本统计",
+    "difficulty": "困难",
+    "tags": [
+      "竞赛题",
+      "AC自动机",
+      "Trie",
+      "字符串"
+    ],
+    "content": "# 多模式文本统计\n\n## 题目描述\n给定 `N` 个模式串和一个文本串。对每个模式串，统计它在文本中出现的次数，允许出现位置重叠。\n\n## 输入格式\n第一行输入 `N`，随后 `N` 行为模式串，最后一行为文本串。\n\n## 输出格式\n按输入顺序输出 `N` 行，每行一个出现次数。\n\n## 数据范围\n`1 ≤ N ≤ 2×10^5`，模式串总长度和文本长度均不超过 `5×10^5`，仅含小写字母。",
+    "test_cases": [
+      {
+        "input": "3\na\nab\nba\nababa",
+        "output": "3\n2\n2",
+        "description": "统计重叠出现"
+      },
+      {
+        "input": "1\na\naaaa",
+        "output": "4",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "3\naa\naaa\nb\naaaaa",
+        "output": "4\n3\n0",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "2\nabc\nbc\nabcabc",
+        "output": "2\n2",
+        "description": "隐藏判题增强-3"
+      },
+      {
+        "input": "3\na\nab\nba\nababa\n",
+        "output": "3\n2\n2",
+        "description": "输入边界兼容-1"
+      }
+    ]
+  },
+  {
+    "title": "通配符文件匹配",
+    "difficulty": "中等",
+    "tags": [
+      "竞赛题",
+      "动态规划",
+      "字符串匹配"
+    ],
+    "content": "# 通配符文件匹配\n\n## 题目描述\n给定模式串 `P` 和文本串 `S`。模式中 `?` 可匹配任意一个字符，`*` 可匹配任意长度（包括 0）的字符序列。判断模式能否完整匹配文本。\n\n## 输入格式\n第一行输入模式串 `P`，第二行输入文本串 `S`。\n\n## 输出格式\n匹配输出 `YES`，否则输出 `NO`。\n\n## 数据范围\n`1 ≤ |P|,|S| ≤ 5000`。",
+    "test_cases": [
+      {
+        "input": "a*b?d\naxxbcd",
+        "output": "YES",
+        "description": "星号匹配多个字符"
+      },
+      {
+        "input": "a?c\nac",
+        "output": "NO",
+        "description": "问号必须匹配一个字符"
+      },
+      {
+        "input": "*\nabc",
+        "output": "YES",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "?\na",
+        "output": "YES",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "a*b*c\nabc",
+        "output": "YES",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  },
+  {
+    "title": "区间加与区间和",
+    "difficulty": "困难",
+    "tags": [
+      "竞赛题",
+      "线段树",
+      "懒标记",
+      "数据结构"
+    ],
+    "content": "# 区间加与区间和\n\n## 题目描述\n维护长度为 `N` 的数组，支持两种操作：`1 l r x` 将区间 `[l,r]` 每个数加上 `x`；`2 l r` 查询区间 `[l,r]` 的元素和。\n\n## 输入格式\n第一行输入 `N Q`，第二行输入初始数组，随后 `Q` 行输入操作。\n\n## 输出格式\n对每个查询操作输出一行区间和。\n\n## 数据范围\n`1 ≤ N,Q ≤ 2×10^5`，数值及操作后结果范围在 64 位有符号整数内。",
+    "test_cases": [
+      {
+        "input": "5 4\n1 2 3 4 5\n2 1 5\n1 2 4 10\n2 2 3\n2 4 5",
+        "output": "15\n25\n19",
+        "description": "区间修改与查询"
+      },
+      {
+        "input": "1 4\n5\n2 1 1\n1 1 1 -10\n2 1 1\n2 1 1",
+        "output": "5\n-5\n-5",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "4 4\n0 0 0 0\n1 1 4 3\n2 1 4\n1 2 3 -1\n2 2 3",
+        "output": "12\n4",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "5 3\n1 -1 1 -1 1\n2 1 5\n1 1 5 2\n2 2 4",
+        "output": "1\n5",
+        "description": "隐藏判题增强-3"
+      },
+      {
+        "input": "5 4\n1 2 3 4 5\n2 1 5\n1 2 4 10\n2 2 3\n2 4 5\n",
+        "output": "15\n25\n19",
+        "description": "输入边界兼容-1"
+      }
+    ]
+  },
+  {
+    "title": "动态最大子段和",
+    "difficulty": "困难",
+    "tags": [
+      "竞赛题",
+      "线段树",
+      "最大子段和",
+      "分治"
+    ],
+    "content": "# 动态最大子段和\n\n## 题目描述\n给定长度为 `N` 的整数数组。支持单点修改 `1 pos x`，以及查询 `2 l r`：求子数组 `[l,r]` 内非空连续子段的最大和。\n\n## 输入格式\n第一行输入 `N Q`，第二行输入数组，随后 `Q` 行输入操作。\n\n## 输出格式\n对每个类型 2 查询输出一行答案。\n\n## 数据范围\n`1 ≤ N,Q ≤ 2×10^5`，`|a_i|,|x| ≤ 10^9`。",
+    "test_cases": [
+      {
+        "input": "5 3\n-2 3 -1 4 -5\n2 1 5\n1 1 10\n2 1 4",
+        "output": "6\n16",
+        "description": "维护 sum/prefix/suffix/best"
+      },
+      {
+        "input": "1 3\n-5\n2 1 1\n1 1 4\n2 1 1",
+        "output": "-5\n4",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "4 2\n-1 -2 -3 -4\n2 1 4\n2 2 3",
+        "output": "-1\n-2",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "5 3\n1 2 -10 3 4\n2 1 5\n1 3 5\n2 1 5",
+        "output": "7\n15",
+        "description": "隐藏判题增强-3"
+      },
+      {
+        "input": "5 3\n-2 3 -1 4 -5\n2 1 5\n1 1 10\n2 1 4\n",
+        "output": "6\n16",
+        "description": "输入边界兼容-1"
+      }
+    ]
+  },
+  {
+    "title": "数据流中位数",
+    "difficulty": "中等",
+    "tags": [
+      "竞赛题",
+      "堆",
+      "优先队列",
+      "在线算法"
+    ],
+    "content": "# 数据流中位数\n\n## 题目描述\n依次读入 `N` 个整数。每读入一个数后，输出当前所有数的中位数。若当前元素个数为偶数，定义中位数为中间两个数中较小的那个。\n\n## 输入格式\n第一行输入 `N`，第二行输入 `N` 个整数。\n\n## 输出格式\n输出 `N` 个整数，依次表示每一步的中位数。\n\n## 数据范围\n`1 ≤ N ≤ 2×10^5`，`|a_i| ≤ 10^9`。",
+    "test_cases": [
+      {
+        "input": "6\n5 2 10 1 3 8",
+        "output": "5 2 5 2 3 3",
+        "description": "双堆维护"
+      },
+      {
+        "input": "1\n9",
+        "output": "9",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "5\n1 2 3 4 5",
+        "output": "1 1 2 2 3",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "5\n5 4 3 2 1",
+        "output": "5 4 4 3 3",
+        "description": "隐藏判题增强-3"
+      },
+      {
+        "input": "6\n5 2 10 1 3 8\n",
+        "output": "5 2 5 2 3 3",
+        "description": "输入边界兼容-1"
+      }
+    ]
+  },
+  {
+    "title": "滑动窗口最值",
+    "difficulty": "中等",
+    "tags": [
+      "竞赛题",
+      "单调队列",
+      "滑动窗口"
+    ],
+    "content": "# 滑动窗口最值\n\n## 题目描述\n给定长度为 `N` 的数组和窗口大小 `K`。窗口从左到右每次移动一格，分别输出每个窗口的最小值序列和最大值序列。\n\n## 输入格式\n第一行输入 `N K`，第二行输入数组。\n\n## 输出格式\n第一行输出各窗口最小值，第二行输出各窗口最大值。\n\n## 数据范围\n`1 ≤ K ≤ N ≤ 2×10^5`。",
+    "test_cases": [
+      {
+        "input": "8 3\n1 3 -1 -3 5 3 6 7",
+        "output": "-1 -3 -3 -3 3 3\n3 3 5 5 6 7",
+        "description": "经典窗口最值"
+      },
+      {
+        "input": "1 1\n7",
+        "output": "7\n7",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "5 5\n5 4 3 2 1",
+        "output": "1\n5",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "6 2\n2 2 1 3 3 0",
+        "output": "2 1 1 3 0\n2 2 3 3 3",
+        "description": "隐藏判题增强-3"
+      },
+      {
+        "input": "8 3\n1 3 -1 -3 5 3 6 7\n",
+        "output": "-1 -3 -3 -3 3 3\n3 3 5 5 6 7",
+        "description": "输入边界兼容-1"
+      }
+    ]
+  },
+  {
+    "title": "第 K 小区间查询",
+    "difficulty": "困难",
+    "tags": [
+      "竞赛题",
+      "主席树",
+      "可持久化线段树",
+      "离散化"
+    ],
+    "content": "# 第 K 小区间查询\n\n## 题目描述\n给定静态数组 `a`，回答 `Q` 次查询。每次给出 `l r k`，求子数组 `a[l..r]` 中第 `k` 小的数。\n\n## 输入格式\n第一行输入 `N Q`，第二行输入数组，随后 `Q` 行输入 `l r k`。\n\n## 输出格式\n每个查询输出一行答案。\n\n## 数据范围\n`1 ≤ N,Q ≤ 2×10^5`，`1 ≤ k ≤ r-l+1`，`|a_i| ≤ 10^9`。",
+    "test_cases": [
+      {
+        "input": "5 3\n1 5 2 6 3\n1 5 3\n2 4 2\n3 5 1",
+        "output": "3\n5\n2",
+        "description": "三次区间第 k 小"
+      },
+      {
+        "input": "1 2\n7\n1 1 1\n1 1 1",
+        "output": "7\n7",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "5 3\n5 5 1 1 3\n1 5 4\n2 4 2\n3 5 1",
+        "output": "5\n1\n1",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "6 2\n-3 8 0 -1 8 2\n1 6 2\n2 5 3",
+        "output": "-1\n8",
+        "description": "隐藏判题增强-3"
+      },
+      {
+        "input": "5 3\n1 5 2 6 3\n1 5 3\n2 4 2\n3 5 1\n",
+        "output": "3\n5\n2",
+        "description": "输入边界兼容-1"
+      }
+    ]
+  },
+  {
+    "title": "线性递推第 N 项",
+    "difficulty": "中等",
+    "tags": [
+      "竞赛题",
+      "矩阵快速幂",
+      "快速幂",
+      "数学"
+    ],
+    "content": "# 线性递推第 N 项\n\n## 题目描述\n定义数列 `F_1=a`，`F_2=b`，当 `n≥3` 时 `F_n = p*F_{n-1} + q*F_{n-2}`。给定 `n,a,b,p,q,mod`，求 `F_n mod mod`。\n\n## 输入格式\n输入一行 `n a b p q mod`。\n\n## 输出格式\n输出 `F_n mod mod`。\n\n## 数据范围\n`1 ≤ n ≤ 10^18`，`1 ≤ mod ≤ 2×10^9`，其余参数绝对值不超过 `10^9`。",
+    "test_cases": [
+      {
+        "input": "10 1 1 1 1 1000000007",
+        "output": "55",
+        "description": "斐波那契"
+      },
+      {
+        "input": "3 2 3 2 1 100",
+        "output": "8",
+        "description": "2*3+2"
+      },
+      {
+        "input": "1 7 9 2 3 100",
+        "output": "7",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "2 7 9 2 3 100",
+        "output": "9",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "6 1 2 2 0 1000",
+        "output": "32",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  },
+  {
+    "title": "组合数模质数",
+    "difficulty": "困难",
+    "tags": [
+      "竞赛题",
+      "组合数学",
+      "费马小定理",
+      "逆元"
+    ],
+    "content": "# 组合数模质数\n\n## 题目描述\n给定质数 `P` 和 `Q` 次询问，每次给出 `n,k`，求组合数 `C(n,k) mod P`。保证所有询问中的 `n < P`。\n\n## 输入格式\n第一行输入 `P Q`，随后 `Q` 行输入 `n k`。\n\n## 输出格式\n每个询问输出一行答案。\n\n## 数据范围\n`2 ≤ P ≤ 2×10^6` 且 `P` 为质数，`1 ≤ Q ≤ 2×10^5`。",
+    "test_cases": [
+      {
+        "input": "1000003 3\n5 2\n10 0\n6 3",
+        "output": "10\n1\n20",
+        "description": "预处理阶乘与逆阶乘"
+      },
+      {
+        "input": "7 4\n0 0\n6 3\n6 6\n5 1",
+        "output": "1\n6\n1\n5",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "11 3\n10 5\n9 4\n8 2",
+        "output": "10\n5\n6",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "5 3\n4 2\n3 1\n2 0",
+        "output": "1\n3\n1",
+        "description": "隐藏判题增强-3"
+      },
+      {
+        "input": "1000003 3\n5 2\n10 0\n6 3\n",
+        "output": "10\n1\n20",
+        "description": "输入边界兼容-1"
+      }
+    ]
+  },
+  {
+    "title": "同余方程合并",
+    "difficulty": "困难",
+    "tags": [
+      "竞赛题",
+      "中国剩余定理",
+      "扩展欧几里得",
+      "数论"
+    ],
+    "content": "# 同余方程合并\n\n## 题目描述\n给定 `N` 个同余方程 `x ≡ a_i (mod m_i)`，模数不保证两两互质。求最小非负解 `x`；若无解输出 `-1`。\n\n## 输入格式\n第一行输入 `N`，随后 `N` 行输入 `m_i a_i`。\n\n## 输出格式\n输出最小非负解或 `-1`。\n\n## 数据范围\n`1 ≤ N ≤ 10^5`，`1 ≤ m_i ≤ 10^12`，保证计算过程中的合法答案不超过 64 位有符号整数。",
+    "test_cases": [
+      {
+        "input": "2\n3 2\n5 3",
+        "output": "8",
+        "description": "互质模数"
+      },
+      {
+        "input": "2\n4 1\n2 0",
+        "output": "-1",
+        "description": "方程冲突"
+      },
+      {
+        "input": "1\n7 5",
+        "output": "5",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "2\n4 2\n6 2",
+        "output": "2",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "3\n2 1\n3 2\n5 3",
+        "output": "23",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  },
+  {
+    "title": "素数区间查询",
+    "difficulty": "中等",
+    "tags": [
+      "竞赛题",
+      "筛法",
+      "前缀和",
+      "数论"
+    ],
+    "content": "# 素数区间查询\n\n## 题目描述\n给定 `Q` 次查询，每次给出 `[L,R]`，统计区间内素数数量。\n\n## 输入格式\n第一行输入 `Q`，随后 `Q` 行输入 `L R`。\n\n## 输出格式\n每个查询输出一行素数数量。\n\n## 数据范围\n`1 ≤ Q ≤ 2×10^5`，`1 ≤ L ≤ R ≤ 10^7`。",
+    "test_cases": [
+      {
+        "input": "3\n1 10\n10 20\n2 2",
+        "output": "4\n4\n1",
+        "description": "埃氏筛加前缀和"
+      },
+      {
+        "input": "4\n1 1\n2 3\n4 4\n1 100",
+        "output": "0\n2\n0\n25",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "3\n17 17\n18 18\n19 23",
+        "output": "1\n0\n2",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "2\n999 1000\n90 110",
+        "output": "0\n5",
+        "description": "隐藏判题增强-3"
+      },
+      {
+        "input": "3\n1 10\n10 20\n2 2\n",
+        "output": "4\n4\n1",
+        "description": "输入边界兼容-1"
+      }
+    ]
+  },
+  {
+    "title": "网格最少转弯次数",
+    "difficulty": "困难",
+    "tags": [
+      "竞赛题",
+      "BFS",
+      "状态图",
+      "最短路"
+    ],
+    "content": "# 网格最少转弯次数\n\n## 题目描述\n在 `N×M` 网格中，`.` 可通行，`#` 不可通行。机器人从 `S` 到 `T`，每次向上下左右相邻格移动。连续沿同一方向移动不增加转弯次数，改变方向时转弯次数加 1。求最少转弯次数。第一次选择方向不计转弯。\n\n## 输入格式\n第一行输入 `N M`，随后 `N` 行网格，网格中恰有一个 `S` 和一个 `T`。\n\n## 输出格式\n输出最少转弯次数，不可达输出 `-1`。\n\n## 数据范围\n`1 ≤ N,M ≤ 1000`。",
+    "test_cases": [
+      {
+        "input": "3 4\nS...\n##..\n...T",
+        "output": "1",
+        "description": "先向右再向下"
+      },
+      {
+        "input": "2 2\nS#\n#T",
+        "output": "-1",
+        "description": "不可达"
+      },
+      {
+        "input": "1 2\nST",
+        "output": "0",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "3 3\nS..\n...\n..T",
+        "output": "1",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "3 3\nS#.\n.#.\n..T",
+        "output": "1",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  },
+  {
+    "title": "骑士最短汇合",
+    "difficulty": "中等",
+    "tags": [
+      "竞赛题",
+      "BFS",
+      "网格",
+      "多源思想"
+    ],
+    "content": "# 骑士最短汇合\n\n## 题目描述\n国际象棋棋盘大小为 `N×M`，有两名骑士分别位于 `(x1,y1)` 和 `(x2,y2)`。每一步按标准马步移动。求两名骑士移动总步数最少的汇合方案；允许某个骑士原地不动。无法汇合输出 `-1`。\n\n## 输入格式\n输入 `N M x1 y1 x2 y2`。\n\n## 输出格式\n输出最小总步数。\n\n## 数据范围\n`1 ≤ N,M ≤ 200`。",
+    "test_cases": [
+      {
+        "input": "8 8 1 1 8 8",
+        "output": "6",
+        "description": "可在最短路径上的位置汇合"
+      },
+      {
+        "input": "1 2 1 1 1 2",
+        "output": "-1",
+        "description": "无法移动且不同点"
+      },
+      {
+        "input": "8 8 1 1 1 1",
+        "output": "0",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "3 3 1 1 2 3",
+        "output": "1",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "4 4 1 1 4 4",
+        "output": "2",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  },
+  {
+    "title": "最少交换完成排列",
+    "difficulty": "中等",
+    "tags": [
+      "竞赛题",
+      "置换",
+      "环分解",
+      "贪心"
+    ],
+    "content": "# 最少交换完成排列\n\n## 题目描述\n给定一个 `1..N` 的排列。每次可交换任意两个位置的元素。求把排列变为升序 `1,2,...,N` 所需的最少交换次数。\n\n## 输入格式\n第一行输入 `N`，第二行输入排列。\n\n## 输出格式\n输出最少交换次数。\n\n## 数据范围\n`1 ≤ N ≤ 2×10^5`。",
+    "test_cases": [
+      {
+        "input": "5\n2 1 5 3 4",
+        "output": "3",
+        "description": "两个置换环"
+      },
+      {
+        "input": "4\n1 2 3 4",
+        "output": "0",
+        "description": "已经有序"
+      },
+      {
+        "input": "1\n1",
+        "output": "0",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "5\n2 3 4 5 1",
+        "output": "4",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "6\n2 1 4 3 6 5",
+        "output": "3",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  },
+  {
+    "title": "最小字典序拓扑序",
+    "difficulty": "中等",
+    "tags": [
+      "竞赛题",
+      "拓扑排序",
+      "优先队列",
+      "图论"
+    ],
+    "content": "# 最小字典序拓扑序\n\n## 题目描述\n给定一个有向无环图，请输出所有合法拓扑序中字典序最小的一种。若输入图实际上存在环，则输出 `-1`。\n\n## 输入格式\n第一行输入 `N M`，随后 `M` 行输入边 `u v`。\n\n## 输出格式\n输出拓扑序，节点编号之间用空格分隔；存在环输出 `-1`。\n\n## 数据范围\n`1 ≤ N,M ≤ 2×10^5`。",
+    "test_cases": [
+      {
+        "input": "5 4\n1 3\n2 3\n3 5\n4 5",
+        "output": "1 2 3 4 5",
+        "description": "小根堆选择当前最小节点"
+      },
+      {
+        "input": "2 2\n1 2\n2 1",
+        "output": "-1",
+        "description": "存在环"
+      },
+      {
+        "input": "4 0",
+        "output": "1 2 3 4",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "4 3\n1 4\n2 4\n3 4",
+        "output": "1 2 3 4",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "3 2\n3 2\n3 1",
+        "output": "3 1 2",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  },
+  {
+    "title": "会议室最少数量",
+    "difficulty": "中等",
+    "tags": [
+      "竞赛题",
+      "贪心",
+      "优先队列",
+      "区间"
+    ],
+    "content": "# 会议室最少数量\n\n## 题目描述\n有 `N` 场会议，每场会议占用时间区间 `[s_i,e_i)`。同一会议室中的会议不能重叠。求安排全部会议所需的最少会议室数量。\n\n## 输入格式\n第一行输入 `N`，随后 `N` 行输入 `s_i e_i`。\n\n## 输出格式\n输出最少会议室数量。\n\n## 数据范围\n`1 ≤ N ≤ 2×10^5`。",
+    "test_cases": [
+      {
+        "input": "5\n0 30\n5 10\n15 20\n20 25\n25 35",
+        "output": "2",
+        "description": "复用已结束会议室"
+      },
+      {
+        "input": "3\n1 2\n2 3\n3 4",
+        "output": "1",
+        "description": "首尾衔接"
+      },
+      {
+        "input": "1\n0 100",
+        "output": "1",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "4\n1 5\n1 5\n1 5\n1 5",
+        "output": "4",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "4\n0 10\n2 3\n3 4\n4 5",
+        "output": "2",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  },
+  {
+    "title": "带冷却的任务调度",
+    "difficulty": "中等",
+    "tags": [
+      "竞赛题",
+      "贪心",
+      "计数",
+      "堆"
+    ],
+    "content": "# 带冷却的任务调度\n\n## 题目描述\n有若干任务，每个任务用一个大写字母表示。相同类型任务之间至少需要间隔 `K` 个时间单位；每个任务执行耗时 1，空闲也耗时 1。求完成全部任务的最短总时间。\n\n## 输入格式\n第一行输入 `N K`，第二行输入 `N` 个大写字母任务。\n\n## 输出格式\n输出最短总时间。\n\n## 数据范围\n`1 ≤ N ≤ 2×10^5`，`0 ≤ K ≤ 10^9`。",
+    "test_cases": [
+      {
+        "input": "6 2\nA A A B B B",
+        "output": "8",
+        "description": "A B idle A B idle A B"
+      },
+      {
+        "input": "4 0\nA A B C",
+        "output": "4",
+        "description": "无需冷却"
+      },
+      {
+        "input": "1 100\nA",
+        "output": "1",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "5 1\nA A A A A",
+        "output": "9",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "8 2\nA A A B B C C D",
+        "output": "8",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  },
+  {
+    "title": "最小覆盖圆环区间",
+    "difficulty": "困难",
+    "tags": [
+      "竞赛题",
+      "贪心",
+      "倍增",
+      "环形区间"
+    ],
+    "content": "# 最小覆盖圆环区间\n\n## 题目描述\n圆环长度为 `L`，有 `N` 个覆盖区间，每个区间沿顺时针方向从 `l_i` 覆盖到 `r_i`，允许跨越 0 点。请选择尽可能少的区间覆盖整个圆环，若无法覆盖输出 `-1`。\n\n## 输入格式\n第一行输入 `L N`，随后 `N` 行输入 `l_i r_i`，位置范围为 `[0,L)`。\n\n## 输出格式\n输出最少区间数量。\n\n## 数据范围\n`1 ≤ L ≤ 10^9`，`1 ≤ N ≤ 2×10^5`。",
+    "test_cases": [
+      {
+        "input": "10 3\n0 4\n4 8\n8 0",
+        "output": "3",
+        "description": "三个区间刚好覆盖"
+      },
+      {
+        "input": "10 2\n0 3\n5 8",
+        "output": "-1",
+        "description": "存在空隙"
+      },
+      {
+        "input": "10 1\n0 0",
+        "output": "1",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "10 2\n8 3\n3 8",
+        "output": "2",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "12 4\n10 2\n2 5\n5 9\n9 10",
+        "output": "4",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  },
+  {
+    "title": "网格路径异或值",
+    "difficulty": "困难",
+    "tags": [
+      "竞赛题",
+      "状态压缩",
+      "Meet-in-the-middle",
+      "异或"
+    ],
+    "content": "# 网格路径异或值\n\n## 题目描述\n给定 `N×M` 整数网格，从左上角出发，每次只能向右或向下移动，直到右下角。路径异或值定义为经过所有格子数值的按位异或。给定目标 `K`，统计异或值恰好为 `K` 的路径数量。\n\n## 输入格式\n第一行输入 `N M K`，随后 `N` 行输入网格。\n\n## 输出格式\n输出路径数量。\n\n## 数据范围\n`1 ≤ N,M ≤ 20`，`N+M ≤ 40`，格子值和 `K` 在 32 位非负整数范围内。",
+    "test_cases": [
+      {
+        "input": "2 2 6\n1 2\n4 3",
+        "output": "1",
+        "description": "两条路径中恰有一条满足"
+      },
+      {
+        "input": "1 1 5\n5",
+        "output": "1",
+        "description": "只有一条路径"
+      },
+      {
+        "input": "1 1 0\n0",
+        "output": "1",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "2 3 0\n1 1 1\n1 1 1",
+        "output": "3",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "3 3 1\n1 2 3\n4 5 6\n7 8 9",
+        "output": "1",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  },
+  {
+    "title": "钥匙与门的迷宫",
+    "difficulty": "困难",
+    "tags": [
+      "竞赛题",
+      "BFS",
+      "状态压缩",
+      "最短路"
+    ],
+    "content": "# 钥匙与门的迷宫\n\n## 题目描述\n在 `N×M` 网格中，`.` 表示空地，`#` 表示墙，`S` 为起点，`T` 为终点。小写字母 `a` 到 `f` 表示钥匙，大写字母 `A` 到 `F` 表示对应的门，只有持有对应钥匙才能通过门。拾取钥匙后永久持有。求从 `S` 到 `T` 的最少移动步数。\n\n## 输入格式\n第一行输入 `N M`，随后 `N` 行输入网格。\n\n## 输出格式\n输出最少移动步数，不可达输出 `-1`。\n\n## 数据范围\n`1 ≤ N,M ≤ 200`，钥匙种类最多 6 种。",
+    "test_cases": [
+      {
+        "input": "3 5\nS.aA.\n##.#T\n.....",
+        "output": "5",
+        "description": "先取得钥匙再通过门"
+      },
+      {
+        "input": "2 3\nS#T\n###",
+        "output": "-1",
+        "description": "终点不可达"
+      },
+      {
+        "input": "1 2\nST",
+        "output": "1",
+        "description": "隐藏判题增强-1"
+      },
+      {
+        "input": "1 4\nSaAT",
+        "output": "3",
+        "description": "隐藏判题增强-2"
+      },
+      {
+        "input": "2 4\nS.A.T\n#a###",
+        "output": "-1",
+        "description": "隐藏判题增强-3"
+      }
+    ]
+  }
+]

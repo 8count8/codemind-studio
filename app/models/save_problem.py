@@ -1,4 +1,4 @@
-﻿"""保存题目 - MySQL"""
+"""保存题目 - MySQL"""
 
 import json
 import logging
@@ -37,10 +37,11 @@ def save_problem_to_database(title: str, content, difficulty: str, tags=None):
         cursor.execute("""
         INSERT INTO problems (title, content, difficulty, tags)
         VALUES (%s, %s, %s, %s)
-        RETURNING id
         """, (title, content_markdown, difficulty, tags_json))
-        problem_id = cursor.fetchone()[0]
+        problem_id = cursor.lastrowid
         connection.commit()
+        from app.models.question_db import clear_question_cache
+        clear_question_cache()
 
         logging.info(f"成功保存题目 '{title}' 到数据库, id={problem_id}")
         return problem_id

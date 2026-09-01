@@ -60,9 +60,39 @@ prompt = """你是一位资深的算法专家和代码审查师，精通各种�
         "strengths": ["代码优点1", "代码优点2", ...],
         "issues": ["存在问题1", "存在问题2", ...],
         "suggestions": ["改进建议1", "改进建议2", ...]
+    },
+    "dimension_scores": {
+        "syntax_score": 85,
+        "algorithm_score": 60,
+        "project_score": 40,
+        "debug_score": 30,
+        "security_score": 20
     }
 }
 ```
+
+### dimension_scores 五维评分标准（0-100 分）
+
+- **syntax_score（语法基础）**：代码规范性、语法错误率、PEP8合规性、可读性
+  * 90-100：无语法错误，规范完美，注释充分
+  * 60-89：基本规范，少量瑕疵
+  * 0-59：存在语法错误或严重不规范
+- **algorithm_score（算法思维）**：解题效率、复杂度优化、算法正确性
+  * 90-100：最优解法，复杂度分析到位
+  * 60-89：解法正确但非最优
+  * 0-59：算法错误或无法解题
+- **project_score（项目实践）**：代码模块化、功能完整性、设计合理性
+  * 90-100：结构清晰，模块化优秀
+  * 60-89：基本结构合理
+  * 0-59：结构混乱或无模块化
+- **debug_score（调试能力）**：错误处理、异常捕获、日志记录
+  * 90-100：异常处理完善，日志规范
+  * 60-89：有基础异常处理
+  * 0-59：无异常处理或错误处理不当
+- **security_score（安全意识）**：输入验证、注入防护、数据加密
+  * 90-100：安全防护完善
+  * 60-89：有基础安全措施
+  * 0-59：无安全意识或存在安全隐患
 
 ## 评审举例
 例如，给定题目"编写一个函数，计算x的n次幂"，学生代码如下：
@@ -93,6 +123,13 @@ def power(x, n):
             "使用快速幂算法(二分法)将时间复杂度优化到O(log n)",
             "添加对输入参数的类型和范围检查"
         ]
+    },
+    "dimension_scores": {
+        "syntax_score": 85,
+        "algorithm_score": 60,
+        "project_score": 70,
+        "debug_score": 40,
+        "security_score": 30
     }
 }
 ```
@@ -104,6 +141,10 @@ class CodeInsightExaminer(Model):
     model_prompt = prompt
     model_id = "10001"
     model_name = "Ai批改"
-    model_ark_url = "https://ark.cn-beijing.volces.com/api/v3/chat/completions"
-    model_ark_id = "ep-20250420105909-k9krn"
-    model_ark_key = "9bb28231-c3ae-4ee9-ac12-e9794efe0016"
+
+    # 生成参数：逐行审查需要稳定和深度
+    temperature = 0.3
+    top_p = 0.9
+
+    # Ollama 模型名（None → 全局 OLLAMA_MODEL，默认 qwen2.5:7b）
+    ollama_model_name = None

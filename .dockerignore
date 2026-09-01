@@ -1,0 +1,63 @@
+# ============================================================
+#  Docker 构建忽略文件（减小上下文体积，避免 COPY 进敏感/冗余内容）
+#  = 注意：与 .gitignore 独立，只影响 docker build 的 context
+# ============================================================
+
+# --- Python 缓存 / 本地环境 ---
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/.pytest_cache/
+**/.mypy_cache/
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+.coverage
+htmlcov/
+coverage.xml
+
+# --- Node / 前端 ---
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+**/.npm-cache/
+
+# --- 本地数据库 / 日志 / 模型文件（很大，别打进镜像）---
+runtime/
+logs/
+*.log
+.DS_Store
+Thumbs.db
+*.sqlite3
+*.sqlite
+.vscode/
+.idea/
+
+# --- 本机 Ollama 模型缓存（如果有）---
+.ollama/
+ollama-models/
+
+# --- 本机私有配置（绝不打进镜像！）---
+.env
+.env.local
+.env.docker
+.env.*.local
+packaging/*.tar
+packaging/*.tar.gz
+packaging/*.zip
+*.bak
+*.old
+
+# --- 临时打包输出目录 ---
+packaging/staging/
+packaging/output/
+
+# --- Git ---
+.git/
+.gitignore
+.gitattributes
+.github/

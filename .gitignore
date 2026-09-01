@@ -49,3 +49,14 @@ software-testing/
 docs/
 app/models/user_db
 app/service/ai/test.txt
+
+# 构建产物 / 临时文件 / 测试报告
+packaging/
+tmp/
+output/
+reports/
+.coverage
+coverage.xml
+
+# Docker 本地环境配置（仅保留 .env.docker.example 作为模板）
+.env.docker

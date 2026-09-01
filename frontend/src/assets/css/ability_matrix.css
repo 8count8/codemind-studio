@@ -27,6 +27,10 @@
     font-size: 1rem;
 }
 
+.export-btn {
+    margin-top: 1rem;
+}
+
 /* 顶部统计卡片行 */
 .stats-row {
     display: grid;
@@ -220,6 +224,9 @@
     flex-direction: column;
     gap: 1rem;
 }
+
+.recommend-tasks { margin: .55rem 0 0 1.2rem; color: var(--text-color); opacity: .82; font-size: .86rem; line-height: 1.65; }
+.trend-wrapper { position: relative; min-height: 320px; }
 
 .recommend-group h3 {
     font-size: 0.95rem;
@@ -434,6 +441,29 @@
 .toast.success { background-color: #4caf50; }
 .toast.error   { background-color: #f44336; }
 .toast.warning { background-color: #ff9800; }
+
+.learning-path {
+    margin: 0;
+    padding-left: 1.25rem;
+}
+
+.learning-path li {
+    margin-bottom: 0.85rem;
+}
+
+.learning-path p {
+    margin: 0.3rem 0;
+    color: var(--text-secondary, #64748b);
+}
+
+.path-task {
+    display: inline-block;
+    margin: 0.15rem 0.35rem 0.15rem 0;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    background: rgba(66, 184, 131, 0.12);
+    font-size: 0.82rem;
+}
 
 /* 响应式 */
 @media (max-width: 900px) {

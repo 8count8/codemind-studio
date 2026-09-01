@@ -3,6 +3,13 @@ import vue from '@vitejs/plugin-vue'
 
 export default defineConfig({
   plugins: [vue()],
+  build: {
+    // 打包输出到项目根 packaging/staging/frontend-dist（供 PyInstaller + Inno 一起收割）
+    outDir: process.env.VITE_BUILD_OUT_DIR || '../packaging/staging/frontend-dist',
+    emptyOutDir: true,
+    sourcemap: false,
+    chunkSizeWarningLimit: 2000,
+  },
   server: {
     port: 5173,
     proxy: {

@@ -11,7 +11,10 @@ class Config:
 
     DEBUG = False
     WHITELIST_ROUTES = []
-    WHITELIST_BLUEPRINTS = ["auth", "main", "static", None]
+    # ``main`` also owns authenticated pages such as /dashboard, so only
+    # authentication/static blueprints are exempted as a whole.
+    WHITELIST_BLUEPRINTS = ["auth", "static", None]
+    ADMIN_USERNAMES = os.environ.get("ADMIN_USERNAMES", "admin")
 
 
 class API_Docs_Config:
@@ -41,24 +44,19 @@ class API_Docs_Config:
 class DevelopmentConfig(Config, API_Docs_Config):
     """开发环境配置"""
     DEBUG = True
-    WHITELIST_BLUEPRINTS = ["auth", "main", "static", None, "api_doc", "answerpad", "flasgger", "code_review",
-                            "quizbank", "favorites", "answer", "user_api", "ai_question", "profile", "ability_matrix"]
+    WHITELIST_BLUEPRINTS = ["auth", "static", None, "api_doc", "flasgger"]
 
 
 class TestingConfig(Config):
     """测试环境配置"""
     TESTING = True
+    WTF_CSRF_ENABLED = False
 
 
-class ProductionConfig(Config):
+class ProductionConfig(Config, API_Docs_Config):
     """生产环境配置 (云服务器部署)"""
     DEBUG = False
-    WHITELIST_BLUEPRINTS = [
-        "auth", "main", "static", None,
-        "api_doc", "answerpad", "flasgger", "code_review",
-        "quizbank", "favorites", "answer", "user_api",
-        "ai_question", "profile", "ability_matrix"
-    ]
+    WHITELIST_BLUEPRINTS = ["auth", "static", None, "api_doc", "flasgger"]
     WHITELIST_ROUTES = [
         "health_check",
         "root",

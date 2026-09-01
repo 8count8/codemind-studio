@@ -4,13 +4,14 @@
 from app.api.flasgger_compat import swag_from
 
 from . import auth_bp
-from flask import redirect, url_for, request, current_app, jsonify
+from flask import redirect, url_for, request, current_app, jsonify, session
 
 from app.service import UserLoginService
-from app.utils.auth import set_user_session, clear_session, get_current_user_id
+from app.utils.auth import set_user_session, clear_session, get_current_user_id, is_admin
 
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
+@auth_bp.route('/auth/login', methods=['POST'])
 def login():
     """
     用户登录
@@ -26,8 +27,8 @@ def login():
 
             # 根据登录结果进行处理
             if result["status"] == "success":
-                set_user_session(username)
-                current_app.logger.info(f'用户登录成功: {username}')
+                set_user_session(result.get("user_id", username), result.get("username", username))
+                current_app.logger.info(f'用户登录成功: {result.get("username", username)}')
                 return {"status": 200, "message": "用户登录成功", "redirect": url_for('main.dashboard')}
             else:
                 current_app.logger.warning(f'用户登录失败: {username}, 原因: {result["message"]}')
@@ -37,10 +38,11 @@ def login():
         return jsonify({"status": 200, "message": "请使用 Vue 前端访问"})
     except Exception as e:
         current_app.logger.error(f"登录错误: {str(e)}")
-        return f"服务器错误: {str(e)}", 500
+        return jsonify({"status": 500, "message": "服务器错误"}), 500
 
 
 @auth_bp.route('/logout', methods=['GET', 'POST'])
+@auth_bp.route('/auth/logout', methods=['GET', 'POST'])
 def logout():
     """
     退出登录
@@ -53,6 +55,7 @@ def logout():
 
 
 @auth_bp.route('/register', methods=['GET', 'POST'])
+@auth_bp.route('/auth/register', methods=['POST'])
 def register():
     """
     注册新用户
@@ -84,6 +87,7 @@ def register():
 
 
 @auth_bp.route('/get_verification_code', methods=['POST'])
+@auth_bp.route('/auth/get-verification-code', methods=['POST'])
 @swag_from({
     'tags': ['用户认证'],
     'description': '发送验证码到指定邮箱',
@@ -160,6 +164,7 @@ def reset():
 
 
 @auth_bp.route('/get_forgot_password_code', methods=['POST'])
+@auth_bp.route('/auth/forgot-password/get-code', methods=['POST'])
 def get_forgot_password_code():
     """
     获取忘记密码的验证码
@@ -182,12 +187,18 @@ def get_forgot_password_code():
 def check_login_status():
     user_id = get_current_user_id()
     if user_id:
-        return {"isAuthenticated": True, "user": {"username": user_id, "avatar": "default-avatar.png"}}
+        return {"isAuthenticated": True, "user": {
+            "id": user_id,
+            "username": session.get("username") or user_id,
+            "avatar": "default-avatar.png",
+            "is_admin": is_admin(),
+        }}
     else:
         return {"isAuthenticated": False}
 
 
 @auth_bp.route('/reset_password', methods=['POST'])
+@auth_bp.route('/auth/forgot-password/reset', methods=['POST'])
 def reset_password():
     """
     处理重置密码的请求。
@@ -214,6 +225,7 @@ def reset_password():
 
 # /auth/status
 @auth_bp.route('/auth/status', methods=['GET'])
+@auth_bp.route('/auth/check', methods=['GET'])
 def auth_status():
     """
     检查用户认证状态。
@@ -221,7 +233,15 @@ def auth_status():
     try:
         user_id = get_current_user_id()
         if user_id:
-            return jsonify({"isAuthenticated": True, "user": {"username": user_id, "avatar": "/static/img/user_icon.png"}}), 200
+            return jsonify({
+                "isAuthenticated": True,
+                "user": {
+                    "id": user_id,
+                    "username": session.get("username") or user_id,
+                    "avatar": "/img/user_icon.png",
+                    "is_admin": is_admin(),
+                },
+            }), 200
         else:
             return jsonify({"isAuthenticated": False}), 200
     except Exception as e:
@@ -236,12 +256,11 @@ def health_check():
     系统健康检查端点，检查邮件配置和数据库连接。
     """
     import os
-    import smtplib
-    import socket
+    from datetime import datetime, timezone
 
     result = {
         "status": "ok",
-        "timestamp": "2026-08-12",
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "checks": {}
     }
 
@@ -252,25 +271,8 @@ def health_check():
         "EMAIL_PASSWORD": os.getenv("EMAIL_PASSWORD", ""),
         "EMAIL_RECEIVERS": os.getenv("EMAIL_RECEIVERS", ""),
     }
-    result["checks"]["email_env"] = {
-        k: ("SET" if v else "MISSING") for k, v in email_vars.items()
-    }
-
-    # 检查 EMAIL_TYPE 是否正确
-    expected_type = "NETEASE_EMAIL_SMTP_SSL"
-    result["checks"]["email_type_valid"] = email_vars["EMAIL_TYPE"] == expected_type
-
-    # 检查 SMTP 连接
-    smtp_host = "smtp.163.com"
-    smtp_port = 465
-    try:
-        socket.setdefaulttimeout(5)
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect((smtp_host, smtp_port))
-        s.close()
-        result["checks"]["smtp_connect"] = "ok"
-    except Exception as e:
-        result["checks"]["smtp_connect"] = f"failed: {str(e)}"
+    # 邮件是可选能力，只报告是否配置；健康检查不主动访问外部 SMTP。
+    result["checks"]["email_configured"] = all(email_vars.values())
 
     # 检查数据库连接
     try:
@@ -278,15 +280,14 @@ def health_check():
         conn = get_db_connection()
         conn.close()
         result["checks"]["database"] = "ok"
-    except Exception as e:
-        result["checks"]["database"] = f"failed: {str(e)}"
+    except Exception:
+        current_app.logger.exception("健康检查数据库连接失败")
+        result["checks"]["database"] = "failed"
 
     # 如果任何检查失败
-    failed = [k for k, v in result["checks"].items() if v not in ("ok", True)]
+    failed = ["database"] if result["checks"].get("database") != "ok" else []
     if failed:
         result["status"] = "degraded"
         result["failed_checks"] = failed
 
     return jsonify(result), 200
-
-

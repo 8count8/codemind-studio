@@ -13,7 +13,7 @@
 """
 
 from functools import wraps
-from flask import session, jsonify, g
+from flask import session, jsonify, g, current_app
 
 from app.utils.constants import HTTPStatus
 
@@ -73,11 +73,42 @@ def require_auth(f):
     return decorated
 
 
+def is_admin():
+    """Return whether the current session belongs to a configured administrator."""
+    username = str(session.get('username') or '').strip().casefold()
+    configured = current_app.config.get('ADMIN_USERNAMES', 'admin')
+    if isinstance(configured, str):
+        allowed = {item.strip().casefold() for item in configured.split(',') if item.strip()}
+    else:
+        allowed = {str(item).strip().casefold() for item in configured if str(item).strip()}
+    return bool(username and username in allowed)
+
+
+def require_admin(f):
+    """Require an authenticated session whose username is in ADMIN_USERNAMES."""
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if not session.get('user_id'):
+            return jsonify({"status": HTTPStatus.UNAUTHORIZED, "message": "请先登录"}), HTTPStatus.UNAUTHORIZED
+        if not is_admin():
+            return jsonify({"status": HTTPStatus.FORBIDDEN, "message": "需要管理员权限"}), HTTPStatus.FORBIDDEN
+        return f(*args, **kwargs)
+    return decorated
+
+
 def clear_session():
     """清除当前 session（退出登录时使用）"""
     session.pop('user_id', None)
+    session.pop('username', None)
 
 
-def set_user_session(user_id):
-    """设置用户 session（登录时使用）"""
+def set_user_session(user_id, username=None):
+    """设置用户 session；user_id 使用数据库整数主键，username 用于展示。"""
     session['user_id'] = user_id
+    if username is not None:
+        session['username'] = username
+
+
+def get_current_username():
+    """获取当前登录用户名；兼容旧会话中 user_id 直接存用户名的情况。"""
+    return session.get('username') or session.get('user_id')

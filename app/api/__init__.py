@@ -21,6 +21,8 @@ user_api_bp = Blueprint('user_api', __name__)
 ai_question_bp = Blueprint('ai_question', __name__)
 profile_bp = Blueprint('profile', __name__)
 ability_matrix_bp = Blueprint('ability_matrix', __name__)  # 能力矩阵
+ollama_bp = Blueprint('ollama', __name__)  # Ollama 运行状态 + 拉模型
+admin_bp = Blueprint('admin', __name__)    # 管理员后台：用户/题目/操作记录
 
 # 导入路由和视图函数
 from . import (
@@ -33,5 +35,7 @@ from . import (
     user_api,
     ai_question_routes,
     profile_routes,
-    ability_matrix_routes
+    ability_matrix_routes,
+    ollama_routes,
+    admin_routes,
 )

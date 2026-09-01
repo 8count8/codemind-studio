@@ -16,7 +16,7 @@
       <label for="email">邮箱：</label>
       <input type="email" id="email" v-model="email" required autocomplete="email">
       <label for="new-password">新密码：</label>
-      <input type="password" id="new-password" v-model="newPassword" required autocomplete="new-password">
+      <input type="password" id="new-password" v-model="newPassword" required minlength="8" maxlength="128" pattern="(?=.*[A-Za-z])(?=.*\d).{8,128}" title="至少 8 位，且同时包含字母和数字" autocomplete="new-password">
       <label for="verification-code">验证码：</label>
       <div class="verification-code-container">
         <input type="text" id="verification-code" v-model="verificationCode" required autocomplete="off">

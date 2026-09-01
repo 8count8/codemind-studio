@@ -176,4 +176,7 @@ body {
         grid-template-columns: 1fr;
     }
 }
-
+/* 客户端分页（数据库种子固定 250 题，筛选后仍保持每页 20 条） */
+.quiz-pagination { display:flex; justify-content:center; align-items:center; gap:14px; margin:22px 0; }
+.quiz-pagination button { border:0; border-radius:7px; padding:8px 14px; background:var(--primary-color,#2563eb); color:#fff; cursor:pointer; }
+.quiz-pagination button:disabled { opacity:.4; cursor:not-allowed; }

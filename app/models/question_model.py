@@ -8,11 +8,18 @@ from .question_db import (
     get_question_by_id as original_get_question_by_id,
     search_questions_by_title as original_search_questions_by_title,
     update_question as original_update_question,
+    insert_question as original_insert_question,
 )
 from app.models.db import dict_to_markdown, VALID_DIFFICULTIES
 
 
 class QuestionModel:
+    @staticmethod
+    def add_question(title, difficulty, tags, content=None, favorite=False):
+        """Insert a question; ``favorite`` is retained for API compatibility."""
+        del favorite
+        return original_insert_question(title, content or "", difficulty, tags)
+
     @staticmethod
     def get_all_questions():
         """

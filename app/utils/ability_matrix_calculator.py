@@ -19,6 +19,21 @@ ABILITY_DIMENSIONS = [
     'debug_score', 'security_score'
 ]
 
+# 维度权重系数（算法/安全等难提升维度权重更高，确保贡献不被语法淹没）
+# 对应文档：能力矩阵.md §3.1 EMA 增量更新算法
+DIMENSION_WEIGHTS = {
+    'syntax_score': 1.0,
+    'algorithm_score': 1.2,
+    'project_score': 1.1,
+    'debug_score': 1.0,
+    'security_score': 1.15,
+}
+
+# EMA 单次更新上限（防作弊，避免单次异常提交导致矩阵失真）
+EMA_DELTA_CAP = 15.0
+# EMA 学习率上限（首次提交权重高，后续衰减）
+EMA_ALPHA_MAX = 0.3
+
 DIMENSION_LABELS = {
     'syntax_score': '语法基础',
     'algorithm_score': '算法思维',

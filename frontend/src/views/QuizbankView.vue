@@ -44,12 +44,12 @@
     <main class="main-content">
       <div class="search-box">
         <input type="text" id="search-input" v-model="searchQuery" placeholder="输入关键词搜索题目...">
-        <button id="search-btn">搜索</button>
+        <button id="search-btn" @click="currentPage = 1">搜索</button>
       </div>
 
       <div class="question-list" id="question-list">
         <div
-          v-for="q in filteredQuestions"
+          v-for="q in paginatedQuestions"
           :key="q.id"
           class="question-card"
           :data-id="q.id"
@@ -70,12 +70,17 @@
           </div>
         </div>
       </div>
+      <div class="quiz-pagination" v-if="totalPages > 1">
+        <button :disabled="currentPage <= 1" @click="currentPage--">上一页</button>
+        <span>第 {{ currentPage }} / {{ totalPages }} 页 · 共 {{ filteredQuestions.length }} 题</span>
+        <button :disabled="currentPage >= totalPages" @click="currentPage++">下一页</button>
+      </div>
     </main>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import ThemeToggle from '../components/ThemeToggle.vue'
 import http from '../utils/http'
@@ -87,6 +92,8 @@ const selectedDifficulties = ref(new Set())
 const selectedTags = ref(new Set())
 const searchQuery = ref('')
 const difficulties = ['简单', '中等', '困难']
+const currentPage = ref(1)
+const perPage = 20
 
 const allTags = computed(() => {
   const tagSet = new Set()
@@ -106,6 +113,8 @@ const filteredQuestions = computed(() => {
     return matchesDiff && matchesTag && matchesSearch
   })
 })
+const totalPages = computed(() => Math.max(1, Math.ceil(filteredQuestions.value.length / perPage)))
+const paginatedQuestions = computed(() => filteredQuestions.value.slice((currentPage.value - 1) * perPage, currentPage.value * perPage))
 
 function parseTags(tagsStr) {
   try {
@@ -123,13 +132,17 @@ function toggleDifficulty(d) {
   const s = new Set(selectedDifficulties.value)
   s.has(d) ? s.delete(d) : s.add(d)
   selectedDifficulties.value = s
+  currentPage.value = 1
 }
 
 function toggleTag(tag) {
   const s = new Set(selectedTags.value)
   s.has(tag) ? s.delete(tag) : s.add(tag)
   selectedTags.value = s
+  currentPage.value = 1
 }
+
+watch(searchQuery, () => { currentPage.value = 1 })
 
 function goAnswer(questionId) {
   router.push(`/answerpad?questionId=${questionId}`)
@@ -152,6 +165,13 @@ onMounted(async () => {
     const res = await http.get('/api/questions')
     if (res.data.status === 200) {
       questions.value = res.data.data || []
+      try {
+        const favRes = await http.get('/api/user/favorites')
+        const favoriteIds = new Set((favRes.data.data || []).map(f => String(f.id)))
+        questions.value.forEach(q => { q.favorite = favoriteIds.has(String(q.id)) })
+      } catch {
+        // 游客允许浏览题目列表；未登录时收藏状态保持为空。
+      }
     }
   } catch (e) {
     console.error('获取题目失败:', e)

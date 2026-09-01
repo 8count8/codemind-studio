@@ -1,4 +1,4 @@
-﻿"""
+"""
 调用AI接口生成算法题目，并调用models中的相关函数将其存储到数据库中。
 使用异步处理让题目无论存储到数据库中与否，都能够正常显示在前端。
 """
@@ -150,7 +150,7 @@ def generate_algorithm_problem(algorithm_type: str, difficulty_level: str):
     # 创建模型实例
     model = AlgorithmProblemGenerator()
 
-    # 调用火山API生成算法题目，使用重试机制
+    # 调用本地 Ollama 大模型生成算法题目，使用重试机制
     max_retries = 3
     retry_count = 0
     

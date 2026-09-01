@@ -13,7 +13,7 @@ CodeMind Studio 是一个面向编程初学者与从业者的智能学习平台�
 - **Flask-WTF** — CSRF 保护
 - **Flask-CORS** — 前后端分离跨域支持
 - **Flasgger** — Swagger API 文档自动生成
-- **PyMySQL** — MySQL 驱动
+- **mysql-connector-python** ≥ 8.0.33 — Oracle 官方 MySQL 驱动（C 扩展 + 纯 Python 双模式）
 - **Gunicorn** — WSGI HTTP 服务器
 - **bcrypt** — 密码哈希加密
 - **python-dotenv** — 环境变量管理
@@ -94,7 +94,10 @@ CMS-master/
 │   ├── vite.config.js                # Vite 配置（含开发代理 → :5000）
 │   └── package.json
 ├── database/
-│   └── init_db.sql                   # 完整建表 + 15 道种子题 + 42 组测试用例 + 预置账户
+│   ├── init_db.sql                   # 11 张表 + 预置账户 + 索引
+│   ├── 250_questions.json            # 250 道题的单一数据源
+│   ├── 250_questions_seed.sql        # 250 题 + 637 组用例（Docker 自动执行）
+│   └── generate_questions_seed.py    # JSON 校验与 SQL 再生成工具
 ├── deploy/                           # 部署配置
 │   ├── install.sh                    # 一键部署脚本
 │   ├── codemind.service              # Gunicorn systemd 服务
@@ -118,8 +121,8 @@ CMS-master/
 |---|---|
 | `users` | 用户账户（username + bcrypt password + email + created_at + last_login） |
 | `verification_codes` | 邮箱验证码（10 分钟过期，ON DUPLICATE KEY UPDATE 覆盖重发） |
-| `problems` | 题库（15 道种子题：简单 5 + 中等 7 + 困难 3） |
-| `test_cases` | 测试用例（42 组 input + expected_output） |
+| `problems` | 题库（250 道：简单 90 + 中等 113 + 困难 47） |
+| `test_cases` | 测试用例（637 组 input + expected_output + description） |
 | `answer_records` | 答题记录 |
 | `favorites` | 收藏夹 |
 | `functions_used` | 功能使用日志（历史记录来源之一） |
@@ -130,12 +133,18 @@ CMS-master/
 
 ### 初始化
 
-在 MySQL 客户端中粘贴执行 [database/init_db.sql](database/init_db.sql)：
+Docker Compose 首次启动会按顺序执行 [database/init_db.sql](database/init_db.sql) 和 [database/250_questions_seed.sql](database/250_questions_seed.sql)：
 - 11 张表建表（`IF NOT EXISTS`，可重复执行）
-- 15 道编程题目 + 42 组测试用例
+- 250 道编程题目 + 637 组测试用例
 - 2 个预置账户（admin / testuser，bcrypt 已验证）
 - 10 个性能索引
-- `ON DUPLICATE KEY UPDATE` 兼容重复执行
+
+已有 MySQL 数据卷不会重新触发容器初始化。如需按 JSON 强制同步题库（会替换 `problems` 与 `test_cases`），执行：
+
+```bash
+python database/generate_questions_seed.py
+mysql -u root -p codemind < database/250_questions_seed.sql
+```
 
 ### 安全设计
 
@@ -201,7 +210,7 @@ npm run build      # 输出到 frontend/dist
 | `DB_PASSWORD` | 数据库密码 | `your-password` |
 | `DB_NAME` | 数据库名 | `codemind` |
 | `SECRET_KEY` | 会话加密密钥（生产必填） | 随机字符串 |
-| `CORS_ORIGINS` | 允许的前端来源（逗号分隔） | `http://localhost:5173,https://your-domain.com` |
+| `CORS_ORIGINS` | 允许的前端来源（逗号分隔） | `http://localhost:5173,http://106.55.16.213` |
 | `EMAIL_TYPE` | 邮件服务类型 | `NETEASE_EMAIL_SMTP_SSL` |
 | `EMAIL_ADDRESS` | 邮箱账号 | `you@163.com` |
 | `EMAIL_PASSWORD` | 邮箱 SMTP 授权码 | — |
@@ -225,7 +234,7 @@ Nginx（80 端口）
 
 ```bash
 # SSH 连接服务器
-ssh root@your-server-ip
+ssh root@106.55.16.213
 
 # 克隆代码
 git clone https://github.com/your-username/codemind-studio.git /opt/codemind
@@ -247,7 +256,7 @@ bash install.sh
 
 1. **购买云服务器**：腾讯云/阿里云轻量应用服务器（2核2G足够），系统选择 Ubuntu 22.04 LTS
 2. **开放端口**：在云控制台安全组中开放 80 端口
-3. **SSH 连接**：`ssh root@your-server-ip`
+3. **SSH 连接**：`ssh root@106.55.16.213`
 4. **安装依赖**：
    ```bash
    apt update && apt install -y python3 python3-pip python3-venv nginx mysql-server git
@@ -272,7 +281,7 @@ bash install.sh
     systemctl start codemind && systemctl enable codemind
     systemctl restart nginx
     ```
-11. **验证**：访问 `http://your-server-ip/health`
+11. **验证**：访问 `http://106.55.16.213/health`
 
 ### 常用管理命令
 

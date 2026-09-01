@@ -42,15 +42,29 @@ def create_app(config=None):
     app = Flask(__name__)
 
     # 加载配置
-    if config is not None:
-        app.config.from_object(config)
+    if config is None:
+        import config as project_config
+        config = (
+            project_config.DevelopmentConfig
+            if os.environ.get('FLASK_ENV') == 'development'
+            else project_config.ProductionConfig
+        )
+    app.config.from_object(config)
 
     # ---- 跨域 Session Cookie 配置 ----
     # 生产环境使用 HTTPS，需设置 Secure + SameSite=None
     is_production = os.environ.get('FLASK_ENV') == 'production'
+    secure_cookie_env = os.environ.get('SESSION_COOKIE_SECURE')
+    secure_cookie = (
+        secure_cookie_env.strip().lower() in ('1', 'true', 'yes', 'on')
+        if secure_cookie_env is not None
+        else False
+    )
     app.config.update(
-        SESSION_COOKIE_SECURE=is_production,
-        SESSION_COOKIE_SAMESITE='None',
+        # Docker 快速开始默认通过 http://localhost:8080 访问；HTTPS 反代
+        # 部署时用 SESSION_COOKIE_SECURE=true 显式开启 Secure Cookie。
+        SESSION_COOKIE_SECURE=secure_cookie,
+        SESSION_COOKIE_SAMESITE='None' if secure_cookie else 'Lax',
         SESSION_COOKIE_HTTPONLY=True,
         SESSION_COOKIE_NAME='codemind_session',
         PERMANENT_SESSION_LIFETIME=86400
@@ -59,10 +73,9 @@ def create_app(config=None):
     # 设置日志
     init_logging(app)
 
-    # 初始化扩展
-    # 生产环境完全禁用 CSRF（前后端分离 API 服务）
-    is_production_env = os.environ.get('FLASK_ENV') == 'production'
-    
+    # 初始化扩展。Session Cookie 认证仍然需要 CSRF 防护；测试配置可显式关闭。
+    csrf_enabled = app.config.get('WTF_CSRF_ENABLED', True)
+
     class NoOpCSRF:
         """空的 CSRF 实现，完全跳过检查"""
         def exempt(self, f):
@@ -70,8 +83,7 @@ def create_app(config=None):
         def protect(self):
             pass
     
-    if not is_production_env:
-        # 仅在开发环境启用 CSRF
+    if csrf_enabled:
         from flask_wtf.csrf import CSRFProtect
         csrf = CSRFProtect(app)
     else:
@@ -85,6 +97,18 @@ def create_app(config=None):
     origins = [o.strip() for o in cors_origins.split(',') if o.strip()]
     CORS(app, supports_credentials=True, origins=origins)
 
+    # Swagger/OpenAPI 在线文档（文档要求访问 /apidocs/）。
+    if os.environ.get('ENABLE_SWAGGER', 'true').strip().lower() in ('1', 'true', 'yes', 'on'):
+        try:
+            from flasgger import Swagger
+            Swagger(
+                app,
+                config=getattr(config, 'swagger_config', None),
+                template=getattr(config, 'SWAGGER_TEMPLATE', None),
+            )
+        except ImportError:
+            app.logger.warning('flasgger 未安装，/apidocs/ 不可用')
+
     # 导入蓝图
     from app.api import (
         auth_bp,
@@ -96,7 +120,9 @@ def create_app(config=None):
         user_api_bp,
         ai_question_bp,
         profile_bp,
-        ability_matrix_bp
+        ability_matrix_bp,
+        ollama_bp,
+        admin_bp,
     )
     # 注册蓝图
     app.register_blueprint(auth_bp)
@@ -109,6 +135,8 @@ def create_app(config=None):
     app.register_blueprint(ai_question_bp)
     app.register_blueprint(profile_bp)
     app.register_blueprint(ability_matrix_bp)
+    app.register_blueprint(ollama_bp)
+    app.register_blueprint(admin_bp)
 
     # ---- 请求拦截器 ----
     @app.before_request
@@ -118,6 +146,9 @@ def create_app(config=None):
         """
         # 公开路由列表（不需要登录）
         public_routes = [
+            '/',
+            '/home',
+            '/api/csrf-token',
             '/get_verification_code',
             '/get_forgot_password_code',
             '/register',
@@ -127,6 +158,9 @@ def create_app(config=None):
             '/reset',
             '/reset_password',
         ]
+        if request.path == '/api/questions' and request.method == 'GET':
+            # 游客可以浏览题目列表，但题目详情和答题功能需要登录。
+            return None
         if request.path in public_routes and request.method in ('POST', 'PUT', 'PATCH', 'DELETE', 'GET'):
             # 公开 API 直接放行
             return None
@@ -142,9 +176,8 @@ def create_app(config=None):
             return jsonify(status='error', message='未登录或登录已过期', code=401), 401
         return redirect(url_for('auth.login'))
 
-    # 错误处理器（生产环境不再处理 CSRF 错误）
-    # 生产环境已完全禁用 CSRF
-    if not is_production_env:
+    # CSRF 错误统一返回前端可读 JSON。
+    if csrf_enabled:
         @app.errorhandler(400)
         @app.errorhandler(403)
         def handle_csrf_error(e):

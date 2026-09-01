@@ -16,9 +16,9 @@
       <label for="new-username">用户名：</label>
       <input type="text" id="new-username" v-model="username" required autocomplete="username">
       <label for="new-password">密码：</label>
-      <input type="password" id="new-password" v-model="password" required autocomplete="new-password">
+      <input type="password" id="new-password" v-model="password" required minlength="8" maxlength="128" pattern="(?=.*[A-Za-z])(?=.*\d).{8,128}" title="至少 8 位，且同时包含字母和数字" autocomplete="new-password">
       <label for="confirm-password">确认密码：</label>
-      <input type="password" id="confirm-password" v-model="confirmPassword" required autocomplete="new-password">
+      <input type="password" id="confirm-password" v-model="confirmPassword" required minlength="8" maxlength="128" autocomplete="new-password">
       <label for="new-email">邮箱：</label>
       <input type="email" id="new-email" v-model="email" required autocomplete="new-email">
       <label for="verification-code">验证码：</label>

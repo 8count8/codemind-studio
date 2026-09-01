@@ -1,4 +1,4 @@
-﻿"""
+"""
 能力矩阵业务逻辑层
 
 该模块封装了能力矩阵相关的业务逻辑，包括：
@@ -106,6 +106,17 @@ class AbilityMatrixService:
             if matrix_status != 200:
                 return matrix_result, matrix_status
 
+            # 成就解锁检测（对应文档 §十一）
+            # 矩阵更新后自动检测是否解锁新成就
+            try:
+                from app.models.achievement_model import check_and_unlock_achievements
+                unlock_result, _ = check_and_unlock_achievements(user_id)
+                if unlock_result.get('newly_unlocked_count', 0) > 0:
+                    matrix_result['newly_unlocked'] = unlock_result.get('newly_unlocked', [])
+                    matrix_result['achievement_message'] = unlock_result.get('message', '')
+            except Exception as ach_err:
+                logging.warning(f"成就检测失败（不影响主流程）: {ach_err}")
+
             # 返回更新后的矩阵
             return matrix_result, 200
 
@@ -157,13 +168,20 @@ class AbilityMatrixService:
     @staticmethod
     def evaluate_code_with_ai(code, question_id=None):
         """
-        使用AI对代码进行能力评分（模拟实现）。
-        实际项目中应替换为真实的AI API调用。
+        使用AI对代码进行能力评分。
+
+        本函数是启发式评分的兜底实现。当存在真实 AI 审查结果
+        （CodeInsightExaminerService 返回的 dimension_scores）时，
+        应优先使用 AI 多维评分，而非本函数的启发式评分。
+
+        启发式评分基于代码文本特征，作为 AI 不可用时的降级方案。
+        对应文档：能力矩阵.md §八 初始化与边界情况
+
         :param code: 代码内容
         :param question_id: 题目ID
         :return: (评分字典, 评分详情字典)
         """
-        # 基于代码特征的简单启发式评分（模拟）
+        # 基于代码特征的启发式评分（AI 降级方案）
         code_lines = code.strip().split('\n')
         line_count = len(code_lines)
 
@@ -192,7 +210,7 @@ class AbilityMatrixService:
         security_hits = sum(1 for kw in security_keywords if kw.lower() in code.lower())
         security_score = min(30 + security_hits * 15, 100)
 
-        # 添加随机波动（模拟AI的不确定性）
+        # 启发式评分加小范围波动（模拟 AI 不确定性）
         import random
         scores = {
             'syntax_score': max(0, min(100, syntax_score + random.randint(-5, 5))),
@@ -213,7 +231,7 @@ class AbilityMatrixService:
             'exception_handling': try_count > 0,
             'security_practices': security_hits,
             'evaluated_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            'note': '此为模拟评分，生产环境请接入真实AI模型'
+            'note': '启发式降级评分，AI 可用时优先使用 AI 多维评分（dimension_scores）'
         }
 
         return scores, detail
@@ -290,17 +308,147 @@ class AbilityMatrixService:
 
             weak_dims = weak_result.get('weak_dimensions', [])
 
+            # 有评估数据时始终给出至少两个优先提升维度。
+            if len(weak_dims) < 2:
+                matrix_result, matrix_status = ability_matrix_model.get_ability_matrix(user_id)
+                matrix = matrix_result.get('matrix', {}) if matrix_status == 200 else {}
+                ranked = sorted(
+                    (
+                        {
+                            'dimension': dim,
+                            'label': AbilityMatrixService.DIMENSION_LABELS[dim],
+                            'score': float(matrix.get(dim) or 0),
+                            'suggestion': ability_matrix_model.get_dimension_suggestion(dim),
+                        }
+                        for dim in AbilityMatrixService.DIMENSIONS
+                        if float(matrix.get(dim) or 0) > 0
+                    ),
+                    key=lambda item: item['score'],
+                )
+                existing = {item.get('dimension') for item in weak_dims}
+                weak_dims.extend(item for item in ranked if item['dimension'] not in existing)
+
             recommendations = []
-            for dim in weak_dims[:3]:  # 最多推荐3个薄弱项
+            for dim in weak_dims[:2]:
+                # 使用真实题库查询替代硬编码列表（对应文档 §10.2）
+                # 按维度标签 + 难度自适应 + 去重已做题
+                recommended_tasks = ability_matrix_model.fetch_recommended_problems(
+                    user_id=user_id,
+                    dimension=dim['dimension'],
+                    score=dim['score'],
+                    limit=5
+                )
                 recommendations.append({
                     'dimension': dim['dimension'],
                     'label': dim['label'],
                     'current_score': dim['score'],
                     'suggestion': dim['suggestion'],
-                    'recommended_tasks': get_recommended_tasks(dim['dimension'])
+                    'recommended_tasks': recommended_tasks
                 })
 
-            return {"recommendations": recommendations, "count": len(recommendations)}, 200
+            # 4 周学习路径 - 里程碑检测动态化（对应文档 §10.4.4）
+            # 每周基于「假设上周推荐维度已提升」重新评估薄弱维度
+            # 动态调整下周推荐，而非固定轮流分配
+            learning_path = []
+
+            # 复制当前矩阵分数用于模拟后续每周提升
+            matrix_result, matrix_status = ability_matrix_model.get_ability_matrix(user_id)
+            current_matrix = dict(matrix_result.get('matrix', {}) if matrix_status == 200 else {})
+
+            # 记录每周已聚焦过的维度，避免连续重复
+            focused_dims_history = []
+
+            for week in range(1, 5):
+                # 里程碑检测：模拟上周推荐维度提升 +8 分（预期完成上周任务）
+                if week > 1 and focused_dims_history:
+                    for prev_dim in focused_dims_history[-1:]:
+                        prev_score = float(current_matrix.get(prev_dim, 0) or 0)
+                        current_matrix[prev_dim] = min(prev_score + 8, 100.0)
+
+                # 重新评估当前最薄弱维度（排除本周已聚焦的，避免连续重复）
+                week_weak = []
+                avg_score = (
+                    sum(float(current_matrix.get(d, 0) or 0) for d in AbilityMatrixService.DIMENSIONS)
+                    / len(AbilityMatrixService.DIMENSIONS)
+                ) if AbilityMatrixService.DIMENSIONS else 0
+
+                for dim in AbilityMatrixService.DIMENSIONS:
+                    score = float(current_matrix.get(dim, 0) or 0)
+                    if score < avg_score and score < 60 and dim not in focused_dims_history[-1:]:
+                        week_weak.append({
+                            'dimension': dim,
+                            'label': AbilityMatrixService.DIMENSION_LABELS[dim],
+                            'score': score,
+                            'suggestion': ability_matrix_model.get_dimension_suggestion(dim),
+                        })
+
+                # 若所有维度均达标，回退到最低分维度
+                if not week_weak:
+                    sorted_dims = sorted(
+                        AbilityMatrixService.DIMENSIONS,
+                        key=lambda d: float(current_matrix.get(d, 0) or 0)
+                    )
+                    lowest_dim = sorted_dims[0] if sorted_dims else None
+                    if lowest_dim and lowest_dim not in focused_dims_history[-1:]:
+                        week_weak = [{
+                            'dimension': lowest_dim,
+                            'label': AbilityMatrixService.DIMENSION_LABELS[lowest_dim],
+                            'score': float(current_matrix.get(lowest_dim, 0) or 0),
+                            'suggestion': ability_matrix_model.get_dimension_suggestion(lowest_dim),
+                        }]
+
+                # 若仍为空（仅剩1个维度），允许重复聚焦
+                if not week_weak:
+                    sorted_dims = sorted(
+                        AbilityMatrixService.DIMENSIONS,
+                        key=lambda d: float(current_matrix.get(d, 0) or 0)
+                    )
+                    if sorted_dims:
+                        lowest = sorted_dims[0]
+                        week_weak = [{
+                            'dimension': lowest,
+                            'label': AbilityMatrixService.DIMENSION_LABELS[lowest],
+                            'score': float(current_matrix.get(lowest, 0) or 0),
+                            'suggestion': ability_matrix_model.get_dimension_suggestion(lowest),
+                        }]
+
+                if week_weak:
+                    focus_dim = week_weak[0]
+                    focused_dims_history.append(focus_dim['dimension'])
+                    # 按本周维度查询真实题库
+                    week_tasks = ability_matrix_model.fetch_recommended_problems(
+                        user_id=user_id,
+                        dimension=focus_dim['dimension'],
+                        score=focus_dim['score'],
+                        limit=2
+                    )
+                    # 里程碑描述：本周完成后预期提升
+                    milestone = f"完成本周{focus_dim['label']}训练后，该维度预期提升至 {min(focus_dim['score'] + 8, 100):.1f} 分"
+                    learning_path.append({
+                        'week': week,
+                        'focus': focus_dim['label'],
+                        'dimension': focus_dim['dimension'],
+                        'current_score': focus_dim['score'],
+                        'goal': focus_dim['suggestion'],
+                        'tasks': week_tasks[:2],
+                        'milestone': milestone,
+                        'milestone_check': f"第{week}周结束后重新评估能力矩阵，动态调整第{week+1}周计划" if week < 4 else "已完成 4 周学习路径，建议重新评估整体能力画像",
+                    })
+                else:
+                    learning_path.append({
+                        'week': week,
+                        'focus': '综合巩固',
+                        'goal': '所有维度已达标，本周进行综合练习',
+                        'tasks': [],
+                        'milestone': '维持当前能力水平',
+                        'milestone_check': '无需调整',
+                    })
+
+            return {
+                "recommendations": recommendations,
+                "count": len(recommendations),
+                "learning_path": learning_path,
+            }, 200
 
         except Exception as e:
             logging.error(f"生成学习推荐失败: {e}")

@@ -2,7 +2,7 @@
 CodeInsightExaminer 代码审查服务模块Service
 
 该模块提供基于AI模型的代码审查服务，主要包含以下功能：
-1. 调用火山引擎API进行代码分析
+1. 调用本地 Ollama 大模型进行代码分析（零 Token、离线）
 2. 解析和修复API返回的JSON数据
 3. 格式化审查结果输出
 4. 处理算法题目批改
@@ -70,13 +70,13 @@ class CodeReviewService:
 
     def parse_review_result(self, review_result: Dict) -> Dict:
         """
-        解析审查结果，提取关键信息。
+        解析审查结果，提取关键信息 + 多维评分。
 
         参数:
             review_result (Dict): 审查结果字典。
 
         返回:
-            Dict: 包含解析后信息的字典。
+            Dict: 包含解析后信息的字典，含 dimension_scores 5 维评分。
         """
         if not review_result or "reviewed_code" not in review_result or "summary" not in review_result:
             raise ValueError("无效的审查结果")
@@ -88,22 +88,38 @@ class CodeReviewService:
         issues = summary.get("issues", [])
         suggestions = summary.get("suggestions", [])
 
-        # 计算得分
-        initial_score = 100
-        score = initial_score
-        score += len(strengths) * 5  # 每个优点加 5 分
-        score -= len(issues) * 10    # 每个问题减 10 分
-        score -= len(suggestions) * 3  # 每个建议减 3 分
+        # 优先使用 AI 返回的 dimension_scores（5 维精准评分）
+        dimension_scores = review_result.get("dimension_scores", {})
 
-        # 限制得分范围
-        score = max(0, min(score, 100))
+        # 降级：若 AI 未返回 dimension_scores，基于 strengths/issues/suggestions 折算总分
+        if not dimension_scores:
+            initial_score = 100
+            fallback_score = initial_score
+            fallback_score += len(strengths) * 5
+            fallback_score -= len(issues) * 10
+            fallback_score -= len(suggestions) * 3
+            fallback_score = max(0, min(fallback_score, 100))
+            dimension_scores = {dim: fallback_score for dim in [
+                "syntax_score", "algorithm_score", "project_score",
+                "debug_score", "security_score"
+            ]}
+
+        # 确保每个维度都在 0-100 之间
+        for dim in ("syntax_score", "algorithm_score", "project_score",
+                    "debug_score", "security_score"):
+            val = float(dimension_scores.get(dim, 0) or 0)
+            dimension_scores[dim] = max(0.0, min(100.0, val))
+
+        # 综合分（5 维平均，用于前端展示与兼容旧字段）
+        overall_score = round(sum(dimension_scores.values()) / 5, 2)
 
         parsed_result = {
             "reviewed_code": reviewed_code,
             "strengths": strengths,
             "issues": issues,
             "suggestions": suggestions,
-            "score": score  # 新增得分字段
+            "dimension_scores": dimension_scores,
+            "score": int(overall_score)  # 兼容旧字段
         }
 
         return parsed_result
@@ -213,29 +229,29 @@ class CodeReviewService:
         
         return run_result
     
-    def _run_code(self, code: str, language: str,  question_id, task_id) -> Dict:
+    def _run_code(self, code: str, language: str, question_id, task_id) -> Dict:
         """
-        运行代码并返回结果（模拟）
-        
-        在实际实现中，应该通过沙箱环境运行代码并测试用例
+        通过沙箱（Docker 优先，无 Docker 用本机解释器/编译器）真实运行用户代码，
+        跑完整组测试用例，并在 AI 批改前就把 passed / failed 统计好。
         """
-        # TODO: 实现真实的代码运行和测试用例验证
-
-        review = review_algorithm_code(code=code, language=language, question_id=question_id, task_id=task_id)
+        # 同步跑测试用例
+        review = review_algorithm_code(
+            code=code, language=language, question_id=question_id, task_id=task_id
+        )
+        # 保留原 schema 的几个旧字段兼容老调用方（比如 AI prompt 里还在读 test_passed/output 等）
+        review.setdefault("status",  "passed" if review.get("success") else review.get(
+            "failed_cases", 0) == review.get("total_cases", 0) if review.get("total_cases", 0) == 0 else "failed")
+        review.setdefault("output", None)
+        review.setdefault("test_passed", review.get("passed_cases", 0))
+        review.setdefault("test_total",  review.get("total_cases", 0))
+        review.setdefault("execution_time",
+                          round(sum(r.get("run_time", 0) for r in review.get("results", [])), 3))
+        # 如果有第一个 failed 用例或最后一个 passed 用例，取一个给旧的 'output' 字段兜底显示
+        results = review.get("results") or []
+        if results:
+            first_sample = next((r for r in results if not r.get("success")), results[0])
+            review["output"] = first_sample.get("actual_output") or first_sample.get("error")
         return review
-
-        # 运行结果返回格式
-        # {
-        #     'id': task_id,
-        #     'run_time': execution_result['run_time'],
-        #     'success': execution_result['success'],
-        #     'output': execution_result['output'],
-        #     'error': execution_result['error'],
-        #     'test_passed': passed,
-        #     'test_total': total,
-        #     'test_details': test_details,
-        #     'timestamp': datetime.now().isoformat()
-        # }
     
     def _process_ai_review(
             self, 
@@ -282,14 +298,16 @@ class CodeReviewService:
             # 调用AI模型
             try:
                 review_result = self.review_code(prompt)
-                
-                # 解析审查结果
+
+                # 解析审查结果（含 dimension_scores 5 维评分）
                 parsed_result = self.parse_review_result(review_result)
-                
+
                 # 适配前端需要的格式
+                # score 为综合分（5维平均），dimension_scores 为多维精准评分
                 result = {
                     "status": "complete",
                     "score": self._calculate_score(parsed_result),
+                    "dimension_scores": parsed_result.get("dimension_scores", {}),
                     "feedback": self._generate_feedback(parsed_result),
                     "improvements": parsed_result.get("suggestions", []),
                     "original_code": code,  # 添加原始代码
@@ -393,27 +411,30 @@ class CodeReviewService:
     
     def _calculate_score(self, parsed_result: Dict) -> int:
         """
-        根据解析结果计算分数
+        根据解析结果计算综合分数。
+
+        若 AI 返回了 dimension_scores（5 维精准评分），则综合分 = 5 维平均。
+        否则降级为基于 strengths/issues/suggestions 的启发式折算。
         """
-        # 基础分数
+        # 优先使用 AI 多维评分的平均值作为综合分
+        dimension_scores = parsed_result.get("dimension_scores")
+        if dimension_scores:
+            try:
+                vals = [float(v) for v in dimension_scores.values()]
+                if vals:
+                    return max(0, min(100, int(round(sum(vals) / len(vals)))))
+            except (TypeError, ValueError):
+                pass
+
+        # 降级：基于 strengths/issues/suggestions 折算总分
         base_score = 70
-        
-        # 根据优点增加分数
         strengths = parsed_result.get("strengths", [])
         strength_score = min(len(strengths) * 5, 15)
-        
-        # 根据问题减少分数
         issues = parsed_result.get("issues", [])
         issue_score = min(len(issues) * 8, 30)
-        
-        # 根据建议数量适当调整
         suggestions = parsed_result.get("suggestions", [])
         suggestion_adjustment = min(len(suggestions), 5)
-        
-        # 计算总分
         final_score = base_score + strength_score - issue_score + suggestion_adjustment
-        
-        # 确保分数在0-100范围内
         return max(0, min(100, final_score))
     
     def _generate_feedback(self, parsed_result: Dict) -> str:

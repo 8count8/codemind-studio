@@ -41,7 +41,7 @@ export const useUserStore = defineStore('user', () => {
       const data = res.data
       if (data.status === 200) {
         isLoggedIn.value = true
-        user.value = { username }
+        user.value = { username, is_admin: username.trim().toLowerCase() === 'admin' }
         return { success: true, redirect: data.redirect }
       } else {
         return { success: false, message: data.message }

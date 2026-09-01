@@ -25,7 +25,10 @@ export const ALGORITHM_TYPES = [
   { value: 'string', label: '字符串算法' },
   { value: 'tree', label: '树形算法' },
   { value: 'greedy', label: '贪心算法' },
-  { value: 'recursion', label: '递归算法' }
+  { value: 'recursion', label: '递归算法' },
+  { value: 'backtracking', label: '回溯算法' },
+  { value: 'hashing', label: '哈希算法' },
+  { value: 'linked_list', label: '链表算法' }
 ]
 
 // 能力矩阵维度

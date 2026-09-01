@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify, current_app
 from app.api.flasgger_compat import swag_from
 from app.service.algorithm_service import generate_and_save_algorithm_problem
+from app.models.save_problem import save_problem_to_database, save_test_cases_to_database
 from . import ai_question_bp
 
 
@@ -86,4 +87,22 @@ def generate_question():
         current_app.logger.error(f"生成题目时发生未预期错误: {str(e)}")
         return jsonify({'error': '服务器内部错误，请稍后重试'}), 500
 
+
+@ai_question_bp.route('/api/ai-question/save', methods=['POST'])
+def save_generated_question():
+    """Save a generated or manually edited AI question to the shared bank."""
+    body = request.get_json(silent=True) or {}
+    title = str(body.get('title') or '').strip()
+    content = body.get('content') or body.get('description') or ''
+    difficulty = body.get('difficulty') or body.get('difficulty_level')
+    tags = body.get('tags') or []
+    test_cases = body.get('test_cases') or body.get('samples') or []
+    if not title or difficulty not in ('简单', '中等', '困难') or not content:
+        return jsonify({'status': 400, 'message': '标题、题目内容和有效难度不能为空'}), 400
+    problem_id = save_problem_to_database(title, content, difficulty, tags)
+    if not problem_id:
+        return jsonify({'status': 500, 'message': '题目保存失败'}), 500
+    if test_cases and not save_test_cases_to_database(problem_id, test_cases):
+        return jsonify({'status': 500, 'message': '题目已保存，但测试用例保存失败'}), 500
+    return jsonify({'status': 201, 'message': '题目已保存', 'data': {'id': problem_id}}), 201
 

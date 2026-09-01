@@ -1,32 +1,61 @@
+"""
+Model 基类
+    AI 模型（代码审查/出题/批改）。使用 Ollama 本地大模型，
+    全程零 API Token、完全离线。
+
+    协议：Ollama /v1/chat/completions（OpenAI 兼容）
+    默认服务地址：http://localhost:11434/v1
+    默认模型：qwen2.5:7b（可通过 OLLAMA_MODEL 环境变量全局覆盖）
+"""
+
+import os
 from typing import Optional, Union, Dict, List
 
 
 class Model:
     """
-    Model类用于表示一个模型，包含模型的基本信息和生成文本时的参数配置。
-
     属性:
-        model_id (str): 模型的唯一标识符，默认为None。
-        model_name (str): 模型的名称，默认为None。
-        model_ark_id (str): 模型在ARK系统中的ID，默认为None。
-        model_ark_url (str): 模型在ARK系统中的URL地址，默认为None。
-        model_ark_key (str): 模型在ARK系统中的访问密钥，默认为None。
-        model_prompt (str): 生成文本时的初始提示，默认为None。
-        temperature (float): 控制生成文本的随机性，值越高生成的文本越随机，默认为1.0。
-        top_p (float): 控制生成文本时的采样策略，值越小生成的文本越集中，默认为1.0。
-        frequency_penalty (float): 控制生成文本时对重复词汇的惩罚，值越高越避免重复，默认为0.0。
-        presence_penalty (float): 控制生成文本时对新词汇的奖励，值越高越倾向于使用新词汇，默认为0.0。
-        stop (Optional[Union[str, List[str]]]): 生成文本时的停止条件，可以是字符串或字符串列表，默认为None。
-        logit_bias (Optional[Dict[str, float]]): 控制生成文本时对特定词汇的偏好，键为词汇，值为偏好的权重，默认为None。
+        model_id (str): 模型唯一标识符（业务用）
+        model_name (str): 模型中文名称（展示用）
+        model_prompt (str): 系统提示词（System Prompt）
+        ollama_model_name (str|None): 模型专属 Ollama 模型名；None 时走全局 OLLAMA_MODEL
+        temperature / top_p / frequency_penalty / presence_penalty: 生成参数
+        stop (list|str): 停止词（可选）
+        logit_bias (dict): 词汇偏置（可选）
     """
     model_id: str = None
     model_name: str = None
-    model_ark_id: str = None
-    model_ark_url: str = None
-    model_ark_key: str = None
     model_prompt: str = None
+
     temperature: float = None
     top_p: float = None
     frequency_penalty: float = None
     presence_penalty: float = None
+    stop: Optional[Union[str, List[str]]] = None
     logit_bias: Optional[Dict[str, float]] = None
+
+    # ---- Ollama 字段 ----
+    ollama_model_name: str = None
+
+    # ----- 已废弃（原火山引擎字段，留空防 AttributeError） -----
+    # 2026-08-27：用户明确要求"去掉所有需要 Token 的方式"，只保留 Ollama
+    model_ark_id: str = None
+    model_ark_url: str = None
+    model_ark_key: str = None
+
+    # ------------------------------------------------------------------
+    # 工具方法
+    # ------------------------------------------------------------------
+    @staticmethod
+    def get_ollama_base_url() -> str:
+        return os.environ.get(
+            "OLLAMA_BASE_URL", "http://localhost:11434/v1"
+        )
+
+    def get_ollama_model_name(self) -> str:
+        """优先级：模型自身 ollama_model_name → 环境变量 OLLAMA_MODEL → 默认 qwen2.5:7b"""
+        return (
+            self.ollama_model_name
+            or os.environ.get("OLLAMA_MODEL")
+            or "qwen2.5:7b"
+        )

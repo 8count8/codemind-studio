@@ -75,6 +75,18 @@ const routes = [
     name: 'History',
     component: () => import('../views/HistoryView.vue'),
     meta: { requiresAuth: true }
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: () => import('../views/SettingsView.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/admin',
+    name: 'Admin',
+    component: () => import('../views/AdminView.vue'),
+    meta: { requiresAuth: true, requiresAdmin: true }
   }
 ]
 
@@ -94,6 +106,9 @@ router.beforeEach(async (to, from, next) => {
       if (!authenticated) {
         return next({ name: 'Login' })
       }
+    }
+    if (to.meta.requiresAdmin && !userStore.user?.is_admin) {
+      return next({ name: 'Dashboard' })
     }
   }
   next()

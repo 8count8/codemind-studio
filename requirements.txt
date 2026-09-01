@@ -5,5 +5,12 @@ bcrypt
 requests
 flasgger
 flask-cors
-pymysql
+mysql-connector-python>=8.0.33
 gunicorn
+reportlab>=4.2.5
+
+# ===== 单元测试依赖（Unit Testing Dependencies） =====
+pytest>=7.4.0
+pytest-cov>=4.1.0
+pytest-mock>=3.12.0
+coverage>=7.3.0

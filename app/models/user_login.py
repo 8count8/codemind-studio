@@ -1,7 +1,6 @@
-﻿"""用户登录/注册 - MySQL"""
+"""用户登录/注册 - MySQL"""
 from datetime import datetime, timedelta
 from flask import render_template_string
-import random
 import string
 import smtplib
 import os
@@ -48,7 +47,7 @@ def check_user_exists(username=None, email=None):
 
 def register_user(username, password, email):
     """注册新用户"""
-    hashed_password = bcrypt.hashpw(password.encode('UTF-8'), bcrypt.gensalt())
+    hashed_password = bcrypt.hashpw(password.encode('UTF-8'), bcrypt.gensalt(rounds=12))
 
     if check_user_exists(username=username, email=email):
         return {"status": "error", "message": "用户名或邮箱已被注册！"}
@@ -91,7 +90,7 @@ def send_verification_code(email, code):
 
 
 def generate_code(length=6):
-    return ''.join(random.choices(string.digits, k=length))
+    return ''.join(secrets.choice(string.digits) for _ in range(length))
 
 
 def insert_verification_code(email, code):
@@ -105,7 +104,7 @@ def insert_verification_code(email, code):
         cursor.execute('''
             INSERT INTO verification_codes (email, code, expires_at)
             VALUES (%s, %s, %s)
-            ON CONFLICT(email) DO UPDATE SET code=%s, expires_at=%s
+            ON DUPLICATE KEY UPDATE code=%s, expires_at=%s
         ''', (email, code, expires_at, code, expires_at))
         conn.commit()
     except Exception as e:
@@ -224,19 +223,27 @@ def handle_login(username, password):
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT password FROM users WHERE username=%s", (username,))
+        cursor.execute(
+            "SELECT id, username, password FROM users WHERE username=%s OR email=%s LIMIT 1",
+            (username, username),
+        )
         row = cursor.fetchone()
 
         if row:
-            stored_password = row[0]
+            user_id, canonical_username, stored_password = row
             if isinstance(stored_password, str):
                 stored_password = stored_password.encode('UTF-8')
             if bcrypt.checkpw(password.encode('UTF-8'), stored_password):
                 # 更新最后登录时间
-                cursor.execute("UPDATE users SET last_login = %s WHERE username = %s",
-                               (datetime.now(), username))
+                cursor.execute("UPDATE users SET last_login = %s WHERE id = %s",
+                               (datetime.now(), user_id))
                 conn.commit()
-                return {"status": "success", "message": "登录成功！"}
+                return {
+                    "status": "success",
+                    "message": "登录成功！",
+                    "user_id": user_id,
+                    "username": canonical_username,
+                }
             else:
                 return {"status": "error", "message": "用户名或密码错误！"}
         else:
@@ -265,7 +272,7 @@ def handle_forgot_password_get_code(email):
 def handle_forgot_password_reset(email, new_password, user_input_code):
     if not verify_verification_code(email, user_input_code):
         return {"status": "error", "message": "验证码错误！"}
-    hashed_password = bcrypt.hashpw(new_password.encode('UTF-8'), bcrypt.gensalt())
+    hashed_password = bcrypt.hashpw(new_password.encode('UTF-8'), bcrypt.gensalt(rounds=12))
 
     conn = None
     try:
@@ -306,6 +313,71 @@ def get_user_profile(username):
     except Exception as e:
         print(f"查询用户信息失败: {e}")
         return None
+    finally:
+        if conn:
+            conn.close()
+
+
+def get_user_profile_by_id(user_id):
+    """按数据库主键查询个人资料与学习概览。"""
+    conn = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT id, username, email, created_at, last_login FROM users WHERE id=%s",
+            (user_id,),
+        )
+        row = cursor.fetchone()
+        if not row:
+            return None
+        cursor.execute(
+            """SELECT
+                 (SELECT COUNT(*) FROM answer_records WHERE user_id=%s),
+                 (SELECT COUNT(*) FROM user_uploads WHERE user_id=%s),
+                 (SELECT COUNT(*) FROM favorites WHERE user_id=%s),
+                 (SELECT COUNT(*) FROM ability_submissions WHERE user_id=%s)""",
+            (user_id, user_id, user_id, user_id),
+        )
+        stats = cursor.fetchone() or (0, 0, 0, 0)
+        return {
+            "id": row[0],
+            "username": row[1],
+            "email": row[2],
+            "created_at": str(row[3]) if row[3] else None,
+            "last_login": str(row[4]) if row[4] else None,
+            "stats": {
+                "answers": int(stats[0] or 0),
+                "submissions": int(stats[1] or 0),
+                "favorites": int(stats[2] or 0),
+                "evaluations": int(stats[3] or 0),
+            },
+        }
+    except Exception as e:
+        print(f"按 ID 查询用户信息失败: {e}")
+        return None
+    finally:
+        if conn:
+            conn.close()
+
+
+def update_user_profile(user_id, username, email):
+    """更新用户名与邮箱，唯一性由数据库约束保证。"""
+    conn = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            "UPDATE users SET username=%s, email=%s WHERE id=%s",
+            (username, email, user_id),
+        )
+        conn.commit()
+        return {"status": "success"}
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        message = "用户名或邮箱已被使用" if "Duplicate" in str(e) else f"更新失败: {e}"
+        return {"status": "error", "message": message}
     finally:
         if conn:
             conn.close()

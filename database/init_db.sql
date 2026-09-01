@@ -5,6 +5,8 @@
 -- 用法: 在 MySQL 客户端中整段执行
 -- ============================================================
 
+SET NAMES utf8mb4;
+
 -- ============================================================
 -- 第一部分：建表
 -- ============================================================
@@ -43,7 +45,8 @@ CREATE TABLE IF NOT EXISTS user_uploads (
     upload_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     file_name VARCHAR(255) NOT NULL,
     file_type VARCHAR(50),
-    file_path TEXT
+    file_path TEXT,
+    file_content LONGTEXT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 5. API 响应记录表
@@ -62,7 +65,20 @@ CREATE TABLE IF NOT EXISTS favorites (
     question_id VARCHAR(50) NOT NULL,
     question_title VARCHAR(255),
     question_content TEXT,
+    topic_id INT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 6.1 收藏题单
+CREATE TABLE IF NOT EXISTS favorite_topics (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    name VARCHAR(80) NOT NULL,
+    description VARCHAR(255) DEFAULT '',
+    tags VARCHAR(255) DEFAULT '',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY idx_favorite_topics_user_name (user_id, name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 7. 答题记录表
@@ -73,7 +89,23 @@ CREATE TABLE IF NOT EXISTS answer_records (
     user_answer TEXT,
     is_correct INT DEFAULT 0,
     time_spent INT,
+    language VARCHAR(30) DEFAULT 'python',
+    execution_result LONGTEXT,
+    score FLOAT DEFAULT 0,
+    run_time_ms INT DEFAULT 0,
+    task_id VARCHAR(64),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 7.1 答题草稿（服务端兜底；前端同时使用 localStorage）
+CREATE TABLE IF NOT EXISTS user_drafts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    question_id VARCHAR(50) NOT NULL,
+    language VARCHAR(30) DEFAULT 'python',
+    code LONGTEXT,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY idx_user_drafts_user_question (user_id, question_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 8. 能力矩阵表
@@ -103,7 +135,8 @@ CREATE TABLE IF NOT EXISTS test_cases (
     id INT AUTO_INCREMENT PRIMARY KEY,
     problem_id INT NOT NULL,
     input_data TEXT,
-    expected_output TEXT
+    expected_output TEXT,
+    description VARCHAR(255) DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 11. 能力评估提交记录表
@@ -116,6 +149,67 @@ CREATE TABLE IF NOT EXISTS ability_submissions (
     detail_json TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+-- ============================================================
+-- 子维度细化表（对应文档 §1.2.1 子维度细化设计）
+-- 存储每个主维度下的子维度分数，支持子雷达图展示
+-- ============================================================
+CREATE TABLE IF NOT EXISTS ability_subscores (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    dimension VARCHAR(50) NOT NULL COMMENT '主维度字段名，如 algorithm_score',
+    sub_dimension VARCHAR(50) NOT NULL COMMENT '子维度名，如 排序/查找/动态规划',
+    score DECIMAL(5,2) DEFAULT 0.00 COMMENT '子维度分数 0-100',
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY uk_user_sub (user_id, dimension, sub_dimension),
+    INDEX idx_user (user_id),
+    INDEX idx_dimension (dimension),
+    CONSTRAINT fk_subscores_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='能力矩阵子维度细分';
+
+
+-- ============================================================
+-- 成就/勋章定义表（对应文档 §十一 成就与勋章系统）
+-- ============================================================
+CREATE TABLE IF NOT EXISTS achievements (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    code VARCHAR(50) NOT NULL UNIQUE COMMENT '成就代码，如 syntax_master',
+    name VARCHAR(100) NOT NULL COMMENT '成就名称，如 语法达人',
+    description TEXT COMMENT '成就描述',
+    icon VARCHAR(50) DEFAULT 'medal' COMMENT '图标名称',
+    category VARCHAR(50) DEFAULT 'ability' COMMENT '成就类别：ability/submission/streak/special',
+    condition_type VARCHAR(50) NOT NULL COMMENT '条件类型：dimension_score/submission_count/streak_days',
+    condition_value DECIMAL(8,2) NOT NULL COMMENT '条件阈值',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='成就勋章定义';
+
+
+-- ============================================================
+-- 用户成就解锁记录表
+-- ============================================================
+CREATE TABLE IF NOT EXISTS user_achievements (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    achievement_id INT NOT NULL,
+    unlocked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uk_user_achievement (user_id, achievement_id),
+    INDEX idx_user (user_id),
+    CONSTRAINT fk_ua_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    CONSTRAINT fk_ua_achievement FOREIGN KEY (achievement_id) REFERENCES achievements(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户成就解锁记录';
+
+
+-- 成就定义种子数据（INSERT IGNORE 保证重复执行安全）
+INSERT IGNORE INTO achievements (code, name, description, icon, category, condition_type, condition_value) VALUES
+('syntax_master',    '语法达人',   '语法基础维度达到 80 分以上',           'code',        'ability',   'dimension_score', 80),
+('algorithm_expert', '算法专家',   '算法思维维度达到 80 分以上',           'cpu',         'ability',   'dimension_score', 80),
+('project_architect','架构师',     '项目实践维度达到 80 分以上',           'cube',        'ability',   'dimension_score', 80),
+('debug_master',     '调试大师',   '调试能力维度达到 80 分以上',           'bug',         'ability',   'dimension_score', 80),
+('security_guard',   '安全卫士',   '安全意识维度达到 80 分以上',           'shield-alt',  'ability',   'dimension_score', 80),
+('all_round',        '全面发展',   '所有 5 个维度均达到 60 分以上',        'star',        'ability',   'all_dimensions_60', 60),
+('first_blood',      '初出茅庐',   '完成首次代码评估提交',                 'flag',        'submission','submission_count', 1),
+('persistent',       '坚持不懈',   '累计完成 10 次代码评估提交',           'fire',        'submission','submission_count', 10);
 
 
 -- ============================================================
@@ -556,9 +650,13 @@ INSERT INTO users (username, password, email) VALUES
 -- ============================================================
 
 CREATE INDEX idx_problems_difficulty ON problems(difficulty);
-CREATE INDEX idx_problems_tags ON problems(tags);
+CREATE INDEX idx_problems_tags ON problems(tags(191));
 CREATE INDEX idx_favorites_user_id ON favorites(user_id);
+CREATE INDEX idx_favorites_topic_id ON favorites(topic_id);
+CREATE INDEX idx_favorite_topics_user_id ON favorite_topics(user_id);
+CREATE UNIQUE INDEX idx_favorites_user_question ON favorites(user_id, question_id);
 CREATE INDEX idx_answer_records_user_id ON answer_records(user_id);
+CREATE INDEX idx_user_drafts_user_id ON user_drafts(user_id);
 CREATE INDEX idx_functions_used_user_id ON functions_used(user_id);
 CREATE INDEX idx_user_uploads_user_id ON user_uploads(user_id);
 CREATE INDEX idx_api_responses_upload_id ON api_responses(user_upload_id);
@@ -577,7 +675,9 @@ UNION ALL SELECT 'test_cases', COUNT(*) FROM test_cases
 UNION ALL SELECT 'ability_matrix', COUNT(*) FROM ability_matrix
 UNION ALL SELECT 'ability_submissions', COUNT(*) FROM ability_submissions
 UNION ALL SELECT 'favorites', COUNT(*) FROM favorites
+UNION ALL SELECT 'favorite_topics', COUNT(*) FROM favorite_topics
 UNION ALL SELECT 'answer_records', COUNT(*) FROM answer_records
+UNION ALL SELECT 'user_drafts', COUNT(*) FROM user_drafts
 UNION ALL SELECT 'functions_used', COUNT(*) FROM functions_used
 UNION ALL SELECT 'user_uploads', COUNT(*) FROM user_uploads
 UNION ALL SELECT 'api_responses', COUNT(*) FROM api_responses

@@ -1,0 +1,11 @@
+# ===== 桌面离线版追加依赖（requirements.txt 是基础） =====
+# 用法： pip install -r requirements.txt -r requirements-desktop.txt
+
+# Python 后端打包为 Windows exe
+pyinstaller>=6.6,<7
+
+# Flask 生产级 WSGI 服务器（替换 Flask dev server，稳定无警告）
+waitress>=3.0
+
+# 打包时可选：exe 体积再压缩 10~20%（需要系统 PATH 里有 upx.exe）
+# upx-win64>=4.2.2 ; sys_platform == "win32"

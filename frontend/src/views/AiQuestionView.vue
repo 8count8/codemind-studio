@@ -37,6 +37,9 @@
             <option value="回溯算法">回溯算法</option>
             <option value="分治算法">分治算法</option>
             <option value="数据结构">数据结构</option>
+            <option value="哈希算法">哈希算法</option>
+            <option value="链表算法">链表算法</option>
+            <option value="字符串算法">字符串算法</option>
           </select>
         </div>
         <button id="generate-btn" class="btn-primary" @click="generateQuestion" :disabled="generating">
@@ -86,7 +89,7 @@
                   </div>
                   <div class="result-output">
                     <h4>输出:</h4>
-                    <div class="output-content" v-html="(tc.actual_output || tc.error || '暂无输出').replace(/\n/g, '<br>')"></div>
+                    <pre class="output-content">{{ tc.actual_output || tc.error || '暂无输出' }}</pre>
                   </div>
                 </div>
               </div>
@@ -181,6 +184,7 @@ import 'ace-builds/src-noconflict/theme-monokai'
 import 'ace-builds/src-noconflict/ext-language_tools'
 import ThemeToggle from '../components/ThemeToggle.vue'
 import http from '../utils/http'
+import { sanitizeHtml } from '../utils/sanitizeHtml'
 import { AI_POLL_INTERVAL, AI_MAX_POLL_ATTEMPTS, AUTO_SAVE_INTERVAL } from '../utils/constants'
 
 const editorRef = ref(null)
@@ -206,7 +210,8 @@ const maxPollAttempts = AI_MAX_POLL_ATTEMPTS
 
 const renderedContent = computed(() => {
   if (!currentQuestion.value?.content) return ''
-  try { return marked.parse(currentQuestion.value.content) } catch { return currentQuestion.value.content }
+  try { return sanitizeHtml(marked.parse(currentQuestion.value.content)) }
+  catch { return sanitizeHtml(currentQuestion.value.content) }
 })
 
 function getAceMode(lang) {
@@ -336,7 +341,5 @@ onUnmounted(() => { clearInterval(autoSaveTimer); if (aiPollingTimer) clearInter
 <style>
 @import '../assets/css/answerpad.css';
 @import '../assets/css/ai_review.css';
-@import '../assets/css/Ace/ace.css';
-@import '../assets/css/Ace/theme/monokai.css';
 @import '../assets/css/Marked/github-markdown.min.css';
 </style>

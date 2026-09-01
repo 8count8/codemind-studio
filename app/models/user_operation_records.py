@@ -1,4 +1,4 @@
-﻿"""用户操作记录 - MySQL"""
+"""用户操作记录 - MySQL"""
 import os
 from datetime import datetime
 import logging
@@ -6,6 +6,7 @@ import logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 from app.models.db import get_db_connection, get_current_timestamp, fetch_dict
+from app.models.learning_model import _ensure_extended_schema
 
 
 def log_function_usage(user_id, function_name):
@@ -13,6 +14,7 @@ def log_function_usage(user_id, function_name):
     connection = None
     try:
         connection = get_db_connection()
+        _ensure_extended_schema(connection)
         cursor = connection.cursor()
         timestamp = get_current_timestamp()
         cursor.execute('INSERT INTO functions_used (user_id, function_name, timestamp) VALUES (%s, %s, %s)',
@@ -26,22 +28,22 @@ def log_function_usage(user_id, function_name):
             connection.close()
 
 
-def upload_file_to_db(user_id, file_path, file_type):
+def upload_file_to_db(user_id, file_path, file_type, file_content=None):
     """处理上传文件并存储到数据库，返回 upload_id"""
     connection = None
     try:
         connection = get_db_connection()
+        _ensure_extended_schema(connection)
         cursor = connection.cursor()
         timestamp = get_current_timestamp()
         file_name = os.path.basename(file_path)
 
         cursor.execute('''
-        INSERT INTO user_uploads 
-        (user_id, upload_time, file_name, file_type, file_path)
-        VALUES (%s, %s, %s, %s, %s)
-        RETURNING id
-        ''', (user_id, timestamp, file_name, file_type, file_path))
-        upload_id = cursor.fetchone()[0]
+        INSERT INTO user_uploads
+        (user_id, upload_time, file_name, file_type, file_path, file_content)
+        VALUES (%s, %s, %s, %s, %s, %s)
+        ''', (user_id, timestamp, file_name, file_type, file_path, file_content))
+        upload_id = cursor.lastrowid
         connection.commit()
         logging.info(f"文件 {file_name} 上传成功！upload_id={upload_id}")
         return upload_id
@@ -79,6 +81,7 @@ def get_user_history_combined(user_id):
     connection = None
     try:
         connection = get_db_connection()
+        _ensure_extended_schema(connection)
         cursor = connection.cursor()
 
         # 查询 functions_used 表
@@ -91,7 +94,7 @@ def get_user_history_combined(user_id):
 
         # 查询 user_uploads 表
         cursor.execute('''
-        SELECT id, 'upload' AS record_type, file_name AS name, upload_time AS timestamp, file_type, file_path 
+        SELECT id, 'upload' AS record_type, file_name AS name, upload_time AS timestamp, file_type, file_path, file_content AS original_code
         FROM user_uploads 
         WHERE user_id = %s
         ''', (user_id,))
@@ -99,11 +102,12 @@ def get_user_history_combined(user_id):
 
         # 查询 api_responses 表
         cursor.execute('''
-        SELECT id, 'api_response' AS record_type, response_file_name AS name, timestamp, response_file_content AS content 
-        FROM api_responses 
-        WHERE user_upload_id IN (
-            SELECT id FROM user_uploads WHERE user_id = %s
-        )
+        SELECT r.id, 'api_response' AS record_type, r.response_file_name AS name,
+               r.timestamp, r.response_file_content AS content,
+               u.file_content AS original_code, u.file_type
+        FROM api_responses r
+        JOIN user_uploads u ON u.id = r.user_upload_id
+        WHERE u.user_id = %s
         ''', (user_id,))
         api_response_records = fetch_dict(cursor)
 

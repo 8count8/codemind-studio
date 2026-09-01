@@ -47,6 +47,10 @@ class AlgorithmProblemGenerator(Model):
     model_prompt = prompt
     model_id = "10002"
     model_name = "Ai算法题生成"
-    model_ark_url = "https://ark.cn-beijing.volces.com/api/v3/chat/completions"
-    model_ark_id = "ep-20250420105909-k9krn"
-    model_ark_key = "9bb28231-c3ae-4ee9-ac12-e9794efe0016"
+
+    # 生成参数：出题需要创造力与情景化
+    temperature = 0.85
+    top_p = 0.95
+
+    # Ollama 模型名（None → 全局 OLLAMA_MODEL，默认 qwen2.5:7b）
+    ollama_model_name = None

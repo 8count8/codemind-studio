@@ -1,0 +1,53 @@
+# CodeMind Studio backend: Flask/Gunicorn plus native sandbox runtimes.
+FROM python:3.11-slim-bookworm
+
+# The backend uses the host Docker daemon to launch one-shot sandbox containers.
+COPY --from=docker:27-cli /usr/local/bin/docker /usr/local/bin/docker
+
+LABEL maintainer="CodeMind Studio <codemind@example.com>"
+LABEL description="CodeMind Studio Flask Backend"
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    DEBIAN_FRONTEND=noninteractive \
+    TZ=Asia/Shanghai
+
+WORKDIR /app
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        curl \
+        ca-certificates \
+        tzdata \
+        python3 \
+        nodejs \
+        npm \
+        openjdk-17-jre-headless \
+        build-essential \
+    && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+    && echo "Asia/Shanghai" > /etc/timezone \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
+    && if [ ! -e /usr/local/bin/python ]; then ln -s /usr/bin/python3 /usr/local/bin/python; fi
+
+COPY requirements.txt ./
+RUN pip install --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt \
+    && pip install --no-cache-dir gunicorn gevent
+
+COPY run.py config.py ./
+COPY app/ ./app/
+COPY database/ ./database/
+
+RUN chmod +x run.py
+
+EXPOSE 5000
+
+HEALTHCHECK --interval=20s --timeout=5s --start-period=30s --retries=10 \
+    CMD curl -fsSL http://127.0.0.1:5000/health || exit 1
+
+CMD ["gunicorn", "-k", "gevent", "-w", "4", "--threads", "4", \
+     "-b", "0.0.0.0:5000", "--timeout", "600", \
+     "--access-logfile", "-", "--error-logfile", "-", \
+     "--log-level", "info", "app:create_app()"]

@@ -1,0 +1,161 @@
+name: codemind-studio
+
+services:
+  # These one-shot services make the four sandbox images available before the API starts.
+  sandbox-python:
+    image: python:3.11-slim
+    command: ["true"]
+    restart: "no"
+
+  sandbox-node:
+    image: node:20-slim
+    command: ["true"]
+    restart: "no"
+
+  sandbox-java:
+    image: eclipse-temurin:17-jdk-jammy
+    command: ["true"]
+    restart: "no"
+
+  sandbox-gcc:
+    image: gcc:12
+    command: ["true"]
+    restart: "no"
+
+  mysql:
+    image: mysql:8.0
+    container_name: codemind-mysql
+    restart: unless-stopped
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-authentication-plugin=mysql_native_password
+      - --innodb-buffer-pool-size=512M
+    environment:
+      TZ: Asia/Shanghai
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-codemind_root_pw}
+      MYSQL_DATABASE: ${DB_NAME:-codemind}
+      MYSQL_USER: ${DB_USER:-codemind}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-codemind_db_pw}
+    volumes:
+      - codemind_mysql:/var/lib/mysql
+      - ./database/init_db.sql:/docker-entrypoint-initdb.d/01_init_db.sql:ro
+      - ./database/250_questions_seed.sql:/docker-entrypoint-initdb.d/02_250_questions_seed.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u${DB_USER:-codemind}", "-p${DB_PASSWORD:-codemind_db_pw}"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 40s
+    expose:
+      - "3306"
+    ports:
+      - "${MYSQL_HOST_PORT:-3307}:3306"
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: codemind-ollama
+    restart: unless-stopped
+    environment:
+      TZ: Asia/Shanghai
+      OLLAMA_HOST: 0.0.0.0:11434
+    volumes:
+      - codemind_ollama:/root/.ollama
+    ports:
+      - "11434:11434"
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 20s
+      timeout: 5s
+      retries: 15
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+        reservations:
+          memory: 2G
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: codemind-backend
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      ollama:
+        condition: service_healthy
+      sandbox-python:
+        condition: service_completed_successfully
+      sandbox-node:
+        condition: service_completed_successfully
+      sandbox-java:
+        condition: service_completed_successfully
+      sandbox-gcc:
+        condition: service_completed_successfully
+    environment:
+      TZ: Asia/Shanghai
+      FLASK_ENV: production
+      APP_DEPLOY_MODE: docker
+      SANDBOX_MODE: docker
+      SANDBOX_TIMEOUT: ${SANDBOX_TIMEOUT:-5}
+      AI_TIMEOUT_SECONDS: ${AI_TIMEOUT_SECONDS:-9}
+      SECRET_KEY: ${SECRET_KEY:-please-change-this-secret-key}
+      SESSION_COOKIE_SECURE: ${SESSION_COOKIE_SECURE:-false}
+      ADMIN_USERNAMES: ${ADMIN_USERNAMES:-admin}
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: ${DB_USER:-codemind}
+      DB_PASSWORD: ${DB_PASSWORD:-codemind_db_pw}
+      DB_NAME: ${DB_NAME:-codemind}
+      OLLAMA_BASE_URL: http://ollama:11434/v1
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen2.5:7b}
+      EMAIL_TYPE: ${EMAIL_TYPE:-NETEASE_EMAIL_SMTP_SSL}
+      EMAIL_ADDRESS: ${EMAIL_ADDRESS:-}
+      EMAIL_PASSWORD: ${EMAIL_PASSWORD:-}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8080,http://127.0.0.1:8080,http://frontend:80}
+    volumes:
+      - codemind_backend_logs:/app/logs
+      - /var/run/docker.sock:/var/run/docker.sock
+    expose:
+      - "5000"
+    ports:
+      - "${BACKEND_HOST_PORT:-5001}:5000"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsSL http://127.0.0.1:5000/health || exit 1"]
+      interval: 20s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+      args:
+        VITE_API_BASE: ${VITE_API_BASE:-}
+    container_name: codemind-frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      TZ: Asia/Shanghai
+    ports:
+      - "${FRONTEND_HOST_PORT:-8080}:80"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsSL http://127.0.0.1:80/ -o /dev/null || exit 1"]
+      interval: 20s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+volumes:
+  codemind_mysql:
+    driver: local
+  codemind_ollama:
+    driver: local
+  codemind_backend_logs:
+    driver: local

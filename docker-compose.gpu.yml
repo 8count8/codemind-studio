@@ -1,0 +1,28 @@
+# ============================================================
+#  GPU 加速扩展（仅 NVIDIA 显卡用户需要）
+#
+#  使用方法（叠加 docker-compose.yml）：
+#    docker compose --env-file .env.docker \
+#        -f docker-compose.yml \
+#        -f docker-compose.gpu.yml up -d
+#
+#  前置条件（Windows 用户）：
+#    1) Docker Desktop → Settings → General → 勾选 "Use the WSL 2 based engine"
+#    2) NVIDIA 驱动 ≥ 525（官网最新版 Game Ready 即可）
+#    3) 在 PowerShell 里执行：
+#       docker run --rm --gpus all nvidia/cuda:12.0.0-base-ubuntu22.04 nvidia-smi
+#       能看到显卡信息就说明 GPU 容器可用
+# ============================================================
+
+services:
+  ollama:
+    # 覆盖原 ollama 服务：加 GPU 独占 + 放宽内存
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+        limits:
+          memory: 16G

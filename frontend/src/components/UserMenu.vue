@@ -23,6 +23,16 @@
           </router-link>
         </div>
         <div>
+          <router-link to="/settings" class="dropdown-link" @click="dropdownVisible = false">
+            ⚙️ 设置（Ollama / AI 模型）
+          </router-link>
+        </div>
+        <div v-if="userStore.user?.is_admin">
+          <router-link to="/admin" class="dropdown-link" @click="dropdownVisible = false">
+            🛠 管理员后台
+          </router-link>
+        </div>
+        <div>
           <button class="btn btn-info btn-logout" id="logout-btn" @click="handleLogout">退出登录</button>
         </div>
       </div>
